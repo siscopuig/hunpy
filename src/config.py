@@ -1,4 +1,4 @@
-
+from os import path
 
 class Config(object):
 

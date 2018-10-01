@@ -1,0 +1,17 @@
+
+chrome.options:
+   - --dns-prefetch-disable
+   - --disable-gpu
+   - --disable-plugins
+   - --no-sandbox
+   - --disable-infobars
+   - --disable-session-crashed-bubble
+   - --ignore-certificate-errors
+   - --ignore-ssl-errors=true
+
+chrome.headless_option:       --headless
+chrome.size_option:           --window-size={},{}
+chrome.user_data_dir:         --user-data-dir={}
+chrome.user_agent:            --user-agent={}
+chrome.chromedriver_log:      --log-path={}
+chrome.chromedriver_log_name: chromedriver.log

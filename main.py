@@ -1,8 +1,6 @@
-from src import Bootstrap
+from src import bootstrap
 
 # Execute from the command line.
 if __name__ == '__main__':
-
-
-
-	bootstrap = Bootstrap()
+	
+	bootstrap = bootstrap()
