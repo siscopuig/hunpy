@@ -16,9 +16,11 @@ class DriverOptions:
 
 
 		self.chrome_options = Options()
+		self.chrome_options.add_argument('--user-data-dir=/home/sisco/PycharmProjects/hunpy/profile')
 		self.chrome_options.add_argument('--window-size=1366x768')
 		self.chrome_options.add_argument('--user-agent=' + self.user_agent)
 		self.chrome_options.add_argument('--ignore-ssl-errors=true')
+		#self.chrome_options.add_argument('--headless')
 
 		# self.chrome_options.arguments(
 		# 	'--window-size=1366x768',

@@ -15,3 +15,112 @@ chrome.user_data_dir:         --user-data-dir={}
 chrome.user_agent:            --user-agent={}
 chrome.chromedriver_log:      --log-path={}
 chrome.chromedriver_log_name: chromedriver.log
+
+
+# Xpath
+x.body:           .//body
+x.iframe:         .//iframe
+x.iframe_n:       .//iframe[{}]
+x.equals:         '@{}="{}"'
+x.contains:       contains(@{}, "{}")
+x.and:            ' and '
+x.img:            .//img
+x.a_img:          .//a//img
+x_aimg:           .//a/img
+x.ancestor_a:     ./ancestor::a
+
+
+# Iframe Attributes
+txt.html:    html
+txt.id:      id
+txt.name:    name
+txt.src:     src
+txt.title:   title
+txt.style:   style
+txt.href:    href
+txt.onclick: onclick
+
+
+advert.min_pixels:     400
+advert.min_dimension:  10
+
+
+src.ignored_domains:
+   - facebook.com
+   - cdn3.doubleverify.com
+   - consent.trustarc.com
+   - consent.google.com
+   - tt.mbww.com
+   - ooyala.com
+   - soundcloud.com
+   - bankrate.com
+   - hkg3.aastocks.com
+   - l.yimg.com
+   - bmwag.demdex.net
+   - s.amazon-adsystem.com
+   - ums.adtechus.com
+   - cache.btrll.com
+   - a.rfihub.com
+   - img1.zergnet.com
+   - img2.zergnet.com
+   - img3.zergnet.com
+   - img4.zergnet.com
+   - img5.zergnet.com
+   - overlander.com.hk
+   - caixinglobal.com
+   - imageresizer.static9.net.au
+   - dis.criteo.com
+   - r2.abcimg.es
+   - r1.abcimg.es
+   - g.fastapi.net
+   - images.sohu.com
+   - pos.baidu.com
+   - www.ifeng.com
+   - securepubads.g.doubleclick.net
+   - googleads.g.doubleclick.net
+   - youtube.com
+   - ad.doubleclick.net
+   - localhost:63342
+
+
+src.ignored_subdomains:
+  - safeframe
+  - cache
+  - templates
+  - addons
+  - uploads
+  - wp-content
+  - plugins
+
+# Requests (utils_requests)
+http_bad_request:
+  - 0
+  - 204
+  - 400
+  - 401
+  - 403
+  - 404
+  - 500
+
+src.ignore.landing:
+   - 'about:'
+   - 'about:blank'
+   - javascript
+   - widget
+
+format.datetime:
+  - '%Y-%m-%d %H:%M:%S'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
