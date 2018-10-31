@@ -15,6 +15,7 @@ class Iframe(HtmlElement):
 		tab = self.level * '\t'
 
 		string = (
+			'\n'
 			'{t}Frame: {level}:{hash}\n'
 			'{t} id:          {id}\n'
 			'{t} name:        {name}\n'

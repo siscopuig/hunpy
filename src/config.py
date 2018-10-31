@@ -36,7 +36,10 @@ class Config:
 
 
 	def __init__(self, name):
-
+		"""
+		
+		:param name: 
+		"""
 		if not name in self.data:
 			self.data[name] = {}
 		self.data = self.data[name]
@@ -44,7 +47,11 @@ class Config:
 
 
 	def load(self, file_paths):
-
+		"""
+		
+		:param file_paths: 
+		:return: 
+		"""
 		if file_paths:
 
 			# Checks that `file_paths` is a list
@@ -58,6 +65,11 @@ class Config:
 
 
 	def update(self, yml_file):
+		"""
+		
+		:param yml_file: 
+		:return: 
+		"""
 		self.merge(self.data, yml_file)
 
 
@@ -72,7 +84,8 @@ class Config:
 		:return: None
 		"""
 		for key, value in source.items():
-			if (key in target) and isinstance(target[key], dict) and isinstance(value, dict):
+			if (key in target) and isinstance(target[key], dict) \
+					and isinstance(value, dict):
 				self.merge(target[key], value)
 			else:
 				target[key] = value
@@ -86,6 +99,7 @@ class Config:
 		except Exception as e:
 			print('Exception -> Config::__getitem__{}'.format(e))
 			return None
+
 
 
 	def __setitem__(self, key, value):

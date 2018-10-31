@@ -1,9 +1,9 @@
 from src.extractors.container_extractor import ContainerExtractor
 from src.advert import Advert
 from src.searchers.image_searcher import ImageSearcher
-from src.utils.utils_date import UtilsDate
 from src.utils.utils_strings import UtilsString
-
+from src.log import Log
+# from src.utils.utils_date import UtilsDate
 
 
 
@@ -14,17 +14,24 @@ class ImageExtractor(ContainerExtractor):
 
 		super().__init__(driver, config)
 
+		self.log = Log()
+
 
 
 
 	def set_item(self, item, container):
+		"""
 
+		:param item:
+		:param container:
+		:return:
+		"""
 		item.element 		= container.element
 		item.size 			= container.size
 		item.location 		= container.location
-		item.img_src 		= container.src
-		item.img_onclick 	= container.onclick
-		item.img_style 		= container.style
+		item.src 			= container.src
+		item.onclick 		= container.onclick
+		item.style 			= container.style
 		item.a_href 		= container.a_href
 		item.a_onclick 		= container.a_onclick
 		item.a_style 		= container.a_style
@@ -46,20 +53,48 @@ class ImageExtractor(ContainerExtractor):
 
 			advert = Advert()
 
-			if not self.process_source(item):
+			if not self.process_source(item.src, item):
 				continue
+
+			link = self.get_landing_link_from_item(item)
+			if not link:
+				item.landing = self.process_landing(item)
+			else:
+				item.landing = link
+
+			if not item.is_content:
+				return False
 
 			self.set_advert(advert, item)
 
 			adverts.append(advert)
 
+		return adverts
 
 
 	def get_landing_link_from_item(self, item, link=''):
 
+		# a_href, a_onclick, a_style,
+		# src, onclick, style
 
+		if item.a_href:
+			self.log.debug('ImageExtractor: Item value on a_href: {}'.format(item.a_href))
+			link = UtilsString.get_url_from_string(item.a_href)
 
-		pass
+		elif item.a_onclick:
+			self.log.debug('ImageExtractor: Item value on a_href: {}'.format(item.a_onclick))
+			link = UtilsString.get_url_from_string(item.a_onclick)
+
+		elif item.style:
+			self.log.debug('ImageExtractor: Item value on a_href: {}'.format(item.style))
+			link = UtilsString.get_url_from_string(item.style)
+
+		elif item.onclick:
+			self.log.debug('ImageExtractor: Item value on a_href: {}'.format(item.onclick))
+			link = UtilsString.get_url_from_string(item.onclick)
+
+		return link
+
 
 ###############################################
 

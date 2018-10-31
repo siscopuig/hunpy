@@ -33,7 +33,18 @@ Notes:
 
     - Validation process
         - validate container size
-        - validate
+
+
+Notes:
+
+    29-10-2018
+
+    - Create a loop to iterate over the urls
+    - Check if landing exceeds 512 characters (1406, "Data too long for column 'landing' at row 1")
+    - Count instances, cycles
+    - Scroll down until the page bottom then up.
+    - Landing
+        - Reject known ad servers
 
 
 

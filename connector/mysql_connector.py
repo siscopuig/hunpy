@@ -12,6 +12,7 @@ def ewe(func):
 		try:
 			func(self, *args, **kwargs)
 		except Exception as e:
+			# (1406, "Data too long for column 'landing' at row 1")
 			print(e)
 	return wrapper
 

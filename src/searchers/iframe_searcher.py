@@ -5,6 +5,7 @@ from src.image import Image
 from src.page import Page
 import numpy as np
 import hashlib
+from src.log import Log
 
 
 class FrameSearcher(ContainerElement):
@@ -16,21 +17,27 @@ class FrameSearcher(ContainerElement):
 
 		ContainerElement.__init__(self, driver)
 
+		self.log = Log()
+
 		self.driver = driver
 
 		self.attri_tags = np.array([
-			['id', self.txt_id],
-			['name', self.txt_name],
-			['src', self.txt_src],
-			['title', self.txt_title],
-			['style', self.txt_style]
+			['id', 		self.txt_id],
+			['name', 	self.txt_name],
+			['src', 	self.txt_src],
+			['title', 	self.txt_title],
+			['style', 	self.txt_style]
 		])
 
 
 	def find_containers(self, page=None):
 		"""
 		"""
-		return np.array(self.find_iframes(page), dtype=np.object)
+		containers = np.array(self.find_iframes(page), dtype=np.object)
+		if containers.size == 0:
+			return []
+
+		return containers
 
 
 	def find_iframes(self, parent):
@@ -77,8 +84,11 @@ class FrameSearcher(ContainerElement):
 			# Add hash reference
 			refs.append(iframe.hashref)
 
+
 			iframes.append(iframe)
 
+
+			self.log.debug(iframe.__str__())
 
 		for i, iframe in enumerate(iframes):
 

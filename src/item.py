@@ -28,13 +28,15 @@ class Item:
 		self.titles = []
 		self.styles = []
 
+
 		# Processed data
 		self.src = None
 		self.advertiser = None
 		self.landing = None
 		self.xpath = ''
 		self.finfo = None
-		self.is_advert = None
+		self.is_content = None
+		self.is_iframe = False
 
 
 

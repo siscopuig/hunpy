@@ -5,11 +5,15 @@ from src.utils.utils_strings import UtilsString
 
 class Page(HtmlElement):
 	"""
-	Main document
+	This class tries to represent the main document (a complete url)
+
+	Properties:
+		- The page itself (src) E.g. (http://www.europeanpensions.net/ep/index.php)
+		- The page domain (page_domain) E.g. (europeanpensions.net)
+		- adverts from iframes & images from main document
 	"""
 
 	def __init__(self, url):
-
 
 		HtmlElement.__init__(self)
 
@@ -19,6 +23,12 @@ class Page(HtmlElement):
 		self.page_domain = UtilsString.get_domain(url)
 
 		self.main_window_handle = None
+
+		# Adverts candidates
+		self.adverts = []
+
+		# A list advert sources taken from the page
+		self.advert_source_list = []
 
 
 

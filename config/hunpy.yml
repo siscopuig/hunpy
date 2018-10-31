@@ -111,6 +111,12 @@ src.ignore.landing:
 format.datetime:
   - '%Y-%m-%d %H:%M:%S'
 
+log_dir:
+  '../log/'
+
+log_name:
+  'hunpy'
+
 
 
 

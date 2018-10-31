@@ -8,6 +8,7 @@ from src.utils.utils_requests import process_http_requests
 from src.utils.utils_date import UtilsDate
 import asyncio
 import time
+from src.log import Log
 
 class ContainerExtractor:
 	"""
@@ -15,6 +16,7 @@ class ContainerExtractor:
 
 	def __init__(self, driver, config):
 
+		self.log = Log()
 		self.driver = driver
 		self.config = config
 		self.http_bad_request = self.config['http_bad_request']
@@ -23,7 +25,8 @@ class ContainerExtractor:
 		self.src_ignored_domains = self.config['src.ignored_domains']
 		self.src_ignored_subdomains = self.config['src.ignored_subdomains']
 		self.src_ignored_landing = self.config['src.ignore.landing']
-		self.page_domain = UtilsString.get_domain(self.config['page'])
+		self.page_domain = UtilsString.get_domain(self.config.__getitem__('main_document'))
+
 
 
 
@@ -63,15 +66,18 @@ class ContainerExtractor:
 		advert.datetime = UtilsDate.get_datetime()
 		advert.finfo 	= item.finfo
 		advert.landing 	= item.landing
+		advert.is_iframe = item.is_iframe
 		if item.landing:
 			advert.advertiser = UtilsString.get_domain(item.landing)
 
+		# For debugging purposes only:
+		self.log.debug(advert.__str__())
 
 
 
 	def process_source(self, src, item):
 		"""
-		This method has to handle iframe src & image src ??
+		This a generic method to process sources from Iframes & Images
 
 		"""
 
@@ -97,7 +103,13 @@ class ContainerExtractor:
 
 		# If source domain is equal
 		if item.is_page_domain and not item.is_known_placement:
-			print('Is page domain ({}) and not a known placement source: ({})'.format(self.page_domain, src))
+			self.log.debug('Invalid source: is page domain ({}) and '
+						   'not a known placement source: ({})'.format(self.page_domain, src))
+			return False
+
+		if not item.is_known_placement and not item.is_known_adserver:
+			self.log.debug('Not known placement ({}), ({}) and not a known placement '
+				  'source: ({})'.format(item.size[0], item.size[1], src))
 			return False
 
 
@@ -107,10 +119,9 @@ class ContainerExtractor:
 
 		item.src = source
 		item.finfo = finfo
-		item.is_advert = True
+		item.is_content = True
 
 		return True
-
 
 
 	def is_src_matching_invalid_pattern(self, src, domain):
@@ -118,38 +129,39 @@ class ContainerExtractor:
 
 		# Checks that domain src is not in src ignored domains list
 		if domain in self.src_ignored_domains:
-			print('Is Invalid Source: domain ({}) in src ignored list'.format(domain))
+			self.log.debug('Domain src ({}) is in source ignored list'.format(domain))
 			return True
 
 		# Checks that any part of the src is not in the list of text paths
 		if UtilsString.match_string_list_in_list(src, self.src_ignored_subdomains):
-			print('Is invalid Source: path from src: ({}) in src ignored subdomains'.format(src))
+			self.log.debug('Source path from src: ({}) in src ignored subdomains'.format(src))
 			return True
-
 
 
 	def process_stripped_source(self, src):
 		"""
-
+		# @todo: Check effective link by Curl
+		# E.g. http://bs.serving-sys.com/Serving/adServer.bs?cn=brd&pli=1074216618&Page=&Pos=1934671096
+		# 	-> https://www.clearbridge.com/global-esg.html?cmpid=cbieu18_eur_web_penage_ros_728x90_wtr
+		#
 		:return:
 		"""
 
-		stripped_source = UtilsString.strip_string(src)
+		stripped_source = UtilsString.strip_string(src, '?')
 		request = self.is_valid_source_http_request(stripped_source)
 		if not request:
-			print('Invalid http response {}, src: {} '.format(request['status'], stripped_source))
+			self.log.debug('Invalid http response from stripped source, src: ({}) '.format(stripped_source))
 			stripped_source = None
 
 			request = self.is_valid_source_http_request(src)
 			if not request:
-				print('Invalid http response {}, src: {} '.format(request['status'], src))
-				return False
+				self.log.debug('Invalid http response, src: ({}) '.format(src))
+				return '', ''
 
 		if stripped_source:
 			src = stripped_source
 
 		return src, request['content_type']
-
 
 
 	def process_landing(self, item):
@@ -162,7 +174,7 @@ class ContainerExtractor:
 
 		result = self.driver.click_on_element(item.element)
 		if result is None:
-			print('Process Landing: element not visible')
+			self.log.debug('Process Landing: element not visible')
 			return None
 
 
@@ -173,20 +185,20 @@ class ContainerExtractor:
 		# Get landing url
 		landing = self.driver.get_current_url()
 		if not landing:
+			self.log.debug('ContainerExtractor: Not possible to get landing url from tab.')
 			self.driver.close_window_except_main()
 			return None
 
 
 		# Validate landing url
 		if UtilsString.match_string_list_in_list(landing, self.src_ignored_landing):
-			print('Process Landing: a landing {} path in src ignored landing'.format(landing))
+			self.log.debug('Process Landing: a landing {} path in src ignored landing'.format(landing))
 			return None
 
 		# Close window and switch to main
 		self.driver.close_window_except_main()
 
 		return landing
-
 
 
 	def switch_to_new_window(self):
@@ -204,18 +216,17 @@ class ContainerExtractor:
 		windows = self.driver.get_window_handle()
 
 		if len(windows) > 2:
-			print('Switch to new window: Opened {} more than one tab'.format(len(windows)))
+			self.log.debug('Switch to new window: Opened ({}) more than one tab.'.format(len(windows)))
 			return False
 
 		elif len(windows) == 1:
-			print('Switch to new window: Did not open a new tab!!')
+			self.log.debug('Switch to new window: Did not open a new tab.')
 			return False
 
 		else:
 			self.driver.switch_to_window(windows[1])
-			print('Switch to new window: Switched to window {}'.format(windows[1]))
+			self.log.debug('Switch to new window: Switched to window ({})'.format(windows[1]))
 			return True
-
 
 
 	def get_uid(self):
@@ -224,7 +235,6 @@ class ContainerExtractor:
 		:return: 3c3f9dc8-3491-46d3-aa63-fcd4af556276
 		"""
 		return uuid.uuid4().__str__()
-
 
 
 	def is_valid_source_http_request(self, src):
@@ -239,8 +249,6 @@ class ContainerExtractor:
 		return request
 
 
-
-
 	def get_landing_link_from_item(self, item, link=''):
 		"""
 
@@ -248,19 +256,19 @@ class ContainerExtractor:
 		"""
 
 		if item.a_href:
-			print('Item value on a_href: {}'.format(item.a_href))
+			self.log.debug('Item value on a_href: {}'.format(item.a_href))
 			link = UtilsString.get_url_from_string(item.a_href)
 
 		if item.a_onclick:
-			print('Item value on a_href: {}'.format(item.a_onclick))
+			self.log.debug('Item value on a_href: {}'.format(item.a_onclick))
 			link = UtilsString.get_url_from_string(item.a_onclick)
 
 		if item.img_style:
-			print('Item value on a_href: {}'.format(item.a_img_style))
+			self.log.debug('Item value on a_href: {}'.format(item.a_img_style))
 			link = UtilsString.get_url_from_string(item.img_style)
 
 		if item.img_onclick:
-			print('Item value on a_href: {}'.format(item.img_onclick))
+			self.log.debug('Item value on a_href: {}'.format(item.img_onclick))
 			link = UtilsString.get_url_from_string(item.img_onclick)
 
 		return link

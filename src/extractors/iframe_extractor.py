@@ -2,6 +2,7 @@ from src.extractors.container_extractor import ContainerExtractor
 from ordered_set import OrderedSet
 from src.advert import Advert
 from src.utils.utils_strings import UtilsString
+from src.log import Log
 # from src.utils.utils_date import UtilsDate
 
 
@@ -13,6 +14,7 @@ class IframeExtractor(ContainerExtractor):
 
 	def __init__(self, driver, config):
 		ContainerExtractor.__init__(self, driver, config)
+		self.log = Log()
 
 
 	def set_item(self, item, container):
@@ -43,6 +45,7 @@ class IframeExtractor(ContainerExtractor):
 		item.names = list(item.names)
 		item.titles = list(item.titles)
 		item.styles = list(item.styles)
+		item.is_iframe = True
 
 
 	def append_item_info(self, item, container):
@@ -145,8 +148,10 @@ class IframeExtractor(ContainerExtractor):
 			link = self.extract_link_from_attributes(item)
 			if not link:
 				item.landing = self.process_landing(item)
+			else:
+				item.landing = link
 
-			if not item.is_advert:
+			if not item.is_content:
 				return False
 
 			return True
@@ -167,8 +172,10 @@ class IframeExtractor(ContainerExtractor):
 			link = self.extract_link_from_attributes(item)
 			if not link:
 				item.landing = self.process_landing(item)
+			else:
+				item.landing = link
 
-			if not item.is_advert:
+			if not item.is_content:
 				return False
 
 			return True

@@ -1,12 +1,8 @@
-[3573:3573:1026/171326.739683:WARNING:password_store_factory.cc(262)] Using basic (unencrypted) store for password storage. See https://chromium.googlesource.com/chromium/src/+/master/docs/linux_password_storage.md for more information about password storage options.
-[3573:3573:1026/171326.862656:WARNING:CONSOLE(0)] "HTML Imports is deprecated and will be removed in M73, around March 2019. Please use ES modules instead. See https://www.chromestatus.com/features/5144752345317376 for more details.", source:  (0)
-[3573:3573:1026/171326.875608:WARNING:CONSOLE(77)] "document.registerElement is deprecated and will be removed in M73, around March 2019. Please use window.customElements.define instead. See https://www.chromestatus.com/features/4642138092470272 for more details.", source: https://ssl.gstatic.com/chrome/components/doodle-notifier-02.html (77)
-[3573:3573:1026/171326.919809:ERROR:CONSOLE(9)] "Uncaught TypeError: Cannot read property '1' of null", source: https://www.google.com/_/chrome/newtab?ie=UTF-8 (9)
-[3573:3573:1026/171328.803219:INFO:CONSOLE(1)] "Banner initialised", source: https://s0.2mdn.net/ads/richmedia/studio/pv2/60817163/20180903024843963/js/banner.js (1)
-[3573:3573:1026/171329.799323:INFO:CONSOLE(1)] "Polite loading scripts", source: https://s0.2mdn.net/ads/richmedia/studio/pv2/60817163/20180903024843963/js/banner.js (1)
-[3573:3573:1026/171330.319241:INFO:CONSOLE(1)] "null", source: https://s0.2mdn.net/ads/richmedia/studio/pv2/60817163/20180903024843963/js/banner.animation.js (1)
-[3573:3573:1026/171330.337982:INFO:CONSOLE(1)] "dom", source: https://s0.2mdn.net/ads/richmedia/studio/pv2/60817163/20180903024843963/js/banner.animation.js (1)
-[3573:3573:1026/171330.352451:INFO:CONSOLE(1)] "animate", source: https://s0.2mdn.net/ads/richmedia/studio/pv2/60817163/20180903024843963/js/banner.animation.js (1)
-[3573:3573:1026/171330.692288:INFO:CONSOLE(0)] "Uncaught (in promise) NotSupportedError: Failed to load because no supported source was found.", source: https://s0.2mdn.net/ads/richmedia/studio/pv2/60817163/20180903024843963/index.html (0)
-[3573:3573:1026/171550.492725:WARNING:pref_notifier_impl.cc(23)] Pref observer found at shutdown.
-[3573:3573:1026/171550.492749:WARNING:pref_notifier_impl.cc(23)] Pref observer found at shutdown.
+[17238:17238:1031/165929.646923:WARNING:password_store_factory.cc(262)] Using basic (unencrypted) store for password storage. See https://chromium.googlesource.com/chromium/src/+/master/docs/linux_password_storage.md for more information about password storage options.
+[17238:17238:1031/165929.824949:WARNING:CONSOLE(0)] "HTML Imports is deprecated and will be removed in M73, around March 2019. Please use ES modules instead. See https://www.chromestatus.com/features/5144752345317376 for more details.", source:  (0)
+[17238:17238:1031/165929.825053:WARNING:CONSOLE(77)] "document.registerElement is deprecated and will be removed in M73, around March 2019. Please use window.customElements.define instead. See https://www.chromestatus.com/features/4642138092470272 for more details.", source: https://ssl.gstatic.com/chrome/components/doodle-notifier-02.html (77)
+[17238:17238:1031/165929.890514:ERROR:CONSOLE(9)] "Uncaught TypeError: Cannot read property '1' of null", source: https://www.google.com/_/chrome/newtab?ie=UTF-8 (9)
+[17277:17277:1031/170259.441451:WARNING:x11_util.cc(1391)] X error received: serial 665, error_code 182 (GLXBadWindow), request_code 155, minor_code 32 (Unknown)
+[17277:17277:1031/170259.441541:WARNING:x11_util.cc(1391)] X error received: serial 669, error_code 3 (BadWindow), request_code 4, minor_code 0 (Unknown)
+[17238:17238:1031/170259.491481:WARNING:pref_notifier_impl.cc(23)] Pref observer found at shutdown.
+[17238:17238:1031/170259.491511:WARNING:pref_notifier_impl.cc(23)] Pref observer found at shutdown.

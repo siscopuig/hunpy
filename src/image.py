@@ -28,9 +28,9 @@ class Image(ImageContainer):
 			' anchor onclick: {a_onclick}\n'
 			' anchor style:   {a_style}\n'
 		).format(
-			img_src=self.img_src,
-			img_onclick=self.img_onclick,
-			img_style=self.img_style,
+			img_src=self.src,
+			img_onclick=self.onclick,
+			img_style=self.style,
 			a_href=self.a_href,
 			a_onclick=self.a_onclick,
 			a_style=self.a_style

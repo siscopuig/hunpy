@@ -1,8 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as expect_cond
+from selenium.common.exceptions import WebDriverException
 from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import NoSuchWindowException
 from selenium.common.exceptions import NoSuchFrameException
@@ -10,8 +10,11 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoSuchAttributeException
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.common.exceptions import ElementNotVisibleException
-from src.driveroptions import DriverOptions
+from selenium.webdriver.chrome.options import Options
 import time
+# from selenium.webdriver.common.keys import Keys
+# from src.driveroptions import DriverOptions
+
 
 
 def ewe(func):
@@ -75,42 +78,85 @@ def ewe(func):
 			#print('Exception: {} Executed function::{}'.format(e.msg, func))
 			return False
 
-		#except  WebDriverException as e:
-		#	print(e)
+		# For debugging purposes:
+		except WebDriverException as e:
+			print(e)
+
 
 	return wrapper
 
 
 
-class Driver(DriverOptions):
-
-
-	driver = None
+class Driver:
 
 
 	def __init__(self):
-		super().__init__()
-		self.create()
+		self.driver = None
+		self.chrome_options = None
 
 
 	@ewe
-	def create(self):
-		self.driver = webdriver.Chrome(
-			chrome_options=self.chrome_options
-		)
-		self.driver.set_window_size(1366, 768)
-		#self.driver.maximize_window()
+	def start(self):
+		"""
 
+		:return:
+		"""
+
+		self.set_chrome_options()
+
+		self.driver = webdriver.Chrome(chrome_options=self.chrome_options)
+		self.driver.set_window_size(1366, 768)
 		self.driver.set_page_load_timeout(10)
 		self.driver.implicitly_wait(0)
+		#self.driver.maximize_window()
 
 
+	def set_chrome_options(self):
+
+		user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64_59.0.3071.86 Safari/537.36'
+		prefs = {'profile.default_content_setting_values.notifications': 2}
+
+		self.chrome_options = Options()
+		self.chrome_options.add_argument('--user-data-dir=/home/sisco/PycharmProjects/hunpy/profile')
+		self.chrome_options.add_argument('--window-size=1366x768')
+		self.chrome_options.add_argument('--user-agent=' + user_agent)
+		self.chrome_options.add_argument('--ignore-ssl-errors=true')
+
+		self.chrome_options.add_experimental_option(
+			'prefs', prefs
+		)
+
+		# self.chrome_options.arguments(
+		# 	'--window-size=1366x768',
+		# 	'--user-agent=' + self.user_agent,
+		# 	'--ignore-certificate-errors',
+		# 	'--ignore-ssl-errors=true',
+		# 	'--dns-prefetch-disable',
+		# 	'--disable-infobars',
+		# 	'--disable-session-crashed-bubble',
+		# 	'--disable-notifications',
+		# 	'--no-sandbox',
+		# 	#'--headless',
+		# 	#'--disable-gpu',
+		# )
+
+	@ewe
 	def get_driver(self):
 		"""
 
 		:return:
 		"""
+		if self.driver is None:
+			self.start()
 		return self.driver
+
+
+	def reset_driver(self):
+		"""
+
+		:return:
+		"""
+		self.driver = None
 
 
 	@ewe
@@ -120,8 +166,16 @@ class Driver(DriverOptions):
 		:param url:
 		:return:
 		"""
-		self.driver.get(url)
-		time.sleep(3)
+		self.get_driver().get(url)
+		time.sleep(0)
+
+
+	def quit(self):
+		"""
+
+		:return:
+		"""
+		self.driver.quit()
 
 
 	@ewe
@@ -168,6 +222,11 @@ class Driver(DriverOptions):
 
 	@ewe
 	def get_element_location(self, element):
+		"""
+
+		:param element:
+		:return:
+		"""
 		return element.location['x'], element.location['y']
 
 
@@ -288,6 +347,7 @@ class Driver(DriverOptions):
 		if not element:
 			return None
 
+		# This method can open more than one tab
 		#ActionChains(self.get_driver()).move_to_element(element).send_keys \
 		#	(Keys.CONTROL + Keys.SHIFT).click().perform()
 
