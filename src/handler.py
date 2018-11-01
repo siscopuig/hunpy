@@ -29,7 +29,6 @@ class Handler:
 		self.log = Log()
 
 
-
 	def search(self):
 		
 
@@ -39,10 +38,10 @@ class Handler:
 			# For debugging purposes:
 			url = 'http://localhost:63342/hunpy/lab/html_templates/html_main_document.html'
 			# url = 'https://www.trustnet.com/'
-			# url = 'http://www.ftadviser.com/'
+			#url = 'http://www.ftadviser.com/'
 			# url = 'http://www.europeanpensions.net/ep/index.php'
 			# url = 'https://www.theguardian.com/uk'
-			# url = url[1]
+			#url = url[1]
 
 			# try:
 			self.config.__setitem__('main_document', url)
@@ -62,7 +61,7 @@ class Handler:
 		:return:
 		"""
 
-		self.driver.open(url)
+		self.driver.open(url, 1)
 
 		self.process_frames(self.driver, url)
 
@@ -99,7 +98,6 @@ class Handler:
 			self.adverts.append(advert)
 
 
-
 	def process_images(self, driver):
 
 		image_searcher = ImageSearcher(driver)
@@ -117,7 +115,6 @@ class Handler:
 
 		for advert in adverts:
 			self.adverts.append(advert)
-
 
 
 	def store_in_database(self):
@@ -141,4 +138,12 @@ class Handler:
 
 
 
+#################################
+# try:
+# 	self.driver.open(url, 4)
+# 	height = self.driver.driver.execute_script("return document.body.parentNode.scrollHeight")
+# 	self.driver.driver.set_window_size(1366, height)
+# 	self.driver.driver.save_screenshot('/home/sisco/PycharmProjects/hunpy/screenshot.png')
+# except Exception as e:
+# 	print(e)
 

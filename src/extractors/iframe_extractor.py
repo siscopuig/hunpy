@@ -151,6 +151,8 @@ class IframeExtractor(ContainerExtractor):
 			else:
 				item.landing = link
 
+
+
 			if not item.is_content:
 				return False
 

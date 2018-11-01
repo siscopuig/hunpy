@@ -12,8 +12,10 @@ from selenium.common.exceptions import StaleElementReferenceException
 from selenium.common.exceptions import ElementNotVisibleException
 from selenium.webdriver.chrome.options import Options
 import time
+import io
+from PIL import Image
 # from selenium.webdriver.common.keys import Keys
-# from src.driveroptions import DriverOptions
+
 
 
 
@@ -103,7 +105,6 @@ class Driver:
 		"""
 
 		self.set_chrome_options()
-
 		self.driver = webdriver.Chrome(chrome_options=self.chrome_options)
 		self.driver.set_window_size(1366, 768)
 		self.driver.set_page_load_timeout(10)
@@ -160,14 +161,17 @@ class Driver:
 
 
 	@ewe
-	def open(self, url):
+	def open(self, url, wait=None):
 		"""
 
+		:param wait:
 		:param url:
 		:return:
 		"""
 		self.get_driver().get(url)
-		time.sleep(0)
+
+		if wait:
+			time.sleep(wait)
 
 
 	def quit(self):
@@ -378,6 +382,37 @@ class Driver:
 
 
 
+	def open_new_tab(self):
+		"""
+		There is a bug in chromedriver that prevent chrome
+		to open a new tab sending keys (CONTROL + "t")
+
+		"""
+		#element = self.find_element_by_xpath('.//body')
+
+		#ActionChains(self.get_driver()).send_keys(Keys.COMMAND + "t").click(element).perform()
+
+		# ActionChains(self.get_driver()).key_down(Keys.CONTROL).click(element)\
+		# 	.send_keys('t').perform()
+		pass
+
+	@ewe
+	def execute_script(self, script):
+		"""
+		Opens a new tab on browser window.
+
+		"""
+		self.get_driver().execute_script(script)
+
+
+
+	def save_screenshot(self, filename):
+
+		# Gets the screenshot of the current element as a binary data.
+
+		self.get_driver().save_screenshot(filename)
+
+
 	@ewe
 	def close_window_except_main(self):
 		"""
@@ -404,8 +439,27 @@ class Driver:
 
 		:return: current url
 		"""
-		current_url = self.get_driver().current_url
-		return current_url
+		return self.get_driver().current_url
+
+
+	def get_screenshot_element(self):
+
+		element = self.driver.find_element_by_xpath('.//img')
+		location = self.driver.get_element_location(element)
+		size = self.driver.get_element_size(element)
+		self.driver.save_screenshot('page_image.png')
+
+		x = location[0]
+		y = location[1]
+
+		width = x + size[0]
+		height = y + size[1]
+
+		image = Image.open(io.FileIO('page_image.png'))
+		image = image.crop((int(x), int(y), int(width), int(height)))
+		image_rgb = image.convert('RGB')
+		image_rgb.save('sample_screenshot_3.jpeg', format('JPEG'))
+
 
 ##########################################
 # if __name__ == '__main__':
