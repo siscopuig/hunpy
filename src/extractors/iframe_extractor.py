@@ -3,7 +3,6 @@ from ordered_set import OrderedSet
 from src.advert import Advert
 from src.utils.utils_strings import UtilsString
 from src.log import Log
-# from src.utils.utils_date import UtilsDate
 
 
 class IframeExtractor(ContainerExtractor):
@@ -15,6 +14,34 @@ class IframeExtractor(ContainerExtractor):
 	def __init__(self, driver, config):
 		ContainerExtractor.__init__(self, driver, config)
 		self.log = Log()
+		
+		
+	def iframes_extractor(self, containers):
+		"""
+		Process iframes & images inside
+		"""
+
+		
+		items = self.get_items(containers)
+
+
+		adverts = []
+		for i, item in enumerate(items):
+
+			advert = Advert()
+
+			# Function to process iframes sources
+			if not self.process_iframes(item) and not self.process_images(item):
+				continue
+
+			self.set_advert(advert, item)
+
+			adverts.append(advert)
+
+
+		# Adverts list
+		return adverts
+
 
 
 	def set_item(self, item, container):
@@ -100,32 +127,6 @@ class IframeExtractor(ContainerExtractor):
 		return True
 
 
-	def iframes_extractor(self, containers):
-		"""
-		Process iframes & images inside
-		"""
-
-		# item_extractor method call
-		items = self.get_items(containers)
-
-
-		adverts = []
-		for i, item in enumerate(items):
-
-			advert = Advert()
-
-			# Function to process iframes sources
-			if not self.process_iframes(item) and not self.process_images(item):
-				print('No iframes sources found')
-				continue
-
-			self.set_advert(advert, item)
-
-			adverts.append(advert)
-
-
-		# Adverts list
-		return adverts
 
 
 	def process_iframes(self, item):
@@ -150,8 +151,6 @@ class IframeExtractor(ContainerExtractor):
 				item.landing = self.process_landing(item)
 			else:
 				item.landing = link
-
-
 
 			if not item.is_content:
 				return False
@@ -191,23 +190,27 @@ class IframeExtractor(ContainerExtractor):
 		:return:
 		"""
 		if item.img_hrefs:
-			link = self.get_link(item.img_hrefs)
+			link = self.get_link_from_list(item.img_hrefs)
 			if link:
 				print('Link: ({link}) extracted from img_hrefs'.format(link=link))
 		elif item.img_onclicks:
-			link = self.get_link(item.img_onclicks)
+			link = self.get_link_from_list(item.img_onclicks)
 			if link:
 				print('Link: ({link}) extracted from img_onclicks'.format(link=link))
 		elif item.styles:
-			link = self.get_link(item.styles)
+			link = self.get_link_from_list(item.styles)
 			if link:
 				print('Link: ({link}) extracted from styles'.format(link=link))
 
 		return link
 
 
-	def get_link(self, list):
-
+	def get_link_from_list(self, list):
+		"""
+		
+		:param list: 
+		:return: 
+		"""
 		for string in list:
 			url = UtilsString.get_url_from_string(string)
 			if url:

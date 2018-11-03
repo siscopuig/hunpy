@@ -1,3 +1,18 @@
+
+Notes:
+
+    01-11-2018
+
+    - Count cycles
+    - Count instances
+
+
+
+
+
+
+
+
 Process items() -> each item can contain multiple iframe sources
 	- Create an Advert instance
 	- Process iframe sources -> loop

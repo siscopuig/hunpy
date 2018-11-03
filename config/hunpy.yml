@@ -1,4 +1,42 @@
 
+
+datasource.relative.paths:
+  adservers:            /home/sisco/PycharmProjects/hunpy/datasource/adserver_domain_list.txt
+  ignore.domain.path:   /home/sisco/PycharmProjects/hunpy/datasource/source_ignore_domain_and_path.txt
+  ignore.domain:        /home/sisco/PycharmProjects/hunpy/datasource/source_ignored_domains.txt
+  ignore.path:          /home/sisco/PycharmProjects/hunpy/datasource/source_ignore_path.txt
+
+
+format.datetime:
+  - '%Y-%m-%d %H:%M:%S'
+
+# RELATIVE LOG DIRECTORY
+log_dir:
+  '../log/'
+
+# LOG FILENAME
+log_name:
+  'hunpy'
+
+# MAXIMUM STRING CHARACTERS
+max.source.len: 512
+max.landing.len: 512
+
+# MINIMUM AD SIZE
+advert.min_pixels:     400
+advert.min_dimension:  10
+
+# REQUESTS (utils_requests)
+http_bad_request:
+  - 0
+  - 204
+  - 400
+  - 401
+  - 403
+  - 404
+  - 500
+
+# DRIVER OPTIONS
 chrome.options:
    - --dns-prefetch-disable
    - --disable-gpu
@@ -8,7 +46,6 @@ chrome.options:
    - --disable-session-crashed-bubble
    - --ignore-certificate-errors
    - --ignore-ssl-errors=true
-
 chrome.headless_option:       --headless
 chrome.size_option:           --window-size={},{}
 chrome.user_data_dir:         --user-data-dir={}
@@ -16,8 +53,7 @@ chrome.user_agent:            --user-agent={}
 chrome.chromedriver_log:      --log-path={}
 chrome.chromedriver_log_name: chromedriver.log
 
-
-# Xpath
+# XPATH
 x.body:           .//body
 x.iframe:         .//iframe
 x.iframe_n:       .//iframe[{}]
@@ -29,8 +65,7 @@ x.a_img:          .//a//img
 x_aimg:           .//a/img
 x.ancestor_a:     ./ancestor::a
 
-
-# Iframe Attributes
+# IFRAME ATTRIBUTES
 txt.html:    html
 txt.id:      id
 txt.name:    name
@@ -41,49 +76,7 @@ txt.href:    href
 txt.onclick: onclick
 
 
-advert.min_pixels:     400
-advert.min_dimension:  10
-
-
-src.ignored_domains:
-   - facebook.com
-   - cdn3.doubleverify.com
-   - consent.trustarc.com
-   - consent.google.com
-   - tt.mbww.com
-   - ooyala.com
-   - soundcloud.com
-   - bankrate.com
-   - hkg3.aastocks.com
-   - l.yimg.com
-   - bmwag.demdex.net
-   - s.amazon-adsystem.com
-   - ums.adtechus.com
-   - cache.btrll.com
-   - a.rfihub.com
-   - img1.zergnet.com
-   - img2.zergnet.com
-   - img3.zergnet.com
-   - img4.zergnet.com
-   - img5.zergnet.com
-   - overlander.com.hk
-   - caixinglobal.com
-   - imageresizer.static9.net.au
-   - dis.criteo.com
-   - r2.abcimg.es
-   - r1.abcimg.es
-   - g.fastapi.net
-   - images.sohu.com
-   - pos.baidu.com
-   - www.ifeng.com
-   - securepubads.g.doubleclick.net
-   - googleads.g.doubleclick.net
-   - youtube.com
-   - ad.doubleclick.net
-   - localhost:63342
-
-
-src.ignored_subdomains:
+src.ignored.subdomains:
   - safeframe
   - cache
   - templates
@@ -92,30 +85,13 @@ src.ignored_subdomains:
   - wp-content
   - plugins
 
-# Requests (utils_requests)
-http_bad_request:
-  - 0
-  - 204
-  - 400
-  - 401
-  - 403
-  - 404
-  - 500
-
 src.ignore.landing:
    - 'about:'
    - 'about:blank'
    - javascript
    - widget
 
-format.datetime:
-  - '%Y-%m-%d %H:%M:%S'
 
-log_dir:
-  '../log/'
-
-log_name:
-  'hunpy'
 
 
 

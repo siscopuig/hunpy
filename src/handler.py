@@ -43,15 +43,14 @@ class Handler:
 			# url = 'https://www.theguardian.com/uk'
 			#url = url[1]
 
-			# try:
+			# @todo: do not set an item in config. Change approach
 			self.config.__setitem__('main_document', url)
 
 			self.manage_driver()
 
 			self.process_page(url)
 
-			# except Exception as e:
-			 #	print(e)
+
 
 
 	def process_page(self, url):
@@ -68,7 +67,6 @@ class Handler:
 		self.process_images(self.driver)
 
 		self.store_in_database()
-
 
 
 	def process_frames(self, driver, url):
@@ -95,7 +93,7 @@ class Handler:
 			return False
 
 		for advert in adverts:
-			self.adverts.append(advert)
+			page.adverts.append(advert)
 
 
 	def process_images(self, driver):

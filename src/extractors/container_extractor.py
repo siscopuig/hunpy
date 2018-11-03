@@ -28,9 +28,12 @@ class ContainerExtractor:
 		self.page_domain = UtilsString.get_domain(self.config.__getitem__('main_document'))
 
 
-
-
 	def get_items(self, containers):
+		"""
+		
+		:param containers: 
+		:return: items 
+		"""
 
 		items = np.empty(len(containers), dtype=np.object)
 		for i, container in enumerate(containers):
@@ -41,7 +44,6 @@ class ContainerExtractor:
 		return items
 
 
-
 	def set_item(self, item, container):
 		"""
 		Is overriding in:
@@ -49,7 +51,6 @@ class ContainerExtractor:
 			ImageExtractor
 		"""
 		return False
-
 
 
 	def set_advert(self, advert, item):
@@ -72,7 +73,6 @@ class ContainerExtractor:
 
 		# For debugging purposes only:
 		self.log.debug(advert.__str__())
-
 
 
 	def process_source(self, src, item):
@@ -103,9 +103,10 @@ class ContainerExtractor:
 
 		# If source domain is equal
 		if item.is_page_domain and not item.is_known_placement:
-			self.log.debug('Invalid source: is page domain ({}) and '
-						   'not a known placement source: ({})'.format(self.page_domain, src))
+			self.log.debug('Invalid source: is page domain ({}) and not a known placement '
+				   'source: ({})'.format(self.page_domain, src))
 			return False
+
 
 		if not item.is_known_placement and not item.is_known_adserver:
 			self.log.debug('Not known placement ({}), ({}) and not a known placement '
@@ -181,6 +182,7 @@ class ContainerExtractor:
 		# Check that a new tab is opened and switch
 		if not self.switch_to_new_window():
 			return None
+
 
 		# Get landing url
 		landing = self.driver.get_current_url()

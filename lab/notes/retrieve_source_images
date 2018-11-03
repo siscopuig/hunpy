@@ -24,5 +24,5 @@ How to retrieve an image:
 - How do I open a new tab in chrome?
     self.driver.execute_script("window.open('');")
 
-
+- Store each source taken in a list to check if equal source appears in the same page.
 

@@ -96,7 +96,7 @@ class ImageExtractor(ContainerExtractor):
 		return link
 
 
-###############################################
+
 
 
 

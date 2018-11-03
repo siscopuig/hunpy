@@ -1,27 +1,25 @@
-from connector.mysql_connector import MysqlConn
-from src.hunpy_exception import HunpyException
-from src.utils.utils_strings import UtilsString
+from src.utils.utils_files import get_abs_path
 import yaml
 
-"""
-__getitem__():
-	Implementing __getitem__ in a class allows its instances to use
-	the [] (indexer) operators.
-	The __getitem__ magic method is usually used for list indexing, dictionary lookups,
-	or accessing ranges of values. Considering how versatile it is, it's probably one
-	of Python's most underutilized magic methods.
-	
-	https://docs.python.org/3.4/reference/datamodel.html#object.__getitem__
-	http://farmdev.com/src/secrets/magicmethod/index.html
-		
-The isinstance():
-	function returns True if the specified object
-	is of the specified type, otherwise False. If the type parameter
-	is a tuple, this function will return True if the object is one
-	of the types in the tuple.
-	
-			
-"""
+#
+# __getitem__():
+# 	Implementing __getitem__ in a class allows its instances to use
+# 	the [] (indexer) operators.
+# 	The __getitem__ magic method is usually used for list indexing, dictionary lookups,
+# 	or accessing ranges of values. Considering how versatile it is, it's probably one
+# 	of Python's most underutilized magic methods.
+#
+# 	https://docs.python.org/3.4/reference/datamodel.html#object.__getitem__
+# 	http://farmdev.com/src/secrets/magicmethod/index.html
+#
+# The isinstance():
+# 	function returns True if the specified object
+# 	is of the specified type, otherwise False. If the type parameter
+# 	is a tuple, this function will return True if the object is one
+# 	of the types in the tuple.
+#
+#
+#
 
 class Config:
 
@@ -29,10 +27,6 @@ class Config:
 	"""
 
 	data = {}
-	dbconn = None
-	urls = None
-	adservers = None
-	placements = None
 
 
 	def __init__(self, name):
@@ -42,6 +36,7 @@ class Config:
 		"""
 		if not name in self.data:
 			self.data[name] = {}
+
 		self.data = self.data[name]
 
 
@@ -59,7 +54,7 @@ class Config:
 				file_paths = [file_paths]
 
 			for file_path in file_paths:
-				with open(UtilsString.get_abs_path(file_path), 'r') as yml_file:
+				with open(get_abs_path(file_path), 'r') as yml_file:
 					self.update(yaml.load(yml_file))
 
 
@@ -84,8 +79,7 @@ class Config:
 		:return: None
 		"""
 		for key, value in source.items():
-			if (key in target) and isinstance(target[key], dict) \
-					and isinstance(value, dict):
+			if (key in target) and isinstance(target[key], dict) and isinstance(value, dict):
 				self.merge(target[key], value)
 			else:
 				target[key] = value
@@ -110,33 +104,6 @@ class Config:
 		:return:
 		"""
 		self.data[key] = value
-
-
-
-	def set_datasource_properties(self):
-
-		self.dbconn = MysqlConn()
-
-		# Urls
-		self.urls = self.dbconn.select_urls()
-		if not self.urls:
-			raise HunpyException('Urls table might be empty')
-		self.data['urls'] = self.urls
-
-
-		# Adservers
-		self.adservers = self.dbconn.select_adservers()
-		if not self.adservers:
-			raise HunpyException('Adservers table might be empty')
-		self.data['adservers'] = self.adservers
-
-
-		# Placements
-		self.placements = self.dbconn.select_placements()
-		if not self.placements:
-			raise HunpyException('Placements table might be empty')
-		self.data['placements'] = self.placements
-
 
 
 	def get_url_id_by_value(self, value):

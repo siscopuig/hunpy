@@ -20,6 +20,9 @@ class Page(HtmlElement):
 		# Url is the main source
 		self.src = url
 
+
+
+
 		self.page_domain = UtilsString.get_domain(url)
 
 		self.main_window_handle = None
@@ -29,6 +32,9 @@ class Page(HtmlElement):
 
 		# A list advert sources taken from the page
 		self.advert_source_list = []
+
+
+
 
 
 
