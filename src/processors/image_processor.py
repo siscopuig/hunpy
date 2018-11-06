@@ -1,22 +1,21 @@
-from src.extractors.container_extractor import ContainerExtractor
-from src.advert import Advert
+from src.processors.container_processor import ContainerProcessor
 from src.searchers.image_searcher import ImageSearcher
 from src.utils.utils_strings import UtilsString
 from src.log import Log
-# from src.utils.utils_date import UtilsDate
+from src.advert import Advert
 
 
 
-class ImageExtractor(ContainerExtractor):
+class ImageProcessor(ContainerProcessor):
 
 
-	def __init__(self, driver, config):
+	def __init__(self, driver, config, datasource):
 
-		super().__init__(driver, config)
+		super().__init__(driver, config, datasource)
+
+		self.imagesearcher = ImageSearcher(driver, config)
 
 		self.log = Log()
-
-
 
 
 	def set_item(self, item, container):
@@ -37,39 +36,9 @@ class ImageExtractor(ContainerExtractor):
 		item.a_style 		= container.a_style
 
 
-	def search_images(self):
+	def get_containers(self, page):
 
-		img = ImageSearcher(self.driver)
-		return img.find_images()
-
-
-	def images_extractor(self, containers):
-
-
-		items = self.get_items(containers)
-
-		adverts = []
-		for i, item in enumerate(items):
-
-			advert = Advert()
-
-			if not self.process_source(item.src, item):
-				continue
-
-			link = self.get_landing_link_from_item(item)
-			if not link:
-				item.landing = self.process_landing(item)
-			else:
-				item.landing = link
-
-			if not item.is_content:
-				return False
-
-			self.set_advert(advert, item)
-
-			adverts.append(advert)
-
-		return adverts
+		return self.imagesearcher.find_containers()
 
 
 	def get_landing_link_from_item(self, item, link=''):

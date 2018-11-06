@@ -1,6 +1,8 @@
 
 from src.item import Item
+from src.advert import Advert
 from src.utils.utils_requests import get_http_request
+from src.processor import Processor
 import numpy as np
 import uuid
 from src.utils.utils_strings import UtilsString
@@ -10,22 +12,28 @@ import asyncio
 import time
 from src.log import Log
 
-class ContainerExtractor:
+class ContainerProcessor(Processor):
 	"""
 	"""
 
-	def __init__(self, driver, config):
+	def __init__(self, driver, config, datasource):
+
+		super().__init__(driver, config, datasource)
 
 		self.log = Log()
 		self.driver = driver
 		self.config = config
 		self.http_bad_request = self.config['http_bad_request']
-		self.adservers = list(self.config['adservers'])
-		self.placements = list(self.config['placements'])
-		self.src_ignored_domains = self.config['src.ignored_domains']
-		self.src_ignored_subdomains = self.config['src.ignored_subdomains']
+		self.placements = datasource.datasource['placements']
+		self.adservers = datasource.datasource['adservers']
+		self.ignore_domain_and_path = datasource.datasource['ignore_domain_and_path']
+		self.ignore_domain = datasource.datasource['ignore_domain']
+		self.ignore_path = datasource.datasource['ignore_path']
 		self.src_ignored_landing = self.config['src.ignore.landing']
-		self.page_domain = UtilsString.get_domain(self.config.__getitem__('main_document'))
+
+		# page_domain
+
+		print(0)
 
 
 	def get_items(self, containers):
@@ -34,6 +42,9 @@ class ContainerExtractor:
 		:param containers: 
 		:return: items 
 		"""
+		if not containers.size:
+			return np.array([], dtype=np.object)
+
 
 		items = np.empty(len(containers), dtype=np.object)
 		for i, container in enumerate(containers):
@@ -44,12 +55,84 @@ class ContainerExtractor:
 		return items
 
 
-	def set_item(self, item, container):
+	def get_containers(self, page):
+		"""
+
+		:param page:
+		:return:
+		"""
+
+		return []
+
+
+	def set_item(self, item, container): # fill_item()
 		"""
 		Is overriding in:
 			IframeExtractor
 			ImageExtractor
 		"""
+		return False
+
+
+	def process(self, page):
+		"""
+
+
+		"""
+
+		containers = self.get_containers(page)
+
+		if len(containers) <= 0:
+			self.log.debug('No containers found')
+			return True
+
+
+		items = self.get_items(containers)
+
+
+		if not self.process_items(items, page):
+			return False
+
+		return True
+
+
+	def process_items(self, items, page):
+		"""
+
+		:param items:
+		:param page:
+		:return:
+		"""
+
+		for i, item in enumerate(items):
+
+			advert = Advert()
+			advert.url_id = self.page.url_id
+
+			# Check that source is valid
+			if not self.process_source(item, advert):
+				continue
+
+			# Process whether an advert has been seen in page already
+
+
+			# Process landing
+
+
+
+			page.adverts.append(advert)
+
+		return True
+
+
+	def process_source(self, item, source):
+		"""
+
+		:param item:
+		:param source:
+		:return:
+		"""
+
 		return False
 
 
@@ -73,56 +156,6 @@ class ContainerExtractor:
 
 		# For debugging purposes only:
 		self.log.debug(advert.__str__())
-
-
-	def process_source(self, src, item):
-		"""
-		This a generic method to process sources from Iframes & Images
-
-		"""
-
-		domain = UtilsString.get_domain(src)
-		if self.is_src_matching_invalid_pattern(src, domain):
-			return False
-
-
-		# Is a known placement
-		if UtilsString.match_placement(self.placements, item.size[0], item.size[1]):
-			item.is_known_placement = True
-
-
-		# Is a known ad server
-		if UtilsString.match_string_in_list(domain, self.adservers):
-			item.is_known_adserver = True
-
-
-		# Is page domain equal to source domain
-		if domain == self.page_domain:
-			item.is_page_domain = True
-
-
-		# If source domain is equal
-		if item.is_page_domain and not item.is_known_placement:
-			self.log.debug('Invalid source: is page domain ({}) and not a known placement '
-				   'source: ({})'.format(self.page_domain, src))
-			return False
-
-
-		if not item.is_known_placement and not item.is_known_adserver:
-			self.log.debug('Not known placement ({}), ({}) and not a known placement '
-				  'source: ({})'.format(item.size[0], item.size[1], src))
-			return False
-
-
-		source, finfo = self.process_stripped_source(src)
-		if not finfo:
-			return False
-
-		item.src = source
-		item.finfo = finfo
-		item.is_content = True
-
-		return True
 
 
 	def is_src_matching_invalid_pattern(self, src, domain):

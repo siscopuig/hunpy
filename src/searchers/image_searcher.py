@@ -8,8 +8,9 @@ class ImageSearcher(ContainerElement):
 	Search for images in main document
 	"""
 
-	def __init__(self, driver):
-		super().__init__(driver)
+	def __init__(self, driver, config):
+
+		super().__init__(driver, config)
 
 
 	def find_containers(self):

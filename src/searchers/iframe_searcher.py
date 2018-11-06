@@ -1,7 +1,6 @@
 from src.iframe import Iframe
 from src.containers.container_element import ContainerElement
 from src.searchers.image_searcher import ImageSearcher
-from src.image import Image
 from src.page import Page
 import numpy as np
 import hashlib
@@ -13,9 +12,9 @@ class FrameSearcher(ContainerElement):
 	Search and extract main document elements(iframes, images, etc...)
 	"""
 
-	def __init__(self, driver):
+	def __init__(self, driver, datasource):
 
-		ContainerElement.__init__(self, driver)
+		super().__init__(driver, datasource)
 
 		self.log = Log()
 
@@ -153,28 +152,6 @@ class FrameSearcher(ContainerElement):
 
 	def process_iframe_ref(self, iframe, element):
 		"""
-		setattr():
-			We use setattr to add an attribute to our class instance.
-			We pass the class instance, the attribute name, and the value.
-			With getattr we retrieve these values.
-
-		hashlib module - A common interface to many hash functions.
-
-		A hash is a small refactoring of data that destroys virtually all
-		of the information in the data. It is used to identify a revision
-		of the data and can be used later to see if the data has changed.
-		A good hash algorithm changes its output dramatically with even a
-		1 character change in the data.
-
-		md5():
-			This hash function accepts sequence of bytes and returns 128 bit
-			hash value, usually used to check data integrity but has security issues.
-
-			Functions associated:
-				encode() : Converts the string into bytes to be acceptable by hash function.
-				digest() : Returns the encoded data in byte format.
-				hexdigest() : Returns the encoded data in hexadecimal format.
-
 		"""
 
 		data = []

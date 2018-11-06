@@ -1,5 +1,5 @@
 
-from connector.mysql_connector import MysqlConn
+from src.connector.mysql_connector import MysqlConn
 from src.log import Log
 from src.hunpy_exception import HunpyException
 import numpy as np
@@ -8,7 +8,6 @@ class DataManager:
 	"""
 	"""
 
-	datasource = {}
 
 
 	def __init__(self):
@@ -16,6 +15,7 @@ class DataManager:
 		self.dbconn = MysqlConn()
 		self.log = Log()
 		self.urls = None
+		self.datasource = {}
 		self.placements = None
 		self.adservers = None
 		self.ignore_domain_path = None
@@ -24,12 +24,14 @@ class DataManager:
 
 
 
-	def set_urls(self):
+	def get_urls(self):
 
 		self.urls = self.dbconn.select_urls()
 
 		if not self.urls:
 			raise HunpyException('Error getting the urls from database')
+
+		return self.urls
 
 
 	def set_placements(self):
@@ -44,10 +46,10 @@ class DataManager:
 		for i, placement in enumerate(placements):
 			self.placements[i] = [placement[0], placement[1]]
 
-		self.__setitem__('placements', self.placements)
+		self.datasource['placements'] = self.placements
 
 
-	def set_adservers_domains(self, filepath):
+	def set_adservers(self, filepath):
 		"""
 
 		:return:
@@ -56,10 +58,7 @@ class DataManager:
 		filelines = self.read_file_in_lines(filepath)
 
 		# Create a numpy array to store the list
-		self.adservers = np.array(filelines, dtype=np.object)
-
-		# Set ad server list in data source
-		self.__setitem__('adservers', self.adservers)
+		self.datasource['adservers'] = np.array(filelines, dtype=np.object)
 
 
 	def set_ignore_domain_and_path(self, filepath):
@@ -71,7 +70,7 @@ class DataManager:
 		self.ignore_domain_path = np.array(filelines, dtype=np.object)
 
 		# Set ad server list in data source
-		self.__setitem__('ignore_domain_path', self.ignore_domain_path)
+		self.__setitem__('ignore_domain_and_path', self.ignore_domain_path)
 
 
 	def set_ignore_domain(self, filepath):
@@ -83,7 +82,7 @@ class DataManager:
 		self.ignore_domain = np.array(filelines, dtype=np.object)
 
 		# Set ad server list in data source
-		self.__setitem__('ignore_domain_path', self.ignore_domain_path)
+		self.__setitem__('ignore_domain', self.ignore_domain_path)
 
 
 	def set_ignore_path(self, filepath):
@@ -95,7 +94,7 @@ class DataManager:
 		self.ignore_path = np.array(filelines, dtype=np.object)
 
 		# Set ad server list in data source
-		self.__setitem__('ignore_domain_path', self.ignore_domain)
+		self.__setitem__('ignore_path', self.ignore_domain)
 
 
 
@@ -114,6 +113,7 @@ class DataManager:
 
 
 	def __setitem__(self, key, value):
+
 		"""
 
 		:param key:

@@ -1,12 +1,7 @@
-
-from connector.mysql_connector import MysqlConn
 from src.driver import Driver
 from src.page import Page
-from src.searchers.iframe_searcher import FrameSearcher
-from src.extractors.iframe_extractor import IframeExtractor
-from src.searchers.image_searcher import ImageSearcher
-from src.extractors.image_extractor import ImageExtractor
 from src.log import Log
+import importlib
 
 
 
@@ -17,23 +12,23 @@ class Handler:
 	-
 	"""
 
-	driver = None
-	page   = None
+	processors = None
 
 
-	def __init__(self, conf_data):
-		self.urls = conf_data['urls']
-		self.config = conf_data
-		self.conn = MysqlConn()
-		self.adverts = []
+	def __init__(self, config, datasource):
+
+
+		self.config = config
+		self.datasource = datasource
 		self.log = Log()
+		self.driver = None
+		self.page = None
 
 
 	def search(self):
-		
 
-		for url in self.urls:
 
+		for url in self.datasource.get_urls():
 
 			# For debugging purposes:
 			url = 'http://localhost:63342/hunpy/lab/html_templates/html_main_document.html'
@@ -43,92 +38,82 @@ class Handler:
 			# url = 'https://www.theguardian.com/uk'
 			#url = url[1]
 
-			# @todo: do not set an item in config. Change approach
-			self.config.__setitem__('main_document', url)
+			id = 1
 
-			self.manage_driver()
+			try:
 
-			self.process_page(url)
+				# Open a page instance
+				self.page = Page(id, url)
 
+				# Get driver instance
+				if self.driver is None:
+					self.driver = Driver()
+					self.log.debug('Chromedriver started')
 
+				# Open page
+				self.driver.start()
+				self.driver.open(url)
 
+				# Create processors (tuple)
+				self.processors = self.create_processors(self.driver, self.config, self.datasource)
 
-	def process_page(self, url):
-		"""
+				# Iterate processors (tuple)
+				for name, processor in self.processors.items():
+					processor.process_start(self.page)
 
-		:param url:
-		:return:
-		"""
-
-		self.driver.open(url, 1)
-
-		self.process_frames(self.driver, url)
-
-		self.process_images(self.driver)
-
-		self.store_in_database()
-
-
-	def process_frames(self, driver, url):
-		"""
-
-		:param driver:
-		:param url:
-		:return:
-		"""
-
-		page = Page(url)
-
-		containers = FrameSearcher(driver).find_containers(page)
+			except Exception as error:
+				print(error)
 
 
-		if not containers:
-			self.log.debug('No iframe containers found')
-			return False
 
-		frame_extractor = IframeExtractor(driver, self.config)
-		adverts = frame_extractor.iframes_extractor(containers)
+	def create_processors(self, driver, config, datasource):
 
-		if not adverts:
-			return False
+		module_names = ['iframe_processor', 'image_processor']
+		module_dir   = 'processors'
 
-		for advert in adverts:
-			page.adverts.append(advert)
+		objects = {}
+		for module_name in module_names:
+			cls = self.import_class(self.get_class_name(module_name), module_name, module_dir)
+			if cls:
+				objects[module_name] = cls(driver, config, datasource)
 
-
-	def process_images(self, driver):
-
-		image_searcher = ImageSearcher(driver)
-		containers = image_searcher.find_images()
-
-		if not containers:
-			self.log.debug('No image containers found in main document')
-			return False
-
-		image_extractor = ImageExtractor(driver, self.config)
-		adverts = image_extractor.images_extractor(containers)
-
-		if not adverts:
-			return False
-
-		for advert in adverts:
-			self.adverts.append(advert)
+		return objects
 
 
-	def store_in_database(self):
+	def get_processors(self):
 
-		for key, advert in enumerate(self.adverts):
-			self.conn.insert_advert(advert)
+		pass
 
 
-	def manage_driver(self):
+	def import_class(self, cls_name, module_name, module_dir):
 		"""
 
 		:return:
 		"""
-		if self.driver is None:
-			self.driver = Driver()
-			self.driver.start()
+		try:
+
+			module = importlib.import_module(module_dir + '.' + module_name)
+			return getattr(module, cls_name)
+		except Exception as error:
+			self.log.debug('Exception importing class: {}'.format(error))
+
+
+	def get_class_name(self, module_name, cls_name=''):
+		"""
+		Get class name by module name:
+		 - Split module name (iframe_processor -> ['iframe', 'processor']
+		 - Uppercase first character + string with first character removed
+		"""
+
+		for name_part in module_name.split('_'):
+			cls_name += ''.join([name_part[:1].upper() + name_part[1:]])
+
+		return cls_name
+
+
+
+
+
 
 
 

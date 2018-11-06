@@ -9,7 +9,7 @@ class ContainerElement:
 
 	"""
 
-	def __init__(self, driver):
+	def __init__(self, driver, config):
 		"""
 		:param driver:
 		"""

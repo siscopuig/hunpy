@@ -13,15 +13,15 @@ class Page(HtmlElement):
 		- adverts from iframes & images from main document
 	"""
 
-	def __init__(self, url):
+	def __init__(self, id, url):
 
 		HtmlElement.__init__(self)
+		
+		# Url id
+		self.url_id = id
 
-		# Url is the main source
+		# Url page is the main source
 		self.src = url
-
-
-
 
 		self.page_domain = UtilsString.get_domain(url)
 
