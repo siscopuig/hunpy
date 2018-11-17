@@ -13,19 +13,27 @@ class Page(HtmlElement):
 		- adverts from iframes & images from main document
 	"""
 
-	def __init__(self, id, url):
+	def __init__(self, driver, id, url):
 
 		HtmlElement.__init__(self)
 		
 		# Url id
 		self.url_id = id
 
+		# Url page from datasource
+		self.origin_url = url
+
+		# Current url
+		self.url = driver.get_current_url()
+
 		# Url page is the main source
 		self.src = url
 
+		# Main page domain
 		self.page_domain = UtilsString.get_domain(url)
 
-		self.main_window_handle = None
+		# Main window handle id
+		self.main_window_handle = driver.get_main_window_handle()
 
 		# Adverts candidates
 		self.adverts = []

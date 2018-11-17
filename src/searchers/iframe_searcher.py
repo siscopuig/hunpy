@@ -18,8 +18,6 @@ class FrameSearcher(ContainerElement):
 
 		self.log = Log()
 
-		self.driver = driver
-
 		self.attri_tags = np.array([
 			['id', 		self.txt_id],
 			['name', 	self.txt_name],
@@ -27,6 +25,8 @@ class FrameSearcher(ContainerElement):
 			['title', 	self.txt_title],
 			['style', 	self.txt_style]
 		])
+
+		self.is_switch_in_frame = None
 
 
 	def find_containers(self, page=None):
@@ -49,7 +49,10 @@ class FrameSearcher(ContainerElement):
 
 		elements = self.driver.find_elements_by_xpath(self.x_iframe)
 
+
+		# Loop over the elements
 		for element in elements:
+
 
 			iframe = Iframe(parent)
 
@@ -87,9 +90,8 @@ class FrameSearcher(ContainerElement):
 			iframes.append(iframe)
 
 
-			self.log.debug(iframe.__str__())
-
 		for i, iframe in enumerate(iframes):
+
 
 			result = self.switch_to_iframe(iframe)
 			if not result:
@@ -101,7 +103,9 @@ class FrameSearcher(ContainerElement):
 			# Recursive - it is calling itself
 			iframe.iframes = self.find_iframes(iframe)
 
-		self.driver.switch_to_main_document()
+		if self.is_switch_in_frame:
+			self.driver.switch_to_main_document()
+			self.log.info('Switched frame focus on main document on find_iframes()')
 
 		return iframes
 
@@ -110,8 +114,8 @@ class FrameSearcher(ContainerElement):
 	def find_images(self):
 		"""
 		"""
-		img = ImageSearcher(self.driver)
-		return img.find_images()
+		img = ImageSearcher(self.driver, self.config)
+		return img.find_containers()
 
 
 	def switch_to_iframe(self, iframe):
@@ -129,21 +133,43 @@ class FrameSearcher(ContainerElement):
 
 		# Switch to the main document.
 		self.driver.switch_to_main_document()
+		self.log.info('Switched frame focus on main document on switch_to_iframe()')
+		self.is_switch_in_frame = False
 
+		# Loop over the iframes starting from last element in list
 		for iframe in reversed(iframes):
+
 
 			element = self.driver.find_element_by_xpath(iframe.xpath)
 
 			if element:
 				if not self.driver.switch_to_iframe(element):
 					return False
+				else:
+
+					# For debugging purposes only:
+					self.is_switch_in_frame = True
+					if not isinstance(element, bool):
+						self.log.info('Switched into frame element id: {}'.format(element.id))
 
 			else:
+
 				element = self.find_element_by_hash(iframe.hashref)
 
+				# For debugging purposes only:
+				#if not isinstance(element, bool):
+				#	self.log.info('Frame element id: {} by hashref: {}'.format(element.id, iframe.hashref))
+
 				if element:
+
 					if not self.driver.switch_to_iframe(element):
+						#self.log.info('Could not switch into a frame by hashref element: {}'.format(iframe.hashref))
 						return False
+					else:
+						# For debugging purposes only:
+						self.is_switch_in_frame = True
+						if not isinstance(element, bool):
+							self.log.info('Switched into frame element id: {}'.format(element.id))
 				else:
 					return False
 

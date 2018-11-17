@@ -9,7 +9,6 @@ class Log:
 	# https://docs.python.org/3/library/logging.html
 	# https://docs.python.org/3/howto/logging-cookbook.html
 
-
 	# Formatter
 	# '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 

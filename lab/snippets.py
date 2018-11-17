@@ -27,3 +27,32 @@ classname = ''.join([name_part[:1].upper() + name_part[1:] for name_part in modu
 # Output:	BodyProcessor
 
 ########################################################################################################
+
+tuples = ((1,), (2,), (3,))
+
+# Convert tuple of tuples into list(array) using list comprehension
+array = [x for y in tuples for x in y]
+
+# Without list comprehension
+array1 = []
+for x in tuples:
+	for y in x:
+		array1.append(y)
+
+print(0)
+
+########################################################################################################
+
+sep = "\n" * 3
+print(sep + '')
+
+uid = (('1d0f473a-ac13-4b7f-b60b-fd12442f8910',),)
+
+foo2 = [x for y in uid for x in y]
+
+print(foo2[0])
+
+
+
+
+

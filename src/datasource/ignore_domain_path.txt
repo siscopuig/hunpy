@@ -19,7 +19,6 @@ multisync.html
 www.financialobserver.com.au
 images
 u.openx.net
-w
 '1.0'
 pd
 wp.com
@@ -40,7 +39,6 @@ js.driftt.com
 dist
 indexprod.html
 aaxeu.amazonadsystem.com
-e
 dtb
 impi
 youtube.com
@@ -77,7 +75,6 @@ um
 cs
 global.fncstatic.com
 static
-v
 all
 html
 markets
@@ -88,11 +85,9 @@ um.ashx
 ib.3lift.com
 userSync.html
 connexity.net
-c
 cse
 imagesna.sslimagesamazon.com
 images
-G
 01
 ape
 sf

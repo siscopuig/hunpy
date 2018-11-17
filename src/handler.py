@@ -27,32 +27,35 @@ class Handler:
 
 	def search(self):
 
+		urls = self.datasource.get_urls()
 
-		for url in self.datasource.get_urls():
+		for url in urls:
 
 			# For debugging purposes:
-			url = 'http://localhost:63342/hunpy/lab/html_templates/html_main_document.html'
+			# url = 'http://localhost:63342/hunpy/lab/html_templates/html_main_document.html'
+			# url_id = 1
+
 			# url = 'https://www.trustnet.com/'
-			#url = 'http://www.ftadviser.com/'
+			# url = 'http://www.ftadviser.com/'
 			# url = 'http://www.europeanpensions.net/ep/index.php'
 			# url = 'https://www.theguardian.com/uk'
-			#url = url[1]
 
-			id = 1
+
+			url_id = url[0]
+			url = url[1]
 
 			try:
-
-				# Open a page instance
-				self.page = Page(id, url)
 
 				# Get driver instance
 				if self.driver is None:
 					self.driver = Driver()
-					self.log.debug('Chromedriver started')
+					self.log.info('Chromedriver started')
+					self.driver.start()
 
-				# Open page
-				self.driver.start()
 				self.driver.open(url)
+
+				# Open a page instance
+				self.page = Page(self.driver, url_id, url)
 
 				# Create processors (tuple)
 				self.processors = self.create_processors(self.driver, self.config, self.datasource)
@@ -61,14 +64,26 @@ class Handler:
 				for name, processor in self.processors.items():
 					processor.process_start(self.page)
 
+				#print(self.page.adverts)
+
 			except Exception as error:
 				print(error)
+				#self.log.error(error)
+				self.driver.close()
+				self.driver = None
 
 
 
 	def create_processors(self, driver, config, datasource):
+		"""
 
-		module_names = ['iframe_processor', 'image_processor']
+		:param driver:
+		:param config:
+		:param datasource:
+		:return:
+		"""
+
+		module_names = ['image_processor', 'iframe_processor', 'storage_processor']
 		module_dir   = 'processors'
 
 		objects = {}
@@ -79,10 +94,6 @@ class Handler:
 
 		return objects
 
-
-	def get_processors(self):
-
-		pass
 
 
 	def import_class(self, cls_name, module_name, module_dir):
@@ -111,18 +122,9 @@ class Handler:
 		return cls_name
 
 
-
-
-
-
-
-
-
-
-
-
 #################################
 # try:
+
 # 	self.driver.open(url, 4)
 # 	height = self.driver.driver.execute_script("return document.body.parentNode.scrollHeight")
 # 	self.driver.driver.set_window_size(1366, height)

@@ -17,6 +17,8 @@ class Item:
 		self.is_known_placement = None
 		self.is_known_adserver = None
 		self.is_page_domain = None
+		self.is_advertiser_missing = True
+		self.instance = {}
 
 
 		self.iframe_srcs = []

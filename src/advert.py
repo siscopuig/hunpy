@@ -1,4 +1,10 @@
 
+from enum import Enum
+
+class AdvertState(Enum):
+
+	NEW = 0
+	EXISTING = 1
 
 
 class Advert:
@@ -15,6 +21,9 @@ class Advert:
 		self.finfo = None
 		self.datetime = None
 		self.is_iframe = None
+		self.location = None
+		self.instances = 1
+		self.state = AdvertState.NEW
 
 
 	def __str__(self):
@@ -33,6 +42,7 @@ class Advert:
 			'{t} finfo:	      {finfo}\n'
 			'{t} datetime:    {datetime}\n'
 			'{t} is iframe:   {is_iframe}\n'
+
 		).format(
 			uid=self.uid,
 			src=self.src,

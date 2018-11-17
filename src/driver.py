@@ -14,7 +14,7 @@ from selenium.webdriver.chrome.options import Options
 import time
 import io
 from PIL import Image
-# from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.keys import Keys
 
 
 
@@ -352,10 +352,10 @@ class Driver:
 			return None
 
 		# This method can open more than one tab
-		#ActionChains(self.get_driver()).move_to_element(element).send_keys \
-		#	(Keys.CONTROL + Keys.SHIFT).click().perform()
+		ActionChains(self.get_driver()).move_to_element(element).send_keys \
+			(Keys.CONTROL + Keys.SHIFT).click().perform()
 
-		ActionChains(self.get_driver()).move_to_element(element).click().perform()
+		#ActionChains(self.get_driver()).move_to_element(element).click().perform()
 
 		time.sleep(2)
 
@@ -369,6 +369,15 @@ class Driver:
 		:return:
 		"""
 		return self.get_driver().window_handles
+
+
+	def get_main_window_handle(self):
+		"""
+
+		:return: 'CDwindow-552D2F0FD1B1B6C1B5FECCDE486232A7'
+		"""
+
+		return self.get_driver().window_handles[0]
 
 
 	@ewe
@@ -414,22 +423,16 @@ class Driver:
 
 
 	@ewe
-	def close_window_except_main(self):
+	def close_window_except_main(self, windows):
 		"""
 		Close all tabs opened except (0)
 
 		:return: None
 		"""
-
-		# Get windows instances
-		windows = self.get_window_handle()
-
-
 		for i, window in enumerate(windows):
 			if i != 0:
 				self.switch_to_window(window)
 				self.close()
-		self.switch_to_window(windows[0])
 
 
 	@ewe

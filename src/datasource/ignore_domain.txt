@@ -33,3 +33,4 @@ googleads.g.doubleclick.net
 youtube.com
 ad.doubleclick.net
 localhost:63342
+adclick.g.doubleclick.net

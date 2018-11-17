@@ -8,9 +8,9 @@ pagead2.googlesyndication.com
 assets.rubiconproject.com
 cdn.atlassbx.com
 img.cdns.turn.com
-speed.pointroll
+speed.pointrollf
 cdn.w55c.net
-www.wsoddata.com
+wsoddata.com
 ab167334.adbutler-exciton.com
 s1.adform.net
 cdn.ctnsnet.com

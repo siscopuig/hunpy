@@ -9,11 +9,7 @@ plugins
 _Incapsula_Resource
 wp-content
 uploads
-uploads
-images
 items
-img
-lib
 icon
 imglib
 watc
@@ -33,3 +29,4 @@ chart
 charts
 article
 articles
+safeframe

@@ -1,10 +1,16 @@
 
 
+connection.parameters:
+  'user': 'root'
+  'password': 'pupahit66'
+  'host': 'localhost'
+  'database': 'hunpy'
+
 datasource.relative.paths:
-  adservers:            /home/sisco/PycharmProjects/hunpy/datasource/adserver_domain_list.txt
-  ignore.domain.path:   /home/sisco/PycharmProjects/hunpy/datasource/source_ignore_domain_and_path.txt
-  ignore.domain:        /home/sisco/PycharmProjects/hunpy/datasource/source_ignored_domains.txt
-  ignore.path:          /home/sisco/PycharmProjects/hunpy/datasource/source_ignore_path.txt
+  adservers:            /home/sisco/PycharmProjects/hunpy/datasource/adservers.txt
+  ignore.domain.path:   /home/sisco/PycharmProjects/hunpy/datasource/ignore_domain_path.txt
+  ignore.domain:        /home/sisco/PycharmProjects/hunpy/datasource/ignore_domain.txt
+  ignore.path:          /home/sisco/PycharmProjects/hunpy/datasource/ignore_path.txt
 
 
 format.datetime:

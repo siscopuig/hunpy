@@ -20,18 +20,16 @@ class IframeProcessor(ContainerProcessor):
 		self.log = Log()
 
 		
-		
 	def process_source(self, item, advert):
 		"""
 		Process iframes & images inside
 		"""
 
-		# Function to process iframes sources
-		if not self.process_frame_sources(item) and \
-				not self.process_image_sources(item):
+		if not self.process_frame_sources(item, advert) and \
+				not self.process_image_sources(item, advert):
 			return False
 
-		self.set_advert(advert, item)
+		return True
 
 
 	def get_containers(self, page):
@@ -43,49 +41,51 @@ class IframeProcessor(ContainerProcessor):
 		return self.framesearcher.find_containers(page)
 
 
-	def process_frame_sources(self, item):
+	def process_frame_sources(self, item, advert):
 		"""
 
 		:param item:
+		:param advert:
 		:return:
 		"""
+
 
 		for i, src in enumerate(item.iframe_srcs):
 
 
-
 			domain = UtilsString.get_domain(src)
 			if self.is_src_matching_invalid_pattern(src, domain):
-				return False
+				continue
 
 			# Is a known placement
-			if UtilsString.match_placement(self.placements, item.size[0], item.size[1]):
+			if self.datasource.match_placement(item.size[0], item.size[1]):
 				item.is_known_placement = True
 
 			# Is a known ad server
-			if UtilsString.match_string_in_list(domain, self.adservers):
+			if UtilsString.match_string_in_list(domain, self.datasource.get_adservers(), 'adservers'):
 				item.is_known_adserver = True
 
+
 			# Is page domain equal to source domain
-			#if domain == self.page_domain:
-			#	item.is_page_domain = True
+			if domain == self.page.page_domain:
+				item.is_page_domain = True
+
 
 			# If source domain is equal
-			#if item.is_page_domain and not item.is_known_placement:
-			#	self.log.debug('Invalid source: is page domain ({}) and not a known placement '
-			#				   'source: ({})'.format(self.page_domain, src))
-			#	return False
+			if item.is_page_domain and not item.is_known_placement:
+				self.log.debug('Invalid source: is page domain ({}) and not a known placement source: ({})'.format(self.page.page_domain, src))
+				continue
+
 
 			if not item.is_known_placement and not item.is_known_adserver:
-				self.log.debug('Not known placement ({}), ({}) and not a known placement '
-							   'source: ({})'.format(item.size[0], item.size[1], src))
-				return False
+				self.log.debug('Not known placement ({}), ({}) and not a known placement source: ({})'.format(item.size[0], item.size[1], src))
+				continue
 
 			source, finfo = self.process_stripped_source(src)
 			if not finfo:
-				return False
+				continue
 
-			item.src = source
+			advert.src = source
 			item.finfo = finfo
 			item.is_content = True
 			return True
@@ -93,49 +93,48 @@ class IframeProcessor(ContainerProcessor):
 		return False
 
 
-	def process_image_sources(self, item):
-		"""
+	def process_image_sources(self, item, advert):
 
-		:param item:
-		:return:
-		"""
 
-		for i, src in enumerate(item.image_srcs):
+		for i, src in enumerate(item.img_srcs):
+
 
 			domain = UtilsString.get_domain(src)
 			if self.is_src_matching_invalid_pattern(src, domain):
-				return False
+				continue
 
 			# Is a known placement
-			if UtilsString.match_placement(self.placements, item.size[0], item.size[1]):
+			if self.datasource.match_placement(item.size[0], item.size[1]):
 				item.is_known_placement = True
 
 			# Is a known ad server
-			if UtilsString.match_string_in_list(domain, self.adservers):
+			if UtilsString.match_string_in_list(domain, self.datasource.get_adservers(), 'adservers'):
 				item.is_known_adserver = True
 
 			# Is page domain equal to source domain
-			if domain == self.page_domain:
+			if domain == self.page.page_domain:
 				item.is_page_domain = True
 
 			# If source domain is equal
 			if item.is_page_domain and not item.is_known_placement:
-				self.log.debug('Invalid source: is page domain ({}) and not a known placement '
-							   'source: ({})'.format(self.page_domain, src))
-				return False
+				self.log.debug('Invalid source: is page domain ({}) and not a known placement source: ({})'
+							   .format(self.page.page_domain, src))
+				continue
 
 			if not item.is_known_placement and not item.is_known_adserver:
-				self.log.debug('Not known placement ({}), ({}) and not a known placement '
-							   'source: ({})'.format(item.size[0], item.size[1], src))
-				return False
+				self.log.debug('Not known placement ({}), ({}) and not a known placement source: ({})'
+							   .format(item.size[0], item.size[1], src))
+				continue
 
 			source, finfo = self.process_stripped_source(src)
 			if not finfo:
-				return False
+				continue
 
-			item.src = source
+			advert.src = source
+			#item.src = source
 			item.finfo = finfo
 			item.is_content = True
+
 			return True
 
 		return False

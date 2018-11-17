@@ -11,5 +11,4 @@ class UtilsDate:
 
 		:return:
 		"""
-		date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-		return date
+		return datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
