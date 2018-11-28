@@ -19,7 +19,6 @@ class Config:
 		for path in file_paths:
 
 			try:
-
 				with open(get_abs_path(path), 'r') as yml_file:
 					self.fill(yaml.load(yml_file))
 
@@ -27,14 +26,7 @@ class Config:
 				self.log.critical('Error loading yaml config file: {}'.format(ex))
 
 
-
-
 	def fill(self, yml_file):
 
 		for key, value in yml_file.items():
 			self.data[key] = value
-
-
-
-
-

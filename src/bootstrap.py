@@ -5,35 +5,23 @@ from handler import Handler
 from connector.mysql_connector import MysqlConn
 import sys
 
+
 config_yml_file_path = [
-	'config/hunpy.yml',
+	'/home/sisco/PycharmProjects/hunpy/config/hunpy.yml',
 ]
 
 
 datasource_paths = {
-	"adservers": 		  "datasource/adservers.txt",
-	"ignore_domain_path": "datasource/ignore_domain_path.txt",
-	"ignore_domain": 	  "datasource/ignore_domain.txt",
-	"ignore_path": 		  "datasource/ignore_path.txt"
+	"adservers": 		  "/home/sisco/PycharmProjects/hunpy/datasource/adservers.txt",
+	"ignore_domain_path": "/home/sisco/PycharmProjects/hunpy/datasource/ignore_domain_path.txt",
+	"ignore_domain": 	  "/home/sisco/PycharmProjects/hunpy/datasource/ignore_domain.txt",
+	"ignore_path": 		  "/home/sisco/PycharmProjects/hunpy/datasource/ignore_path.txt"
 }
 
 
 
 class Bootstrap:
 
-	# @todo:
-	# - In theory this class will start the program and handle
-	# 	all the configuration needed to run.
-
-
-	"""
-	config_file_path	=
-
-	adservers 			= /home/sisco/PycharmProjects/hunpy/datasource/adservers.txt
-	ignore_domain_path 	= '/home/sisco/PycharmProjects/hunpy/datasource/ignore_domain_path.txt'
-	ignore_domain		= '/home/sisco/PycharmProjects/hunpy/datasource/ignore_domain.txt'
-	ignore_path		   	= '/home/sisco/PycharmProjects/hunpy/datasource/ignore_path.txt'
-	"""
 
 	def __init__(self):
 
@@ -41,7 +29,6 @@ class Bootstrap:
 		self.log = Log()
 		self.log.open()
 		self.log.info('Hunpy started')
-
 
 
 	def start(self):
