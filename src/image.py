@@ -1,5 +1,4 @@
-
-from src.containers.container_image import ImageContainer
+from containers.container_image import ImageContainer
 
 
 class Image(ImageContainer):

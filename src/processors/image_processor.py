@@ -1,7 +1,7 @@
-from src.processors.container_processor import ContainerProcessor
-from src.searchers.image_searcher import ImageSearcher
-from src.utils.utils_strings import UtilsString
-from src.log import Log
+from processors.container_processor import ContainerProcessor
+from searchers.image_searcher import ImageSearcher
+from utils.utils_strings import UtilsString
+from log import Log
 
 
 

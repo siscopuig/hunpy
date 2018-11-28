@@ -1,7 +1,7 @@
-from src.driver import Driver
-from src.page import Page
-from src.log import Log
-from src.utils.utils_date import UtilsDate
+from driver import Driver
+from page import Page
+from log import Log
+from utils.utils_date import UtilsDate
 import importlib
 import traceback
 import subprocess

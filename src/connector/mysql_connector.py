@@ -1,6 +1,6 @@
 import pymysql.cursors
 from pymysql import MySQLError
-from src.log import Log
+from log import Log
 
 # https://pymysql.readthedocs.io/en/latest/index.html
 # https://pymysql.readthedocs.io/en/latest/user/examples.html

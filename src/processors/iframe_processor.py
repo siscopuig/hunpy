@@ -1,8 +1,8 @@
-from src.processors.container_processor import ContainerProcessor
+from processors.container_processor import ContainerProcessor
 from ordered_set import OrderedSet
-from src.utils.utils_strings import UtilsString
-from src.log import Log
-from src.searchers.iframe_searcher import FrameSearcher
+from utils.utils_strings import UtilsString
+from log import Log
+from searchers.iframe_searcher import FrameSearcher
 
 
 class IframeProcessor(ContainerProcessor):

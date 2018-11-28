@@ -9,9 +9,6 @@ class ImageContainer:
 		self.size = (-1, -1)
 		self.location = (-1, -1)
 
-		# self.xpath = None
-		# self.hashref = None
-
 
 	def __str__(self):
 

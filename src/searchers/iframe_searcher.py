@@ -1,10 +1,10 @@
-from src.iframe import Iframe
-from src.containers.container_element import ContainerElement
-from src.searchers.image_searcher import ImageSearcher
-from src.page import Page
+from iframe import Iframe
+from containers.container_element import ContainerElement
+from searchers.image_searcher import ImageSearcher
+from page import Page
 import numpy as np
 import hashlib
-from src.log import Log
+from log import Log
 
 
 class FrameSearcher(ContainerElement):

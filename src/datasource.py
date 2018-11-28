@@ -1,8 +1,7 @@
-
-from src.log import Log
-from src.hunpy_exception import HunpyException
-from src.utils.utils_files import get_abs_path
-from src.utils.utils_strings import UtilsString
+from log import Log
+from hunpy_exception import HunpyException
+from utils.utils_files import get_abs_path
+from utils.utils_strings import UtilsString
 import numpy as np
 
 class Datasource:

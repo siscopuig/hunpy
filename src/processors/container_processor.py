@@ -1,16 +1,16 @@
 
-from src.item import Item
-from src.advert import Advert, AdvertState
-from src.utils.utils_requests import get_http_request
-from src.processor import Processor
+from item import Item
+from advert import Advert, AdvertState
+from utils.utils_requests import get_http_request
+from processor import Processor
 import numpy as np
 import uuid
-from src.utils.utils_strings import UtilsString
-from src.utils.utils_requests import process_http_requests
-from src.utils.utils_url import encode_url
+from utils.utils_strings import UtilsString
+from utils.utils_requests import process_http_requests
+from utils.utils_url import encode_url
 import asyncio
 import time
-from src.log import Log
+from log import Log
 
 
 

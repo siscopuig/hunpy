@@ -1,5 +1,4 @@
 from os import path, makedirs
-from pathlib import Path
 
 
 def create_directory(abs_filepath):

@@ -1,6 +1,6 @@
 
-from src.html_element import HtmlElement
-from src.utils.utils_strings import UtilsString
+from html_element import HtmlElement
+from utils.utils_strings import UtilsString
 
 
 class Page(HtmlElement):

@@ -1,5 +1,4 @@
-
-from src.html_element import HtmlElement
+from html_element import HtmlElement
 
 
 class Iframe(HtmlElement):

@@ -1,5 +1,5 @@
-from src.processor import Processor
-from src.utils.utils_date import UtilsDate
+from processor import Processor
+from utils.utils_date import UtilsDate
 
 
 

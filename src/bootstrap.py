@@ -1,8 +1,8 @@
-from src.log import Log
-from src.config import Config
-from src.datasource import Datasource
-from src.handler import Handler
-from src.connector.mysql_connector import MysqlConn
+from log import Log
+from config import Config
+from datasource import Datasource
+from handler import Handler
+from connector.mysql_connector import MysqlConn
 import sys
 
 config_yml_file_path = [

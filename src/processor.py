@@ -1,4 +1,4 @@
-from src.log import Log
+from log import Log
 import time
 
 class Processor:

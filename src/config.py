@@ -1,6 +1,6 @@
-from src.utils.utils_files import get_abs_path
+from log import Log
+from utils.utils_files import get_abs_path
 import yaml
-from src.log import Log
 
 
 class Config:

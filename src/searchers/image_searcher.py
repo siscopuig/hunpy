@@ -1,5 +1,5 @@
-from src.containers.container_element import ContainerElement
-from src.image import Image
+from containers.container_element import ContainerElement
+from image import Image
 import numpy as np
 
 
