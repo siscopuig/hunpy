@@ -12,6 +12,7 @@ class Advert:
 
 	def __init__(self):
 
+		self.id = None
 		self.uid = None
 		self.src = None
 		self.width = None
@@ -20,10 +21,11 @@ class Advert:
 		self.landing = None
 		self.finfo = None
 		self.datetime = None
-		self.is_iframe = None
 		self.location = None
+		self.state = None
+		self.isframe = 0
 		self.instances = 1
-		self.state = AdvertState.NEW
+
 
 
 	def __str__(self):
@@ -41,7 +43,7 @@ class Advert:
 			'{t} landing: 	  {landing}\n'
 			'{t} finfo:	      {finfo}\n'
 			'{t} datetime:    {datetime}\n'
-			'{t} is iframe:   {is_iframe}\n'
+			'{t} is frame:    {isframe}\n'
 
 		).format(
 			uid=self.uid,
@@ -52,7 +54,7 @@ class Advert:
 			landing=self.landing,
 			finfo=self.finfo,
 			datetime=self.datetime,
-			is_iframe=self.is_iframe, t=tab)
+			is_iframe=self.isframe, t=tab)
 
 		return string
 

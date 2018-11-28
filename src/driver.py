@@ -1,15 +1,9 @@
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
+import selenium.common.exceptions as sce
 from selenium.webdriver.support import expected_conditions as expect_cond
-from selenium.common.exceptions import WebDriverException
 from selenium.common.exceptions import TimeoutException
-from selenium.common.exceptions import NoSuchWindowException
-from selenium.common.exceptions import NoSuchFrameException
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import NoSuchAttributeException
-from selenium.common.exceptions import StaleElementReferenceException
-from selenium.common.exceptions import ElementNotVisibleException
 from selenium.webdriver.chrome.options import Options
 import time
 import io
@@ -17,97 +11,110 @@ from PIL import Image
 from selenium.webdriver.common.keys import Keys
 
 
-
-
-def ewe(func):
+def ewe(none_result=True, common_exception_result=False):
 	"""
 	Execute without exceptions
 	"""
 
-	def wrapper(self, *args, **kwargs):
+	def action(func):
 		"""
-		Some functions do not return anything unless is an exception.
-		We could assume that if None is True. E.g. switch_to_frame()
 
-		:param self:
-		:param args:
-		:param kwargs:
-		:return:
+		:param func:
+		:return: wrapper function
 		"""
-		try:
-
-			#print('Driver::{}'.format(func))
-			result = func(self, *args, **kwargs)
-
-			# switch_to_element() -> returns None if switched, otherwise throws
-
-			if result is None:
-				return True
-			else:
-				return result
-
-		# Timeout! what can do with this?
-		except TimeoutException as e:
-			#print('Exception: {} Executed function::{}'.format(e.msg, func))
-			return False
-
-		except NoSuchWindowException as e:
-			#print('Exception: {} Executed function::{}'.format(e.msg, func))
-			return False
-
-		except NoSuchFrameException as e:
-			#print('Exception: {} Executed function::{}'.format(e.msg, func))
-			return False
-
-		# Thrown when element could not be found.
-		except NoSuchElementException as e:
-			#print('Exception: {} Executed function::{}'.format(e.msg, func))
-			return False
-
-		# Thrown when the attribute of element could not be found.
-		except NoSuchAttributeException as e:
-			#print('Exception: {} Executed function::{}'.format(e.msg, func))
-			return False
-
-		# Stale means the element no longer appears on the DOM of the page.
-		except StaleElementReferenceException as e:
-			#print('Exception: {} Executed function::{}'.format(e.msg, func))
-			return False
-
-		# Thrown when an element is present on the DOM, but
-		# it is not visible, and so is not able to be interacted with.
-		except ElementNotVisibleException as e:
-			#print('Exception: {} Executed function::{}'.format(e.msg, func))
-			return False
-
-		# For debugging purposes:
-		except WebDriverException as e:
-			print(e)
 
 
-	return wrapper
+		def wrapper(self, *args, **kwargs):
+			"""
+			Some functions do not return anything unless is an exception.
+			We could assume that if None is True. E.g. switch_to_frame()
+
+			:param self:
+			:param args:
+			:param kwargs:
+			:return:
+			"""
+			try:
+
+				# print(func)
+				result = func(self, *args, **kwargs)
+
+				if result is None:
+					return none_result
+				else:
+					return result
+
+			except sce.NoSuchElementException:
+				return common_exception_result
+
+			except TimeoutException as e:
+				raise TimeoutException(e)
+
+			except self.common_exceptions:
+				return common_exception_result
+
+		return wrapper
+
+	return action
 
 
 
 class Driver:
 
+	common_exceptions = (
+
+		# Thrown when window target to be switched doesn't exist.
+		sce.NoSuchWindowException,
+
+		# Thrown when frame target to be switched doesn't exist.
+		sce.NoSuchFrameException,
+
+		# Thrown when the attribute of element could not be found.
+		sce.NoSuchAttributeException,
+
+		# Stale means the element no longer appears on the DOM of the page.
+		sce.StaleElementReferenceException,
+
+		# Thrown when an element is present on the DOM, but
+		# it is not visible, and so is not able to be interacted with.
+		sce.ElementNotVisibleException,
+
+		# Thrown when an element is present in the DOM but interactions
+		# with that element will hit another element do to paint order
+		sce.ElementNotInteractableException,
+
+		# Thrown when the selector which is used to find an element does not return
+		# a WebElement. Currently this only happens when the selector is an xpath
+		# expression and it is either syntactically invalid (i.e. it is not a
+		# xpath expression) or the expression does not select WebElements
+		# (e.g. "count(//input)").
+		sce.InvalidSelectorException,
+
+		# Thrown when frame or window target to be switched doesn't exist.
+		sce.InvalidSwitchToTargetException,
+
+		# Thrown when the target provided to the `ActionsChains` move()
+		# method is invalid, i.e. out of document.
+		sce.MoveTargetOutOfBoundsException,
+
+	)
+
 
 	def __init__(self):
+
 		self.driver = None
 		self.chrome_options = None
 
 
-	@ewe
+
 	def start(self):
 		"""
-
 		:return:
 		"""
-
 		self.set_chrome_options()
 		self.driver = webdriver.Chrome(chrome_options=self.chrome_options)
-		self.driver.set_window_size(1366, 768)
-		self.driver.set_page_load_timeout(10)
+		self.driver.set_window_size(1440, 990)
+		self.driver.set_page_load_timeout(30)
 		self.driver.implicitly_wait(0)
 		#self.driver.maximize_window()
 
@@ -141,7 +148,7 @@ class Driver:
 		# 	#'--disable-gpu',
 		# )
 
-	@ewe
+	@ewe()
 	def get_driver(self):
 		"""
 
@@ -160,7 +167,7 @@ class Driver:
 		self.driver = None
 
 
-	@ewe
+	@ewe()
 	def open(self, url, wait=None):
 		"""
 
@@ -182,7 +189,7 @@ class Driver:
 		self.driver.quit()
 
 
-	@ewe
+	@ewe([], [])
 	def find_elements_by_xpath(self, xpath):
 		"""
 
@@ -192,7 +199,7 @@ class Driver:
 		return self.get_driver().find_elements_by_xpath(xpath)
 
 
-	@ewe
+	@ewe(None, None)
 	def find_element_by_xpath(self, xpath):
 		"""
 
@@ -202,7 +209,7 @@ class Driver:
 		return self.get_driver().find_element_by_xpath(xpath)
 
 
-	@ewe
+	@ewe()
 	def find_element_parent_by_child(self, child_element, xpath):
 		"""
 
@@ -214,7 +221,7 @@ class Driver:
 
 
 
-	@ewe
+	@ewe('', '')
 	def get_element_size(self, element):
 		"""
 
@@ -224,7 +231,7 @@ class Driver:
 		return element.size['width'], element.size['height']
 
 
-	@ewe
+	@ewe('', '')
 	def get_element_location(self, element):
 		"""
 
@@ -234,7 +241,7 @@ class Driver:
 		return element.location['x'], element.location['y']
 
 
-	@ewe
+	@ewe('', '')
 	def get_element_attribute(self, element, attr):
 		"""
 
@@ -243,12 +250,7 @@ class Driver:
 		:return:
 		"""
 
-		# val = element.get_attribute(attr)
-		# if val is None:
-		# 	return ''
-		# return val
-
-		return element.get_attribute(attr) or ''
+		return element.get_attribute(attr)
 
 
 	@ewe
@@ -260,7 +262,7 @@ class Driver:
 		self.driver.close()
 
 
-	@ewe
+	@ewe()
 	def get_window_size(self):
 		"""
 
@@ -269,7 +271,7 @@ class Driver:
 		return self.driver.get_window_size()
 
 
-	@ewe
+	@ewe()
 	def switch_to_main_document(self):
 		"""
 
@@ -278,7 +280,7 @@ class Driver:
 		self.get_driver().switch_to.default_content()
 
 
-	@ewe
+	@ewe()
 	def switch_to_iframe(self, element):
 		"""
 
@@ -288,7 +290,7 @@ class Driver:
 		self.get_driver().switch_to.frame(element)
 
 
-	@ewe
+	@ewe(None, None)
 	def find_child_element_by_xpath(self, xpath, parent_element):
 		"""
 
@@ -296,11 +298,10 @@ class Driver:
 		:param parent_element:
 		:return:
 		"""
-		result = parent_element.find_element_by_xpath(xpath)
-		return result
+		return parent_element.find_element_by_xpath(xpath)
 
 
-	@ewe
+	@ewe()
 	def is_element_displayed(self, element):
 		"""
 		Whether the element is visible to a user
@@ -324,7 +325,7 @@ class Driver:
 			(expect_cond.visibility_of_element_located(self.get_driver().find_element_by_xpath(xpath)))
 
 
-	@ewe
+	@ewe()
 	def wait_for_element_visibility(self, element):
 		"""
 
@@ -334,7 +335,7 @@ class Driver:
 		return WebDriverWait(self.get_driver(), 2, 0.2).until(expect_cond.visibility_of(element))
 
 
-	@ewe
+	@ewe()
 	def click_on_element(self, element):
 		"""
 		On chrome, pressing the middle button of the mouse links are forced
@@ -352,17 +353,18 @@ class Driver:
 			return None
 
 		# This method can open more than one tab
-		ActionChains(self.get_driver()).move_to_element(element).send_keys \
-			(Keys.CONTROL + Keys.SHIFT).click().perform()
+		#ActionChains(self.get_driver()).move_to_element(element).send_keys \
+		#	(Keys.CONTROL + Keys.SHIFT).click().perform()
 
-		#ActionChains(self.get_driver()).move_to_element(element).click().perform()
+		# This method clicks on element(it might skipped clicking on light-boxes)
+		ActionChains(self.get_driver()).move_to_element(element).click().perform()
 
 		time.sleep(2)
 
 
 
 
-	@ewe
+	@ewe([], [])
 	def get_window_handle(self):
 		"""
 		Returns the handles of all windows within the current session.
@@ -371,6 +373,7 @@ class Driver:
 		return self.get_driver().window_handles
 
 
+	@ewe('', '')
 	def get_main_window_handle(self):
 		"""
 
@@ -380,7 +383,7 @@ class Driver:
 		return self.get_driver().window_handles[0]
 
 
-	@ewe
+	@ewe()
 	def switch_to_window(self, window_name):
 		"""
 
@@ -405,6 +408,7 @@ class Driver:
 		# 	.send_keys('t').perform()
 		pass
 
+
 	@ewe
 	def execute_script(self, script):
 		"""
@@ -422,7 +426,7 @@ class Driver:
 		self.get_driver().save_screenshot(filename)
 
 
-	@ewe
+	@ewe()
 	def close_window_except_main(self, windows):
 		"""
 		Close all tabs opened except (0)
@@ -435,7 +439,7 @@ class Driver:
 				self.close()
 
 
-	@ewe
+	@ewe('', '')
 	def get_current_url(self):
 		"""
 		Get current url from windows in focus
@@ -443,6 +447,7 @@ class Driver:
 		:return: current url
 		"""
 		return self.get_driver().current_url
+
 
 
 	def get_screenshot_element(self):

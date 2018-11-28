@@ -19,17 +19,6 @@ class IframeProcessor(ContainerProcessor):
 
 		self.log = Log()
 
-		
-	def process_source(self, item, advert):
-		"""
-		Process iframes & images inside
-		"""
-
-		if not self.process_frame_sources(item, advert) and \
-				not self.process_image_sources(item, advert):
-			return False
-
-		return True
 
 
 	def get_containers(self, page):
@@ -41,13 +30,31 @@ class IframeProcessor(ContainerProcessor):
 		return self.framesearcher.find_containers(page)
 
 
-	def process_frame_sources(self, item, advert):
+		
+	def process_source(self, item, advert):
+		"""
+		Process iframes & images inside
+		"""
+
+		if not self.process_frame_sources(item) and not \
+				self.process_image_sources(item):
+			return False
+
+		self.set_advert(advert, item)
+
+		return True
+
+
+
+	def process_frame_sources(self, item):
 		"""
 
 		:param item:
-		:param advert:
 		:return:
 		"""
+
+		# @todo:
+		# - advert object should not come here. There is no need to have it
 
 
 		for i, src in enumerate(item.iframe_srcs):
@@ -71,21 +78,24 @@ class IframeProcessor(ContainerProcessor):
 				item.is_page_domain = True
 
 
-			# If source domain is equal
+			# If domain source is equal to domain page and not a known placement
+			# most probably is not an ad.
 			if item.is_page_domain and not item.is_known_placement:
-				self.log.debug('Invalid source: is page domain ({}) and not a known placement source: ({})'.format(self.page.page_domain, src))
+				self.log.debug('Invalid source: is page domain ({}) and not a known '
+							   'placement source: ({})'.format(self.page.page_domain, src))
 				continue
 
-
+			# Unknown placement and unknown adserver needs to be discarded
 			if not item.is_known_placement and not item.is_known_adserver:
-				self.log.debug('Not known placement ({}), ({}) and not a known placement source: ({})'.format(item.size[0], item.size[1], src))
+				self.log.debug('Not known placement ({}), ({}) and not a known '
+							   'placement source: ({})'.format(item.size[0], item.size[1], src))
 				continue
 
 			source, finfo = self.process_stripped_source(src)
 			if not finfo:
 				continue
 
-			advert.src = source
+			item.src = source
 			item.finfo = finfo
 			item.is_content = True
 			return True
@@ -93,7 +103,8 @@ class IframeProcessor(ContainerProcessor):
 		return False
 
 
-	def process_image_sources(self, item, advert):
+
+	def process_image_sources(self, item):
 
 
 		for i, src in enumerate(item.img_srcs):
@@ -130,14 +141,14 @@ class IframeProcessor(ContainerProcessor):
 			if not finfo:
 				continue
 
-			advert.src = source
-			#item.src = source
+			item.src = source
 			item.finfo = finfo
 			item.is_content = True
 
 			return True
 
 		return False
+
 
 
 	def set_item(self, item, container):
@@ -169,6 +180,7 @@ class IframeProcessor(ContainerProcessor):
 		item.titles = list(item.titles)
 		item.styles = list(item.styles)
 		item.is_iframe = True
+
 
 
 	def append_item_info(self, item, container):
@@ -216,11 +228,11 @@ class IframeProcessor(ContainerProcessor):
 				item.styles.add(img.a_style)
 
 
-		# Append iframes into iframe
 		for iframe in container.iframes:
 			self.append_item_info(item, iframe)
 
 		return True
+
 
 
 	def extract_link_from_attributes(self, item, link=''):
@@ -246,6 +258,7 @@ class IframeProcessor(ContainerProcessor):
 		return link
 
 
+
 	def get_link_from_list(self, list):
 		"""
 		
@@ -258,38 +271,3 @@ class IframeProcessor(ContainerProcessor):
 				return url
 
 		return ''
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

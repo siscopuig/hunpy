@@ -44,9 +44,9 @@ class ImageSearcher(ContainerElement):
 			if not container.src:
 				continue
 
-			container.element 	= img_element
-			container.size 		= self.driver.get_element_size(container.element)
-			container.location 	= self.driver.get_element_location(container.element)
+			container.element = img_element
+			container.size = self.driver.get_element_size(container.element)
+			container.location = self.driver.get_element_location(container.element)
 
 
 			if not self.is_valid_container(container):

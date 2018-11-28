@@ -7,7 +7,7 @@ import numpy as np
 import uuid
 from src.utils.utils_strings import UtilsString
 from src.utils.utils_requests import process_http_requests
-from src.utils.utils_date import UtilsDate
+from src.utils.utils_url import encode_url
 import asyncio
 import time
 from src.log import Log
@@ -30,6 +30,7 @@ class ContainerProcessor(Processor):
 		self.src_ignored_landing = self.config['src.ignore.landing']
 
 
+
 	def get_items(self, containers):
 
 		if not containers.size:
@@ -45,6 +46,7 @@ class ContainerProcessor(Processor):
 		return items
 
 
+
 	def get_containers(self, page):
 		"""
 
@@ -55,6 +57,7 @@ class ContainerProcessor(Processor):
 		return []
 
 
+
 	def set_item(self, item, container): # fill_item()
 		"""
 		Is overriding in:
@@ -62,6 +65,7 @@ class ContainerProcessor(Processor):
 			ImageExtractor
 		"""
 		return False
+
 
 
 	def process(self, page):
@@ -83,6 +87,7 @@ class ContainerProcessor(Processor):
 		return True
 
 
+
 	def process_source(self, item, advert):
 		"""
 
@@ -94,10 +99,9 @@ class ContainerProcessor(Processor):
 		return False
 
 
+
 	def process_items(self, items, page):
 		"""
-		@todo:
-		-	Process whether an advert has been seen in page already.
 		"""
 
 		for i, item in enumerate(items):
@@ -105,32 +109,32 @@ class ContainerProcessor(Processor):
 			advert = Advert()
 
 			# Goes to (IframeProcessor & ImageProcessor)
+			# Sets parts of Advert object
 			if not self.process_source(item, advert):
 				continue
 
 			# If an advert is duplicated in the same page continue the loop.
-			# All info has been gathered previously and there is no need to
-			# process some elements again
-			if self.count_duplicate_advert_in_page(advert):
+			# At this point info has been gathered previously and there is
+			# no need to process some elements again.
+			if self.process_duplicate_advert_in_page(advert):
 				continue
 
-
+			# Process existing advert in database.
 			if not self.process_existing_advert(advert):
 				continue
 
-
+			# Process links from anchors or clicking elements.
 			self.process_advertiser(item, advert)
 
-			# Set advert
-			self.set_advert(advert, item)
-
-			# Append advert in
+			# Add advert in list.
 			page.adverts.append(advert)
+
 
 		return True
 
 
-	def count_duplicate_advert_in_page(self, advert):
+
+	def process_duplicate_advert_in_page(self, advert):
 
 		# - At this point the source is in advert object.
 		# - If current advert.src is in page.adverts list, if true,
@@ -150,6 +154,7 @@ class ContainerProcessor(Processor):
 		return False
 
 
+
 	def process_existing_advert(self, advert):
 
 		# - Check in database for an existing source.
@@ -162,34 +167,53 @@ class ContainerProcessor(Processor):
 
 			advert.state = AdvertState.EXISTING
 
+
 			if not existing['id']:
 				self.log.info('Advert not found in database, source: ({})'.format(advert.src))
 				return False
-
-			# @todo:
-			# advert.id is not defined in Adverts yet
-
 			advert.id  = existing['id']
+
+
+			if not existing['uid']:
+				self.log.info('Advert not found in database, source: ({})'.format(advert.src))
+				return False
 			advert.uid = existing['uid']
+
 
 			if existing['advertiser']:
 				advert.advertiser = existing['advertiser']
 			else:
 				self.log.info('Advertiser not found, id: ({}) url_id: ({})'.format(existing['id'], self.page.url_id))
 
+		else:
+
+			advert.state = AdvertState.NEW
+			advert.uid = self.get_uid()
+
+
 		return True
+
 
 
 	def process_advertiser(self, item, advert):
 
+
 		if not advert.advertiser:
 
 			if self.get_link_from_anchors(item):
-				return True
+				self.log.info('Link obtained from img hrefs: {}'.format(item.landing))
 
-			self.process_landing(item)
+			else:
+				landing = self.process_landing(item)
+				if not landing:
+					return False
+
+			if item.landing:
+				advert.landing = item.landing
+				advert.advertiser = UtilsString.get_domain(item.landing)
 
 		return True
+
 
 
 	def set_advert(self, advert, item):
@@ -199,34 +223,22 @@ class ContainerProcessor(Processor):
 		:param item:
 		:return:
 		"""
-		advert.url_id  	= self.page.url_id
-		advert.width 	= item.size[0]
-		advert.height 	= item.size[1]
-		advert.finfo 	= item.finfo
+
+		advert.src = encode_url(item.src)
+		advert.domain = UtilsString.get_domain(advert.src)
+		advert.url_id = self.page.url_id
+		advert.width = item.size[0]
+		advert.height = item.size[1]
+		advert.location = item.location
+		advert.finfo = item.finfo
 
 
-		if not advert.uid:
-			advert.uid = self.get_uid()
-
-		if item.landing:
-			advert.landing = item.landing
-			advert.advertiser = UtilsString.get_domain(item.landing)
-		else:
-			advert.landing = item.landing
-			advert.advertiser = item.advertiser
-
-		advert.datetime = UtilsDate.get_datetime()
-		advert.is_iframe = item.is_iframe
-
-
-		# For debugging purposes only:
-		self.log.debug(advert.__str__())
 
 
 	def is_src_matching_invalid_pattern(self, src, domain):
 
 		# @todo:
-		# Improve source validation
+		# - Improve source validation
 
 		if UtilsString.match_string_in_list(domain, self.datasource.get_ignore_domain(), 'ignore_domain'):
 			self.log.debug('Domain src ({}) is in source ignore domain'.format(domain))
@@ -235,6 +247,7 @@ class ContainerProcessor(Processor):
 		if UtilsString.match_string_parts_in_list(src, self.datasource.get_ignore_path(), 'ignore_path'):
 			self.log.debug('Source path from src: ({}) in src ignore path list'.format(src))
 			return True
+
 
 
 	def process_stripped_source(self, src):
@@ -263,9 +276,9 @@ class ContainerProcessor(Processor):
 		return src, request['content_type']
 
 
+
 	def process_landing(self, item):
 		"""
-		WebElement of top level iframe (item.element)
 
 		:param item
 		:return:
@@ -289,7 +302,6 @@ class ContainerProcessor(Processor):
 		if len(windows) == 1:
 			self.log.info('CLicking on element did not open a new tab')
 			if self.page.main_window_handle == windows[0]:
-				#self.log.info('Page main window: {} equal to :{}'.format(self.page.main_window_handle, windows[0]))
 				return False
 
 		# Check that the main window did not redirect to another page
@@ -304,11 +316,11 @@ class ContainerProcessor(Processor):
 		if not landing:
 			return False
 
-
 		# Set landing in item
 		item.landing = landing
 		item.advertiser = UtilsString.get_domain(landing)
 		return True
+
 
 
 	def get_landing_source(self, landing=None):
@@ -316,10 +328,6 @@ class ContainerProcessor(Processor):
 		# An element could be broken when clicking on an element could redirect
 		# to another address without open a new tab. Solutions:
 		# 	- Improve different click on element methods and checks.
-		#
-		#
-		# We arrived at this point being clicked on element. We expect to have
-		# 1,2 or more windows
 
 		landings = []
 
@@ -365,12 +373,42 @@ class ContainerProcessor(Processor):
 		return landing
 
 
-	def get_uid(self):
-		"""
-		Generate a random UUID
-		:return: 3c3f9dc8-3491-46d3-aa63-fcd4af556276
-		"""
-		return uuid.uuid4().__str__()
+
+	def get_link_from_anchors(self, item):
+
+		if item.img_hrefs:
+
+			for source in reversed(item.img_hrefs):
+
+				link = UtilsString.get_url_from_string(source)
+				if not link:
+					continue
+
+				if self.is_landing_invalid(link):
+					continue
+
+				item.landing = link
+				return True
+
+		return False
+
+
+
+	def is_landing_invalid(self, link):
+
+		# Is landing source already invalid
+		if link in self.src_ignored_landing:
+			self.log.debug('Landing source {} in ignored landing list'.format(link))
+			return True
+
+		# Is landing domain in ignore domain
+		domain = UtilsString.get_domain(link)
+		if domain in self.datasource.get_ignore_domain():
+			self.log.debug('Landing domain {} in ignore domain list'.format(domain))
+			return True
+
+		return False
+
 
 
 	def is_valid_source_http_request(self, src):
@@ -385,35 +423,14 @@ class ContainerProcessor(Processor):
 		return request
 
 
-	def get_link_from_anchors(self, item):
 
-		if item.img_hrefs:
+	def get_uid(self):
+		"""
+		Generate a random UUID
+		:return: 3c3f9dc8-3491-46d3-aa63-fcd4af556276
+		"""
+		return uuid.uuid4().__str__()
 
-			for source in reversed(item.img_hrefs):
-
-				link = UtilsString.get_url_from_string(source)
-
-				if not link:
-					continue
-
-				# Is landing source already invalid
-				if link in self.src_ignored_landing:
-					self.log.debug('Landing source {} in ignored landing list'.format(link))
-					continue
-
-				# Is landing domain in ignore domain
-				domain = UtilsString.get_domain(link)
-				if domain in self.datasource.get_ignore_domain():
-					self.log.debug('Landing domain {} in ignore domain list'.format(domain))
-					continue
-
-
-				item.landing = link
-				item.advertiser = UtilsString.get_domain(link)
-				self.log.info('Link obtained from img hrefs: {}'.format(link))
-				return True
-
-		return False
 
 
 	def is_valid_http_response(self, items):

@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.23, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.24, for Linux (x86_64)
 --
 -- Host: 127.0.0.1    Database: hunpy
 -- ------------------------------------------------------
--- Server version	5.7.23-0ubuntu0.18.04.1
+-- Server version	5.7.24-0ubuntu0.18.10.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,27 +16,27 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `AdServer`
+-- Table structure for table `Adservers`
 --
 
-DROP TABLE IF EXISTS `AdServer`;
+DROP TABLE IF EXISTS `Adservers`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `AdServer` (
+CREATE TABLE `Adservers` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `domain` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=115 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `AdServer`
+-- Dumping data for table `Adservers`
 --
 
-LOCK TABLES `AdServer` WRITE;
-/*!40000 ALTER TABLE `AdServer` DISABLE KEYS */;
-INSERT INTO `AdServer` (`id`, `domain`) VALUES (1,'cdn.oas-eu1.adnxs.com'),(2,'ad.doubleclick.net'),(3,'secure.flashtalking.com'),(4,'s0.2mdn.net'),(5,'ds.serving-sys.com'),(6,'s1.2mdn.net'),(7,'tpc.googlesyndication.com'),(8,'pagead2.googlesyndication.com'),(9,'assets.rubiconproject.com'),(10,'cdn.atlassbx.com'),(11,'img.cdns.turn.com'),(12,'speed.pointroll'),(13,'cdn.w55c.net'),(14,'www.wsoddata.com'),(15,'ab167334.adbutler-exciton.com'),(16,'s1.adform.net'),(17,'cdn.ctnsnet.com'),(18,'img.mediaplex.com'),(19,'cmc-marke-cmc-markets.bannerflow.com'),(20,'cstatic.weborama.fr'),(21,'s3-eu-west-1.amazonaws.com'),(22,'www.dianomi.com'),(23,'oasc-eu1.247realmedia.com'),(24,'bbgox.bbg-online.de'),(25,'datasource.fondsprofessionell.com'),(26,'aka-cdn-ns.adtech.de'),(27,'aka-cdn.adtech.de'),(28,'ad1.emediate.dk'),(29,'cdn.flashtalking.com'),(30,'secure-nym.adnxs.com'),(31,'ej-ad.s3.amazonaws.com'),(32,'imagesrv.adition.com'),(33,'secure-assets.rubiconproject.com'),(34,'secure.flashtalking.com'),(35,'ads.w55c.net'),(36,'ams1-ib.adnxs.com'),(37,'fra1-ib.adnxs.com'),(38,'fw.adsafeprotected.com'),(39,'cdn.adnxs.com'),(40,'cdn.adsfactor.net'),(41,'secure-ds.serving-sys.com'),(42,'pool.admedo.com'),(43,'img.adplan-ds.com '),(44,'content.aimatch.com'),(45,'img.ak.impact-ad.jp'),(46,'pubads.g.doubleclick.net'),(47,'vcdn.adnxs.com'),(48,'datasource.fa-mag.com'),(49,'cdn.oas-c18.adnxs.com'),(50,'ab167548.adbutler-ikon.com'),(51,'images2.ads.rcsobjects.it'),(52,'datasource.fa-mag.com'),(53,'fi.intms.nl'),(54,'ad.bluerating.com'),(55,'ced.sascdn.com '),(56,'efund.media'),(57,'banners.host.bannerflow.com'),(58,'gfx.finanztreff.de'),(59,'unibet-unibet.bannerflow.com'),(60,'static.snapmobile.asia'),(61,'s1.adformdsp.net'),(62,'html5.adsrvr.org'),(63,'a.rfihub.com'),(64,'server-m.vocento.com'),(65,'s.atemda.com'),(66,'d13.zedo.com'),(67,'cashonline.serverhoster.de'),(68,'ad13.adfarm1.adition.com'),(69,'static.nrc.nl'),(70,'vcdn.adnxs.com'),(71,'media.adrcdn.com'),(72,'d13.zedo.com'),(73,'np-adimage.newscloud.or.kr'),(74,'adimg.imbc.com'),(75,'ad.kmib.co.kr'),(76,'img.realdsp.co.kr'),(77,'openx2.mediamatis.com'),(78,'ad.adsrvr.org'),(79,'servedbyadbutler.com'),(80,'ad.wsodcdn.com'),(81,'assets.incisivemedia.com'),(82,'ad.atdmt.com'),(83,'d31i2625d5nv27.cloudfront.net'),(84,'cdn.oas-c17.adnxs.com'),(85,'s.adroll.com'),(86,'ubmcmm.baidustatic.com'),(87,'falcon-creative-cloudcdn.pixfs.net'),(88,'tveta.naver.net'),(89,'img.funddoctor.co.kr'),(90,'ads.emetro.co.kr'),(91,'img.realdsp.co.kr'),(92,'hcimg.realclick.co.kr'),(93,'s3.eu-central-1.amazonaws.com'),(94,'streaming.ad-balancer.at'),(95,'a248.e.akamai.net'),(96,'ad.charltonmedia.com'),(97,'cdn.asn.advolution.de'),(98,'du3rcmbgk4e8q.cloudfront.net'),(99,'ds-cc.serving-sys.com'),(100,'images.informatm.com'),(101,'g1.dfcfw.com'),(102,'adpic.chinadaily.com.cn'),(103,'afp.alicdn.com'),(104,'c1.ifengimg.com'),(105,'peoplecitic.com'),(106,'info.stockstar.com'),(107,'itv.hexun.com'),(108,'img.cnfol.com'),(109,'static-alias-1.360buyimg.com'),(110,'showimg.caixin.com'),(111,'img.tbnimg.com'),(112,'ipengtai.huanqiu.com'),(113,'wmcdn.qtmojo.cn'),(114,'r.takungpao.com');
-/*!40000 ALTER TABLE `AdServer` ENABLE KEYS */;
+LOCK TABLES `Adservers` WRITE;
+/*!40000 ALTER TABLE `Adservers` DISABLE KEYS */;
+INSERT INTO `Adservers` (`id`, `domain`) VALUES (1,'cdn.oas-eu1.adnxs.com'),(2,'ad.doubleclick.net'),(3,'secure.flashtalking.com'),(4,'s0.2mdn.net'),(5,'ds.serving-sys.com'),(6,'s1.2mdn.net'),(7,'tpc.googlesyndication.com'),(8,'pagead2.googlesyndication.com'),(9,'assets.rubiconproject.com'),(10,'cdn.atlassbx.com'),(11,'img.cdns.turn.com'),(12,'speed.pointroll'),(13,'cdn.w55c.net'),(14,'www.wsoddata.com'),(15,'ab167334.adbutler-exciton.com'),(16,'s1.adform.net'),(17,'cdn.ctnsnet.com'),(18,'img.mediaplex.com'),(19,'cmc-marke-cmc-markets.bannerflow.com'),(20,'cstatic.weborama.fr'),(21,'s3-eu-west-1.amazonaws.com'),(22,'dianomi.com'),(23,'oasc-eu1.247realmedia.com'),(24,'bbgox.bbg-online.de'),(25,'adserver.fondsprofessionell.com'),(26,'aka-cdn-ns.adtech.de'),(27,'aka-cdn.adtech.de'),(28,'ad1.emediate.dk'),(29,'cdn.flashtalking.com'),(30,'secure-nym.adnxs.com'),(31,'ej-ad.s3.amazonaws.com'),(32,'imagesrv.adition.com'),(33,'secure-assets.rubiconproject.com'),(34,'secure.flashtalking.com'),(35,'ads.w55c.net'),(36,'ams1-ib.adnxs.com'),(37,'fra1-ib.adnxs.com'),(38,'fw.adsafeprotected.com'),(39,'cdn.adnxs.com'),(40,'cdn.adsfactor.net'),(41,'secure-ds.serving-sys.com'),(42,'pool.admedo.com'),(43,'img.adplan-ds.com '),(44,'content.aimatch.com'),(45,'img.ak.impact-ad.jp'),(46,'pubads.g.doubleclick.net'),(47,'vcdn.adnxs.com'),(48,'adserver.fa-mag.com'),(49,'cdn.oas-c18.adnxs.com'),(50,'ab167548.adbutler-ikon.com'),(51,'images2.ads.rcsobjects.it'),(52,'adserver.fa-mag.com'),(53,'fi.intms.nl'),(54,'ad.bluerating.com'),(55,'ced.sascdn.com '),(56,'efund.media'),(57,'banners.host.bannerflow.com'),(58,'gfx.finanztreff.de'),(59,'unibet-unibet.bannerflow.com'),(60,'static.snapmobile.asia'),(61,'s1.adformdsp.net'),(62,'html5.adsrvr.org'),(63,'a.rfihub.com'),(64,'server-m.vocento.com'),(65,'s.atemda.com'),(66,'d13.zedo.com'),(67,'cashonline.serverhoster.de'),(68,'ad13.adfarm1.adition.com'),(69,'static.nrc.nl'),(70,'vcdn.adnxs.com'),(71,'media.adrcdn.com'),(72,'d13.zedo.com'),(73,'np-adimage.newscloud.or.kr'),(74,'adimg.imbc.com'),(75,'ad.kmib.co.kr'),(76,'img.realdsp.co.kr'),(77,'openx2.mediamatis.com'),(78,'ad.adsrvr.org'),(79,'servedbyadbutler.com'),(80,'ad.wsodcdn.com'),(81,'assets.incisivemedia.com'),(82,'ad.atdmt.com'),(83,'d31i2625d5nv27.cloudfront.net'),(84,'cdn.oas-c17.adnxs.com'),(85,'s.adroll.com'),(86,'ubmcmm.baidustatic.com'),(87,'falcon-creative-cloudcdn.pixfs.net'),(88,'tveta.naver.net'),(89,'img.funddoctor.co.kr'),(90,'ads.emetro.co.kr'),(91,'img.realdsp.co.kr'),(92,'hcimg.realclick.co.kr'),(93,'s3.eu-central-1.amazonaws.com'),(94,'streaming.ad-balancer.at'),(95,'a248.e.akamai.net'),(96,'ad.charltonmedia.com'),(97,'cdn.asn.advolution.de'),(98,'du3rcmbgk4e8q.cloudfront.net'),(99,'ds-cc.serving-sys.com'),(100,'images.informatm.com'),(101,'g1.dfcfw.com'),(102,'adpic.chinadaily.com.cn'),(103,'afp.alicdn.com'),(104,'c1.ifengimg.com'),(105,'peoplecitic.com'),(106,'info.stockstar.com'),(107,'itv.hexun.com'),(108,'img.cnfol.com'),(109,'static-alias-1.360buyimg.com'),(110,'showimg.caixin.com'),(111,'img.tbnimg.com'),(112,'ipengtai.huanqiu.com'),(113,'wmcdn.qtmojo.cn'),(114,'r.takungpao.com'),(115,'localhost:63342');
+/*!40000 ALTER TABLE `Adservers` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -48,22 +48,20 @@ DROP TABLE IF EXISTS `Adverts`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Adverts` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `ad_uid` varchar(64) DEFAULT NULL,
-  `datetime` datetime DEFAULT NULL,
-  `domain` varchar(255) DEFAULT NULL,
+  `uid` varchar(64) DEFAULT NULL,
   `src` varchar(512) DEFAULT NULL,
+  `advertiser` varchar(255) DEFAULT NULL,
+  `landing` varchar(512) DEFAULT NULL,
   `width` smallint(11) unsigned DEFAULT NULL,
   `height` smallint(11) unsigned DEFAULT NULL,
-  `x` smallint(6) unsigned DEFAULT NULL,
-  `y` smallint(6) unsigned DEFAULT NULL,
-  `processed` tinyint(1) DEFAULT '0',
-  `landing` varchar(512) DEFAULT NULL,
+  `x` int(11) NOT NULL,
+  `y` int(11) NOT NULL,
+  `isframe` smallint(6) DEFAULT NULL,
   `finfo` varchar(40) DEFAULT NULL,
-  `server` varchar(64) DEFAULT NULL,
+  `processed` tinyint(1) DEFAULT '0',
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `last_modified` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `ad_uid` (`ad_uid`)
+  KEY `ad_uid` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -117,7 +115,7 @@ DROP TABLE IF EXISTS `Cycles`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Cycles` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `u_id` smallint(11) unsigned DEFAULT NULL,
+  `url_id` smallint(11) unsigned DEFAULT NULL,
   `cycles` smallint(11) unsigned DEFAULT '0',
   `date` date DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -144,8 +142,8 @@ DROP TABLE IF EXISTS `Instances`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Instances` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `ad_uid` varchar(64) DEFAULT NULL,
-  `u_id` smallint(11) unsigned DEFAULT NULL,
+  `uid` varchar(64) DEFAULT NULL,
+  `url_id` smallint(11) unsigned DEFAULT NULL,
   `counter` smallint(11) unsigned DEFAULT NULL,
   `date` date DEFAULT NULL,
   `last_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -197,7 +195,7 @@ DROP TABLE IF EXISTS `Urls`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Urls` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `u_url` varchar(255) DEFAULT NULL,
+  `url` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -208,7 +206,7 @@ CREATE TABLE `Urls` (
 
 LOCK TABLES `Urls` WRITE;
 /*!40000 ALTER TABLE `Urls` DISABLE KEYS */;
-INSERT INTO `Urls` (`id`, `u_url`) VALUES (1,'http://www.trustnet.com'),(2,'http://www.trustnet.com/IMAUTOEICs.aspx'),(3,'http://www.trustnet.com/Investments/Perf.aspx?univ=O'),(4,'http://www.ftadviser.com/'),(5,'http://www.morningstar.co.uk/uk/'),(6,'http://www.pensions-expert.com'),(7,'http://www.professionaladviser.com'),(8,'http://www.citywire.co.uk/new-model-adviser'),(9,'http://www.citywire.co.uk/wealth-manager'),(10,'http://www.theguardian.com/uk'),(11,'http://www.theguardian.com/world'),(12,'http://www.ft.com/home/uk'),(13,'http://www.barrons.com/'),(14,'http://www.bloomberg.com/markets'),(15,'http://www.bloomberg.com/insights'),(16,'http://www.economist.com'),(17,'http://www.iii.co.uk'),(18,'http://www.moneywise.co.uk'),(19,'http://www.telegraph.co.uk'),(20,'http://www.moneyweek.com'),(21,'http://www.telegraph.co.uk/finance'),(22,'http://www.telegraph.co.uk/finance/personalfinance'),(23,'http://www.funds.telegraph.co.uk/clients/telegraph'),(25,'http://www.moneymarketing.co.uk/investments'),(26,'http://www.moneyobserver.com/how-to-invest'),(27,'https://www.fool.co.uk'),(28,'http://uk.reuters.com'),(30,'http://www.moneywise.co.uk/investing/first-time-investor/expert-investment-tips-50-to-50000'),(31,'http://www.moneywise.co.uk/investing/tax-efficient-investing'),(32,'http://www.moneywise.co.uk/investing/funds'),(33,'http://www.moneywise.co.uk/investing/investment-trusts'),(34,'http://www.moneysavingexpert.com'),(35,'http://www.theguardian.com/uk/money'),(36,'http://www.whatinvestment.co.uk'),(37,'https://www.boringmoney.co.uk'),(38,'http://www.etnet.com.hk/www/tc/home/index.php'),(39,'http://www.forbes.com/forbes/welcome'),(40,'http://www.dailymail.co.uk/home/index.html'),(41,'http://www.forbes.com');
+INSERT INTO `Urls` (`id`, `url`) VALUES (1,'http://www.moneyweek.com'),(2,'http://www.trustnet.com/IMAUTOEICs.aspx'),(3,'http://www.trustnet.com/Investments/Perf.aspx?univ=O'),(4,'http://www.ftadviser.com/'),(5,'http://www.morningstar.co.uk/uk/'),(6,'http://www.pensions-expert.com'),(7,'http://www.professionaladviser.com'),(8,'http://www.citywire.co.uk/new-model-adviser'),(9,'http://www.citywire.co.uk/wealth-manager'),(10,'http://www.theguardian.com/uk'),(11,'http://www.theguardian.com/world'),(12,'http://www.ft.com/home/uk'),(13,'http://www.barrons.com/'),(14,'http://www.bloomberg.com/markets'),(15,'http://www.bloomberg.com/insights'),(16,'http://www.economist.com'),(17,'http://www.iii.co.uk'),(18,'http://www.moneywise.co.uk'),(19,'http://www.telegraph.co.uk'),(20,'http://www.trustnet.com'),(21,'http://www.telegraph.co.uk/finance'),(22,'http://www.telegraph.co.uk/finance/personalfinance'),(23,'http://www.funds.telegraph.co.uk/clients/telegraph'),(25,'http://www.moneymarketing.co.uk/investments'),(26,'http://www.moneyobserver.com/how-to-invest'),(27,'https://www.fool.co.uk'),(28,'http://uk.reuters.com'),(30,'http://www.moneywise.co.uk/investing/first-time-investor/expert-investment-tips-50-to-50000'),(31,'http://www.moneywise.co.uk/investing/tax-efficient-investing'),(32,'http://www.moneywise.co.uk/investing/funds'),(33,'http://www.moneywise.co.uk/investing/investment-trusts'),(34,'http://www.moneysavingexpert.com'),(35,'http://www.theguardian.com/uk/money'),(36,'http://www.whatinvestment.co.uk'),(37,'https://www.boringmoney.co.uk'),(38,'http://www.etnet.com.hk/www/tc/home/index.php'),(39,'http://www.forbes.com/forbes/welcome'),(40,'http://www.dailymail.co.uk/home/index.html'),(41,'http://www.forbes.com');
 /*!40000 ALTER TABLE `Urls` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -221,4 +219,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-10-01 19:38:55
+-- Dump completed on 2018-11-28 12:50:04

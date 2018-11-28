@@ -33,7 +33,6 @@ class ImageProcessor(ContainerProcessor):
 		item.a_href 		= container.a_href
 		item.a_onclick 		= container.a_onclick
 		item.a_style 		= container.a_style
-		item.is_iframe		= False
 
 
 	def get_containers(self, page):
@@ -63,23 +62,21 @@ class ImageProcessor(ContainerProcessor):
 		"""
 		Process source images from main source
 		"""
-		if not self.process_image_source(item, advert):
+		if not self.process_image_source(item):
 			return False
+
+		self.set_advert(advert, item)
 
 		return True
 
 
-	def process_image_source(self, item, advert):
+	def process_image_source(self, item):
 
-		# Attributes to deal with:
-		# - a_href
-		# - a_onclick
-		# - a_style
-		# - element
-		# - src
+
 
 		if not item.src:
 			return False
+
 
 		domain = UtilsString.get_domain(item.src)
 		if self.is_src_matching_invalid_pattern(item.src, domain):
@@ -113,9 +110,8 @@ class ImageProcessor(ContainerProcessor):
 		if not finfo:
 			return False
 
-		advert.src = source
+		item.src = source
 		item.finfo = finfo
-		item.is_content = True
 		return True
 
 
@@ -140,9 +136,8 @@ class ImageProcessor(ContainerProcessor):
 			self.log.debug('ImageExtractor: Item value on a_href: {}'.format(item.onclick))
 			link = UtilsString.get_url_from_string(item.onclick)
 
-		if link:
+		if link and not self.is_landing_invalid(link):
 			item.landing = link
-			item.advertiser = UtilsString.get_domain(link)
 			self.log.info('Link obtained from img hrefs: {}'.format(link))
 			return True
 

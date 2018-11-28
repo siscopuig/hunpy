@@ -2,7 +2,8 @@ from src.log import Log
 from src.config import Config
 from src.datasource import Datasource
 from src.handler import Handler
-from src.utils.utils_strings import UtilsString
+from src.connector.mysql_connector import MysqlConn
+import sys
 
 config_yml_file_path = [
 	'config/hunpy.yml',
@@ -20,6 +21,11 @@ datasource_paths = {
 
 class Bootstrap:
 
+	# @todo:
+	# - In theory this class will start the program and handle
+	# 	all the configuration needed to run.
+
+
 	"""
 	config_file_path	=
 
@@ -31,71 +37,91 @@ class Bootstrap:
 
 	def __init__(self):
 
+		# Open log
+		self.log = Log()
+		self.log.open()
+		self.log.info('Hunpy started')
+
+
+
+	def start(self):
+
+		conf = self.get_yaml_conf_file()
+
+		dbconn = self.get_connector(conf['connection.parameters'])
+
+		# Get datasource from files & database
+		datasource = self.get_datasource(dbconn)
+
+		handler = Handler(conf, datasource)
+		handler.search()
+
+
+	def get_connector(self, connect_param):
+		"""
+		Connect to the database and retrieves the connector
+
+		:param connect_param:
+		:return: connector object
+		"""
+
 		try:
 
-			# Open log
-			self.log = Log()
-			self.log.open()
-			self.log.info('Hunpy started')
+			conn = MysqlConn(connect_param)
+			conn.connect()
 
-			# Load yaml config file
-			self.config = Config()
-			self.config.load(config_yml_file_path)
+		except Exception as e:
+			self.log.error('MySQL exception: {}'.format(e))
+			sys.exit(1)
 
-
-			# Get datasource from files & database
-			self.datasource = Datasource(self.config.data['connection.parameters'])
-			self.datasource.config_datasource_abs_path(datasource_paths)
+		return conn
 
 
-			handler = Handler(self.config.data, self.datasource)
-			handler.search()
+	def get_yaml_conf_file(self):
+		"""
+		Load yaml config file
+
+		:return: a config list
+		"""
+
+		try:
+
+			config = Config()
+			config.load(config_yml_file_path)
+
+		except Exception as e:
+			self.log.error('Error loading yaml configuration file: {}'.format(e))
+			sys.exit(1)
+
+		return config.data
 
 
-		except Exception as error:
-			self.log.error('Problem configuring: {}'.format(error))
+	def get_datasource(self, dbconn):
+		"""
+		Load datasource text files into the system
 
+		:param dbconn:
+		:return: datasource object
+		"""
 
+		try:
+			ds = Datasource(dbconn)
+			ds.config_datasource_abs_path(datasource_paths)
 
+		except Exception as e:
+			self.log.error('Error loading datasource files: {}'.format(e))
+			sys.exit(1)
+
+		return ds
 
 
 
 
 ##########################################
-obj = Bootstrap()
-# placements = self.datasource.get_placements()
-# adservers = self.datasource.get_adservers()
-# ignore_domain_path = self.datasource.get_ignore_domain_path()
-# ignore_domain = self.datasource.get_ignore_domain()
-# ignore_path = self.datasource.get_ignore_path()
+if __name__ == '__main__' :
+	boot = Bootstrap()
+	boot.start()
 
-
-# connect_params = {
-# 	'user': 'root',
-# 	'password': 'pupahit66',
-# 	'host': 'localhost',
-# 	'database': 'hunpy'
-# }
-
-# src = 'https://tpc.googlesyndication.com/simgad/4812493872611183408'
-# ds = Datasource(connect_params)
-# ds.match_source_paths_in_ignore_path(src)
-
-
-# TESTING!!!!!
-# src = 'https://tpc.googlesyndication.com/simgad/4812493872611183408'
-#
-# # match adserver
-# domain = UtilsString.get_domain(src)
-# if UtilsString.match_string_in_list(domain, self.datasource.get_adservers()):
-# 	print(domain)
-# else:
-# 	print(0)
-#
-# if UtilsString.match_string_parts_in_list(src, self.datasource.get_ignore_domain()):
-# 	print(1)
-# else:
-# 	print(0)
 
 
 

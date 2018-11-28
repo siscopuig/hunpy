@@ -1,3 +1,5 @@
+from src.log import Log
+import time
 
 class Processor:
 
@@ -5,24 +7,31 @@ class Processor:
 
 	def __init__(self, driver, config, datasource):
 
+		self.log = Log()
 		self.driver = driver
 		self.config = config
 		self.datasource = datasource
 		self.page = None
 
 
-
-	def process_start(self, page):
+	def process_start(self, page, processor_name):
 		"""
-		Here time completion could be logged
-
-
 		"""
+
+		# Get current timestamp
+		start = time.time()
+
+
+		self.log.info('Processor {} started'.format(processor_name))
+
+
 		self.page = page
-
 
 		# Action
 		self.process(page)
+
+		# Log processor completion time
+		self.log.info('Processor {} finished in {} seconds'.format(processor_name, round(time.time() - start, 2)))
 
 
 

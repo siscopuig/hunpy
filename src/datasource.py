@@ -1,19 +1,19 @@
 
-from src.connector.mysql_connector import MysqlConn
 from src.log import Log
 from src.hunpy_exception import HunpyException
 from src.utils.utils_files import get_abs_path
+from src.utils.utils_strings import UtilsString
 import numpy as np
 
 class Datasource:
 	"""
 	"""
 
-	def __init__(self, connection_param):
+	def __init__(self, dbconn):
 
-		self.dbconn = MysqlConn(connection_param)
-		self.ds_paths = {}
 		self.log = Log()
+		self.dbconn = dbconn
+		self.ds_paths = {}
 		self.urls = None
 		self.datasource = {}
 		self.placements = None
@@ -23,13 +23,13 @@ class Datasource:
 		self.ignore_path = None
 
 
+
+
 	def config_datasource_abs_path(self, ds_paths):
 
 		for key, value in ds_paths.items():
 
 			self.ds_paths[key] = get_abs_path(value)
-
-
 
 
 
@@ -43,6 +43,7 @@ class Datasource:
 		return self.urls
 
 
+
 	def get_placements(self):
 
 		if self.placements is None:
@@ -52,9 +53,10 @@ class Datasource:
 			self.placements = np.zeros((len(placements), 2), dtype=np.int)
 
 			for i, placement in enumerate(placements):
-				self.placements[i] = [placement[0], placement[1]]
+				self.placements[i] = [placement['width'], placement['height']]
 
 		return self.placements
+
 
 
 	def get_adservers(self):
@@ -71,6 +73,7 @@ class Datasource:
 		return self.adservers
 
 
+
 	def get_ignore_domain_path(self):
 
 		if self.ignore_domain_path is None:
@@ -83,11 +86,10 @@ class Datasource:
 		return self.ignore_domain_path
 
 
+
 	def get_ignore_domain(self):
 
-		# @todo: find more detailed info for the issue below
-		# This conditional thrown an error when the instance variable below
-		# is set with a numpy array and it's checking like: if not .......
+
 		if self.ignore_domain is None:
 
 			# Get datasource list from txt file
@@ -98,6 +100,7 @@ class Datasource:
 
 
 		return self.ignore_domain
+
 
 
 	def get_ignore_path(self):
@@ -114,6 +117,7 @@ class Datasource:
 		return self.ignore_path
 
 
+
 	def read_file_in_lines(self, filepath):
 		"""
 
@@ -128,6 +132,7 @@ class Datasource:
 		return [line.rstrip('\n') for line in data]
 
 
+
 	def __setitem__(self, key, value):
 
 		"""
@@ -140,6 +145,7 @@ class Datasource:
 		self.datasource[key] = value
 
 
+
 	def __getitem__(self, item):
 		"""
 
@@ -147,6 +153,7 @@ class Datasource:
 		:return:
 		"""
 		return self.datasource[item]
+
 
 
 	def __contains__(self, key):
@@ -170,24 +177,49 @@ class Datasource:
 
 # ------------------------------------------------
 
-	def insert_new_advert_in_database(self, advert):
+	def insert_new_advert(self, advert):
 
 		# @todo:
-		# Make sure that record has been inserted successfully.
-		# If an error it thrown during the operation, catch it!
+		# - Make sure that record has been inserted successfully.
+		# - If an error it thrown during the operation, catch it!
+		# - Check that landing is not bigger than 512 character -> done
 
-		self.dbconn.insert_new_advert(advert)
+		landing = advert.landing
+		if landing:
+			if len(landing) > 512:
+				landing = UtilsString.strip_landing(landing)
+				if len(landing) > 512:
+					landing = landing[:512]
+					self.log.info('landing has been truncated to have 512 characters')
+				else:
+					self.log.info('landing has been sanitised')
+
+
+		data = {
+			"uid": advert.uid,
+			"src": advert.src,
+			"width": advert.width,
+			"height": advert.height,
+			"finfo": advert.finfo,
+			"isframe": advert.isframe,
+			"x": advert.location[0],
+			"y": advert.location[1],
+			"landing": landing if landing else None,
+			"advertiser": advert.advertiser if advert.advertiser else None,
+		}
+
+
+		self.dbconn.insert_new_advert(data)
 
 
 
-	# IN PROGRESS....
 	def is_source_in_database(self, src):
 
 		# @todo:
 		# Select all the values needed in one call (id, uid, src, advertiser).
 		# It will return a list dict. E.g.
-		#	[{'id': 1, 'uid': '06e7fe57-c21d-4f40-9afa-f441361349be', 'advertiser': 'events.marcusevans-events.com'}]
-
+		#	[{'id': 1, 'uid': '06e7fe57-c21d-4f40-9afa-f441361349be',
+		# 'advertiser': 'events.marcusevans-events.com'}]
 
 
 		# Select uid from adverts where src is equal to src
@@ -201,22 +233,46 @@ class Datasource:
 		return result[0]
 
 
-	def is_new_instance_record_in_database(self, uid, url_id, date):
+
+	def is_new_instance(self, uid, url_id, date):
 
 		result = self.dbconn.select_instance_record_by_date('id', 'Instances', uid, url_id, date)
 		if not result:
 			return False
 
-		id = [x for y in result for x in y]
-		return id[0]
+		return result[0]['id']
 
 
-	def insert_new_instance_record(self, uid, url_id, counter, date):
-		self.dbconn.insert_new_instance_record(uid, url_id, counter, date)
+
+	def insert_new_instance(self, data):
+
+		# @todo: Log if an error or successful
+
+		self.dbconn.insert_new_instance_record(
+			data['uid'], data['url_id'], data['counter'], data['date'])
 
 
-	def update_existing_instance_record(self, id, date, counter):
-		self.dbconn.update_existing_instance_record(id, date, counter)
+
+	def update_existing_instance(self, data):
+
+		# @todo: Log if an error or successful
+
+		self.dbconn.update_existing_instance_record(data['id'], data['date'], data['counter'])
+
+
+	def count_cycle(self, url_id, date):
+
+		result = self.dbconn.today_new_cycle(url_id, date)
+		if not result:
+			self.dbconn.insert_cycle(url_id, 1, date)
+		else:
+			self.dbconn.update_cycle(result[0]['id'], date)
+
+
+
+
+
+
 
 
 
