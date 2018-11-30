@@ -25,10 +25,10 @@ class Datasource:
 
 
 	def config_datasource_abs_path(self, ds_paths):
+		# @todo: Do some file exist checking
 
 		for key, value in ds_paths.items():
-
-			self.ds_paths[key] = get_abs_path(value)
+			self.ds_paths[key] = value
 
 
 
@@ -40,7 +40,6 @@ class Datasource:
 			raise HunpyException('Error getting the urls from database')
 
 		return self.urls
-
 
 
 	def get_placements(self):
@@ -55,7 +54,6 @@ class Datasource:
 				self.placements[i] = [placement['width'], placement['height']]
 
 		return self.placements
-
 
 
 	def get_adservers(self):
@@ -77,7 +75,7 @@ class Datasource:
 
 		if self.ignore_domain_path is None:
 			# Get datasource list from txt file
-			filelines = self.read_file_in_lines(self.ds_paths['ignore_domain_path'])
+			filelines = self.read_file_in_lines(self.ds_paths['ignore.domain.path'])
 
 			# Create a numpy array to store the list
 			self.ignore_domain_path = np.array(filelines, dtype=np.object)
@@ -92,7 +90,7 @@ class Datasource:
 		if self.ignore_domain is None:
 
 			# Get datasource list from txt file
-			filelines = self.read_file_in_lines(self.ds_paths['ignore_domain'])
+			filelines = self.read_file_in_lines(self.ds_paths['ignore.domain'])
 
 			# Create a numpy array to store the list
 			self.ignore_domain = np.array(filelines, dtype=np.object)
@@ -107,7 +105,7 @@ class Datasource:
 		if self.ignore_path is None:
 
 			# Get datasource list from txt file
-			filelines = self.read_file_in_lines(self.ds_paths['ignore_path'])
+			filelines = self.read_file_in_lines(self.ds_paths['ignore.path'])
 
 			# Create a numpy array to store the list
 			self.ignore_path = np.array(filelines, dtype=np.object)

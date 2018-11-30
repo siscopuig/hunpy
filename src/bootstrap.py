@@ -6,18 +6,8 @@ from connector.mysql_connector import MysqlConn
 import sys
 
 
-
-config_yml_file_path = [
-	'/home/sisco/PycharmProjects/hunpy/config/hunpy.yml',
-]
-
-
-datasource_paths = {
-	"adservers": 		  "/home/sisco/PycharmProjects/hunpy/datasource/adservers.txt",
-	"ignore_domain_path": "/home/sisco/PycharmProjects/hunpy/datasource/ignore_domain_path.txt",
-	"ignore_domain": 	  "/home/sisco/PycharmProjects/hunpy/datasource/ignore_domain.txt",
-	"ignore_path": 		  "/home/sisco/PycharmProjects/hunpy/datasource/ignore_path.txt"
-}
+# Configuration filepath
+config_yml_file_path = ['/home/sisco/PycharmProjects/hunpy/config/hunpy.yml']
 
 
 
@@ -29,26 +19,27 @@ class Bootstrap:
 		# Get a log instance
 		self.log = Log()
 
-		# Get configuration list
-		self.config = self.get_yaml_conf_file()
-
-		# Get connector
-		self.dbconn = self.get_connector(self.config['connection.parameters'])
-
-		# Get datasource from files & database
-		self.datasource = self.get_datasource(self.dbconn)
 
 
 	def start(self):
 
+		# Get configuration list
+		config = self.get_yaml_conf_file()
+
+		# Get connector
+		dbconn = self.get_connector(config['connection.parameters'])
+
+		# Get datasource from files & database
+		datasource = self.get_datasource(dbconn, config['datasource.relative.paths'])
+
 		# Open log
-		self.log.open(self.config)
+		self.log.open(config)
 		self.log.info('Hunpy started')
 
+		# Start processing
+		handler = Handler(config, datasource)
+		handler.search()
 
-		handler = Handler(self.config, self.datasource)
-		if handler.search():
-			self.start()
 
 
 	def get_connector(self, connect_param):
@@ -88,17 +79,18 @@ class Bootstrap:
 		return config.data
 
 
-	def get_datasource(self, dbconn):
+	def get_datasource(self, dbconn, datasource_relative_paths):
 		"""
 		Load datasource text files into the system
 
+		:param datasource_relative_paths:
 		:param dbconn:
 		:return: datasource object
 		"""
 
 		try:
 			ds = Datasource(dbconn)
-			ds.config_datasource_abs_path(datasource_paths)
+			ds.config_datasource_abs_path(datasource_relative_paths)
 
 		except Exception as e:
 			sys.exit('Error loading datasource files: {}'.format(e))
@@ -111,7 +103,8 @@ class Bootstrap:
 ##########################################
 if __name__ == '__main__' :
 	boot = Bootstrap()
-	boot.start()
+	while True:
+		boot.start()
 
 
 

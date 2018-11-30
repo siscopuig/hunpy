@@ -65,22 +65,23 @@ class Handler:
 
 				# For debugging purposes only
 				print(traceback.format_exc())
-
 				exception = str(e).replace('\n', '')
-				if 'timeout' in exception:
-					self.handle_timeout()
 
-				self.log.error(exception)
-				self.driver.close()
+				# At this point, if an exception is thrown kill chromedriver processes
+				self.reset_chromedriver()
+				self.log.error('Stopped chromedriver by exception: {}'.format(exception))
+
+				# Reset driver
 				self.driver = None
 
-				# Recursive
-				self.search()
 
-		return True
+		# Close driver and quit chromedriver gracefully
+		self.driver.close()
+		self.driver.quit()
 
 
-	def handle_timeout(self):
+
+	def reset_chromedriver(self):
 
 		try:
 

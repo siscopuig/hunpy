@@ -364,7 +364,8 @@ class Driver:
 		#	(Keys.CONTROL + Keys.SHIFT).click().perform()
 
 
-		ActionChains(self.get_driver()).move_to_element(element).key_down(Keys.COMMAND).click().key_up(Keys.COMMAND).perform()
+		ActionChains(self.get_driver()).move_to_element(element).\
+			key_down(Keys.COMMAND).click().key_up(Keys.COMMAND).perform()
 
 
 		# This method clicks on element(it might avoid clicking on light-boxes)
