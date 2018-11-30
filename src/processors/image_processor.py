@@ -87,7 +87,7 @@ class ImageProcessor(ContainerProcessor):
 			item.is_known_placement = True
 
 
-		if UtilsString.match_string_in_list(domain, self.datasource.get_adservers(), 'adservers'):
+		if UtilsString.match_string_in_list(domain, self.datasource.get_adservers()):
 			item.is_known_adserver = True
 
 

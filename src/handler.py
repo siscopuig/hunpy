@@ -32,8 +32,8 @@ class Handler:
 		for url in urls:
 
 			# For debugging purposes:
-			# url['url'] = 'http://localhost:63342/hunpy/lab/html_templates/html_main_document.html'
-			# url['id'] = 1
+			#url['url'] = 'http://localhost:63342/hunpy/lab/html_templates/html_main_document.html'
+			#url['id']  = 1
 
 			try:
 
@@ -62,6 +62,8 @@ class Handler:
 
 
 			except Exception as e:
+
+				# For debugging purposes only
 				print(traceback.format_exc())
 
 				exception = str(e).replace('\n', '')
@@ -72,6 +74,10 @@ class Handler:
 				self.driver.close()
 				self.driver = None
 
+				# Recursive
+				self.search()
+
+		return True
 
 
 	def handle_timeout(self):

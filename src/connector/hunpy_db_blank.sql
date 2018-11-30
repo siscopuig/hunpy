@@ -197,7 +197,7 @@ CREATE TABLE `Urls` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `url` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -206,7 +206,7 @@ CREATE TABLE `Urls` (
 
 LOCK TABLES `Urls` WRITE;
 /*!40000 ALTER TABLE `Urls` DISABLE KEYS */;
-INSERT INTO `Urls` (`id`, `url`) VALUES (1,'http://www.moneyweek.com'),(2,'http://www.trustnet.com/IMAUTOEICs.aspx'),(3,'http://www.trustnet.com/Investments/Perf.aspx?univ=O'),(4,'http://www.ftadviser.com/'),(5,'http://www.morningstar.co.uk/uk/'),(6,'http://www.pensions-expert.com'),(7,'http://www.professionaladviser.com'),(8,'http://www.citywire.co.uk/new-model-adviser'),(9,'http://www.citywire.co.uk/wealth-manager'),(10,'http://www.theguardian.com/uk'),(11,'http://www.theguardian.com/world'),(12,'http://www.ft.com/home/uk'),(13,'http://www.barrons.com/'),(14,'http://www.bloomberg.com/markets'),(15,'http://www.bloomberg.com/insights'),(16,'http://www.economist.com'),(17,'http://www.iii.co.uk'),(18,'http://www.moneywise.co.uk'),(19,'http://www.telegraph.co.uk'),(20,'http://www.trustnet.com'),(21,'http://www.telegraph.co.uk/finance'),(22,'http://www.telegraph.co.uk/finance/personalfinance'),(23,'http://www.funds.telegraph.co.uk/clients/telegraph'),(25,'http://www.moneymarketing.co.uk/investments'),(26,'http://www.moneyobserver.com/how-to-invest'),(27,'https://www.fool.co.uk'),(28,'http://uk.reuters.com'),(30,'http://www.moneywise.co.uk/investing/first-time-investor/expert-investment-tips-50-to-50000'),(31,'http://www.moneywise.co.uk/investing/tax-efficient-investing'),(32,'http://www.moneywise.co.uk/investing/funds'),(33,'http://www.moneywise.co.uk/investing/investment-trusts'),(34,'http://www.moneysavingexpert.com'),(35,'http://www.theguardian.com/uk/money'),(36,'http://www.whatinvestment.co.uk'),(37,'https://www.boringmoney.co.uk'),(38,'http://www.etnet.com.hk/www/tc/home/index.php'),(39,'http://www.forbes.com/forbes/welcome'),(40,'http://www.dailymail.co.uk/home/index.html'),(41,'http://www.forbes.com');
+INSERT INTO `Urls` (`id`, `url`) VALUES (1,'http://www.moneyweek.com'),(2,'http://www.trustnet.com/IMAUTOEICs.aspx'),(3,'http://www.trustnet.com/Investments/Perf.aspx?univ=O'),(4,'http://www.ftadviser.com/'),(5,'http://www.morningstar.co.uk/uk/'),(6,'http://www.pensions-expert.com'),(7,'http://www.professionaladviser.com'),(8,'http://www.citywire.co.uk/new-model-adviser'),(9,'http://www.citywire.co.uk/wealth-manager'),(10,'http://www.theguardian.com/uk'),(11,'http://www.theguardian.com/world'),(12,'http://www.ft.com/home/uk'),(13,'http://www.barrons.com/'),(14,'http://www.bloomberg.com/markets'),(15,'http://www.bloomberg.com/insights'),(16,'http://www.economist.com'),(17,'http://www.iii.co.uk'),(18,'http://www.moneywise.co.uk'),(19,'http://www.telegraph.co.uk'),(20,'http://www.trustnet.com'),(21,'http://www.telegraph.co.uk/finance'),(22,'http://www.telegraph.co.uk/finance/personalfinance'),(23,'http://www.funds.telegraph.co.uk/clients/telegraph'),(25,'http://www.moneymarketing.co.uk/investments'),(26,'http://www.moneyobserver.com/how-to-invest'),(27,'https://www.fool.co.uk'),(28,'http://uk.reuters.com'),(30,'http://www.moneywise.co.uk/investing/first-time-investor/expert-investment-tips-50-to-50000'),(31,'http://www.moneywise.co.uk/investing/tax-efficient-investing'),(32,'http://www.moneywise.co.uk/investing/funds'),(33,'http://www.moneywise.co.uk/investing/investment-trusts'),(34,'http://www.moneysavingexpert.com'),(35,'http://www.theguardian.com/uk/money'),(36,'http://www.whatinvestment.co.uk'),(37,'https://www.boringmoney.co.uk'),(38,'http://www.etnet.com.hk/www/tc/home/index.php'),(39,'http://www.forbes.com/forbes/welcome'),(40,'http://www.dailymail.co.uk/home/index.html'),(41,'http://www.forbes.com'),(42,'http://www.investmentweek.co.uk/'),(43,'http://www.moneymarketing.co.uk/investments'),(44,'https://next.ft.com/markets'),(45,'http://www.portfolio-adviser.com/'),(46,'http://www.cnbc.com'),(47,'https://www.profit-loss.com/'),(48,'http://www.thisismoney.co.uk/money/investing/index.html'),(49,'http://www.wsj.com'),(50,'http://www.businessinsider.com/');
 /*!40000 ALTER TABLE `Urls` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -219,4 +219,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-28 12:50:04
+-- Dump completed on 2018-11-28 19:34:28

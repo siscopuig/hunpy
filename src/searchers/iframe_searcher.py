@@ -26,8 +26,6 @@ class FrameSearcher(ContainerElement):
 			['style', 	self.txt_style]
 		])
 
-		self.is_switch_in_frame = None
-
 
 	def find_containers(self, page=None):
 		"""
@@ -57,6 +55,7 @@ class FrameSearcher(ContainerElement):
 
 			# Set iframe element
 			iframe.element = element
+			self.log.debug('element ID: {}'.format(element.id))
 
 			# Set element dimensions
 			iframe.size = self.driver.get_element_size(element)
@@ -102,9 +101,6 @@ class FrameSearcher(ContainerElement):
 			# Recursive - it is calling itself
 			iframe.iframes = self.find_iframes(iframe)
 
-		# if self.is_switch_in_frame:
-		# 	self.driver.switch_to_main_document()
-		# 	self.log.info('Switched frame focus on main document on find_iframes()')
 
 		return iframes
 
@@ -130,11 +126,9 @@ class FrameSearcher(ContainerElement):
 			iframe = iframe.parent
 
 		# Switch to the main document.
-		self.driver.switch_to_main_document()
-		# self.log.info('Switched frame focus on main document on switch_to_iframe()')
-		# self.is_switch_in_frame = False
+		self.driver.switch_to_default_content()
 
-		# Loop over the iframes starting from last element in list
+
 		for iframe in reversed(iframes):
 
 
@@ -149,11 +143,6 @@ class FrameSearcher(ContainerElement):
 					self.log.debug('Unable to switch to the iframe document')
 					return False
 
-				#else:
-					# For debugging purposes only:
-					# self.is_switch_in_frame = True
-					# if not isinstance(element, bool):
-					# 	self.log.info('Switched into frame element id: {}'.format(element.id))
 
 			else:
 
@@ -166,11 +155,6 @@ class FrameSearcher(ContainerElement):
 						self.log.debug('Unable to switch to iframe document')
 						return False
 
-					#else:
-						# For debugging purposes only:
-						# self.is_switch_in_frame = True
-						# if not isinstance(element, bool):
-						# 	self.log.info('Switched into frame element id: {}'.format(element.id))
 				else:
 					self.log.debug('Unable to find iframe {} using xpath or hash'.format(iframe.hashref))
 					return False

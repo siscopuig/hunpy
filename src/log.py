@@ -14,27 +14,21 @@ class Log:
 
 	def __init__(self) :
 
-		self.log_filename = ''
-		self.log_filepath = ''
-		self.formatter = ''
-		self.string_format = '%(asctime)s - %(levelname)s - %(message)s'
-		self.date_format = "%Y-%m-%d_%H:%M:%S"
-
-		# Creates log filename & filepath
-		self.create_log_filepath()
-
 		# Get an instance from logging
 		self.logger = logging.getLogger(__name__)
 
 
-	def create_log_filepath(self):
+	def open(self, config):
 
-		dir = '../log/'
-		name = 'hunpy'
-		date = datetime.datetime.now().strftime(self.date_format)
-		self.log_filename = '{name}_{date}.log'.format(name=name, date=date)
-		abs_filepath = os.path.abspath(dir)
-		self.log_filepath = abs_filepath + '/' + self.log_filename
+		string_format = config['log.string.format']
+		date_format = config['log.date.format']
+		log_dir = config['log.dir']
+		log_name = config['log.name']
+
+		date = datetime.datetime.now().strftime(date_format)
+		filename = '{name}_{date}.log'.format(name=log_name, date=date)
+		abs_filepath = os.path.abspath(log_dir)
+		log_filepath = abs_filepath + '/' + filename
 
 		# Create file in log directory
 		try:
@@ -43,26 +37,23 @@ class Log:
 		except OSError:
 			print('Error: Creating directory. ' + abs_filepath)
 
-
-	def open(self):
-
+		# @todo:
+		# Get info to explain the process of the lines below.
 
 		self.logger.setLevel(logging.DEBUG)
-		self.formatter = logging.Formatter(self.string_format)
+		formatter = logging.Formatter(string_format)
 
-
-		fh = logging.FileHandler(filename=self.log_filepath, mode='a', encoding=None, delay=False)
+		fh = logging.FileHandler(filename=log_filepath, mode='a', encoding=None, delay=False)
 		fh.setLevel(logging.DEBUG)
-		fh.setFormatter(self.formatter)
-
+		fh.setFormatter(formatter)
 
 		sh = logging.StreamHandler()
 		sh.setLevel(logging.DEBUG)
-		sh.setFormatter(self.formatter)
-
+		sh.setFormatter(formatter)
 
 		self.logger.addHandler(fh)
 		self.logger.addHandler(sh)
+
 
 
 	def set_level(self, level):

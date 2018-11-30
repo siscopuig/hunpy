@@ -8,7 +8,7 @@ from selenium.webdriver.chrome.options import Options
 import time
 import io
 from PIL import Image
-# from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.keys import Keys
 
 
 def ewe(none_result=True, common_exception_result=False):
@@ -206,6 +206,7 @@ class Driver:
 		:param xpath:
 		:return:
 		"""
+
 		return self.get_driver().find_element_by_xpath(xpath)
 
 
@@ -253,13 +254,13 @@ class Driver:
 		return element.get_attribute(attr)
 
 
-	@ewe
+	@ewe()
 	def close(self):
 		"""
 
 		:return:
 		"""
-		self.driver.close()
+		self.get_driver().close()
 
 
 	@ewe()
@@ -272,12 +273,20 @@ class Driver:
 
 
 	@ewe()
-	def switch_to_main_document(self):
+	def switch_to_default_content(self):
 		"""
 
 		:return:
 		"""
 		self.get_driver().switch_to.default_content()
+
+
+	@ewe()
+	def switch_to_window_default_content(self, window):
+
+		if self.switch_to_window(window):
+			return self.switch_to_default_content()
+		return False
 
 
 	@ewe()
@@ -340,9 +349,7 @@ class Driver:
 		"""
 		On chrome, pressing the middle button of the mouse links are forced
 		to open a new tab. (Appears that so not work anymore)
-
 		Open links in a new tab -> Send Keys -> Ctrl + Shift + click
-
 
 		:return None
 		"""
@@ -352,15 +359,24 @@ class Driver:
 		if not element:
 			return None
 
-		# This method can open more than one tab
+		# This method force chrome to open a new tab by shortcut
 		#ActionChains(self.get_driver()).move_to_element(element).send_keys \
 		#	(Keys.CONTROL + Keys.SHIFT).click().perform()
 
-		# This method clicks on element(it might skipped clicking on light-boxes)
-		ActionChains(self.get_driver()).move_to_element(element).click().perform()
 
-		time.sleep(2)
+		ActionChains(self.get_driver()).move_to_element(element).key_down(Keys.COMMAND).click().key_up(Keys.COMMAND).perform()
 
+
+		# This method clicks on element(it might avoid clicking on light-boxes)
+		#ActionChains(self.get_driver()).move_to_element(element).click().perform()
+
+
+	@ewe()
+	def refresh_window(self):
+
+		# ActionChains(self.get_driver()).key_down(Keys.CONTROL).send_keys(Keys.F5).perform()
+
+		self.get_driver().execute_script("location.reload()")
 
 
 
@@ -384,13 +400,13 @@ class Driver:
 
 
 	@ewe()
-	def switch_to_window(self, window_name):
+	def switch_to_window(self, window):
 		"""
 
-		:param window_name:
+		:param window:
 		:return:
 		"""
-		self.get_driver().switch_to.window(window_name)
+		self.get_driver().switch_to.window(window)
 
 
 
@@ -436,7 +452,7 @@ class Driver:
 		for i, window in enumerate(windows):
 			if i != 0:
 				self.switch_to_window(window)
-				self.close()
+				self.driver.close()
 
 
 	@ewe('', '')

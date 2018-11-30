@@ -11,6 +11,7 @@ from utils.utils_url import encode_url
 import asyncio
 import time
 from log import Log
+from selenium.common.exceptions import TimeoutException
 
 
 
@@ -233,21 +234,20 @@ class ContainerProcessor(Processor):
 		advert.finfo = item.finfo
 
 
-
-
 	def is_src_matching_invalid_pattern(self, src, domain):
 
 		# @todo:
 		# - Improve source validation
 
-		if UtilsString.match_string_in_list(domain, self.datasource.get_ignore_domain(), 'ignore_domain'):
+		# Ignore domain
+		if UtilsString.match_string_in_list(domain, self.datasource.get_ignore_domain()):
 			self.log.debug('Domain src ({}) is in source ignore domain'.format(domain))
 			return True
 
-		if UtilsString.match_string_parts_in_list(src, self.datasource.get_ignore_path(), 'ignore_path'):
+		# Ignore path
+		if UtilsString.match_string_parts_in_list(src, self.datasource.get_ignore_path()):
 			self.log.debug('Source path from src: ({}) in src ignore path list'.format(src))
 			return True
-
 
 
 	def process_stripped_source(self, src):
@@ -276,6 +276,25 @@ class ContainerProcessor(Processor):
 		return src, request['content_type']
 
 
+	def find_advertiser_by_click(self, item):
+
+
+		element = item.element
+		if item.xpath:
+			element = self.driver.find_element_by_xpath(item.xpath)
+			if not element:
+				self.log.info('Process landing -> No element by find element by xpath {}'.format(item.xpath))
+				return False
+
+
+		result = self.driver.click_on_element(element)
+		if result is None:
+			self.log.info('Item element not visible to click on it')
+			return False
+
+		return True
+
+
 
 	def process_landing(self, item):
 		"""
@@ -284,18 +303,18 @@ class ContainerProcessor(Processor):
 		:return:
 		"""
 
-
-		main_window_handle = self.driver.get_main_window_handle()
-		if main_window_handle != self.page.main_window_handle:
-			self.driver.switch_to_window(self.page.main_window_handle)
-			self.log.info('Switched to main window: {}'.format(self.page.main_window_handle))
+		# Switch to main document
+		if not self.driver.switch_to_window(self.page.main_window_handle):
+			self.log.error('Unable to switch to the main window document')
 
 
-		# Click on item element
-		result = self.driver.click_on_element(item.element)
-		if result is None:
-			self.log.debug('Item element not visible to click on it')
+		# New modification
+		if not self.find_advertiser_by_click(item):
 			return False
+
+		# Wait a bit for the new tab to be loaded
+		time.sleep(2)
+
 
 		# Did it open a new window?
 		windows = self.driver.get_window_handle()
@@ -311,8 +330,19 @@ class ContainerProcessor(Processor):
 			return False
 
 
-		# Retrieve landings
-		landing = self.get_landing_source()
+		try:
+			# Retrieve landings
+			landing = self.get_landing_source()
+
+		except TimeoutException as e:
+			self.log.warning('Timeout error accessing url on tab: ({})'.format(e))
+			self.driver.close_window_except_main(windows)
+			return False
+
+
+
+
+
 		if not landing:
 			return False
 
@@ -338,6 +368,11 @@ class ContainerProcessor(Processor):
 
 			if window != self.page.main_window_handle:
 				self.driver.switch_to_window(window)
+
+
+				#time.sleep(3)
+				#self.driver.refresh_window()
+
 				self.log.debug('Switched to new window: Switched to window ({})'.format(window))
 
 				# Get landing url
@@ -350,8 +385,8 @@ class ContainerProcessor(Processor):
 
 
 		# Switch back to the main window
-		self.driver.close_window_except_main(windows)
 		self.driver.switch_to_window(self.page.main_window_handle)
+		self.driver.close_window_except_main(windows)
 		self.log.info('Switched to main window: ({})'.format(self.page.main_window_handle))
 
 

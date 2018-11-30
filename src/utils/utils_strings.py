@@ -6,7 +6,7 @@ class UtilsString:
 
 
 	@staticmethod
-	def match_string_in_list(string, string_list, name_list):
+	def match_string_in_list(string, string_list):
 
 
 		# Convert strings to casefolded strings for caseless matching
@@ -17,7 +17,6 @@ class UtilsString:
 		for element in string_list:
 			str = ''.join(element.casefold())
 			if str == string:
-				print('match_string_in_list({}) str: {} in string: {}'.format(name_list, str, string))
 				return True
 
 		return False
@@ -25,7 +24,7 @@ class UtilsString:
 
 
 	@staticmethod
-	def match_string_parts_in_list(src, string_list, name_list):
+	def match_string_parts_in_list(src, string_list):
 
 		# match_string_parts_in_list(ignore_path) string: ads in str: uploads
 		# https://s0.2mdn.net/ads/richmedia/studio/pv2/60817163/20180903024843963/index.html
@@ -54,7 +53,6 @@ class UtilsString:
 		for string in exploded:
 			for str in string_list:
 				if string and string in str.casefold() and string == str.casefold():
-					#print('match_string_parts_in_list({}) string: {} in str: {}'.format(name_list, string, str))
 					return True
 
 		return False

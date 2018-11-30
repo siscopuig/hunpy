@@ -27,6 +27,12 @@ class Processor:
 
 		self.page = page
 
+
+		if not self.driver.switch_to_window_default_content(self.page.main_window_handle):
+			self.log.error('Unable to switch to main window default content')
+			return False
+
+
 		# Action
 		self.process(page)
 

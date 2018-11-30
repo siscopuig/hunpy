@@ -69,7 +69,7 @@ class IframeProcessor(ContainerProcessor):
 				item.is_known_placement = True
 
 			# Is a known ad server
-			if UtilsString.match_string_in_list(domain, self.datasource.get_adservers(), 'adservers'):
+			if UtilsString.match_string_in_list(domain, self.datasource.get_adservers()):
 				item.is_known_adserver = True
 
 
@@ -119,7 +119,7 @@ class IframeProcessor(ContainerProcessor):
 				item.is_known_placement = True
 
 			# Is a known ad server
-			if UtilsString.match_string_in_list(domain, self.datasource.get_adservers(), 'adservers'):
+			if UtilsString.match_string_in_list(domain, self.datasource.get_adservers()):
 				item.is_known_adserver = True
 
 			# Is page domain equal to source domain
@@ -144,7 +144,6 @@ class IframeProcessor(ContainerProcessor):
 			item.src = source
 			item.finfo = finfo
 			item.is_content = True
-
 			return True
 
 		return False
@@ -156,6 +155,7 @@ class IframeProcessor(ContainerProcessor):
 		item.element = container.element
 		item.location = container.location
 		item.size = container.size
+		item.xpath = container.xpath
 
 		# Convert to an ordered list
 		# An OrderedSet is a custom MutableSet that remembers its order,
@@ -180,6 +180,7 @@ class IframeProcessor(ContainerProcessor):
 		item.titles = list(item.titles)
 		item.styles = list(item.styles)
 		item.is_iframe = True
+
 
 
 

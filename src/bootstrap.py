@@ -6,6 +6,7 @@ from connector.mysql_connector import MysqlConn
 import sys
 
 
+
 config_yml_file_path = [
 	'/home/sisco/PycharmProjects/hunpy/config/hunpy.yml',
 ]
@@ -25,23 +26,29 @@ class Bootstrap:
 
 	def __init__(self):
 
-		# Open log
+		# Get a log instance
 		self.log = Log()
-		self.log.open()
-		self.log.info('Hunpy started')
+
+		# Get configuration list
+		self.config = self.get_yaml_conf_file()
+
+		# Get connector
+		self.dbconn = self.get_connector(self.config['connection.parameters'])
+
+		# Get datasource from files & database
+		self.datasource = self.get_datasource(self.dbconn)
 
 
 	def start(self):
 
-		conf = self.get_yaml_conf_file()
+		# Open log
+		self.log.open(self.config)
+		self.log.info('Hunpy started')
 
-		dbconn = self.get_connector(conf['connection.parameters'])
 
-		# Get datasource from files & database
-		datasource = self.get_datasource(dbconn)
-
-		handler = Handler(conf, datasource)
-		handler.search()
+		handler = Handler(self.config, self.datasource)
+		if handler.search():
+			self.start()
 
 
 	def get_connector(self, connect_param):
@@ -58,8 +65,7 @@ class Bootstrap:
 			conn.connect()
 
 		except Exception as e:
-			self.log.error('MySQL exception: {}'.format(e))
-			sys.exit(1)
+			sys.exit('MySQL exception: {}'.format(e))
 
 		return conn
 
@@ -77,8 +83,7 @@ class Bootstrap:
 			config.load(config_yml_file_path)
 
 		except Exception as e:
-			self.log.error('Error loading yaml configuration file: {}'.format(e))
-			sys.exit(1)
+			sys.exit('Error loading yaml configuration file: {}'.format(e))
 
 		return config.data
 
@@ -96,8 +101,7 @@ class Bootstrap:
 			ds.config_datasource_abs_path(datasource_paths)
 
 		except Exception as e:
-			self.log.error('Error loading datasource files: {}'.format(e))
-			sys.exit(1)
+			sys.exit('Error loading datasource files: {}'.format(e))
 
 		return ds
 

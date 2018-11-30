@@ -1,10 +1,24 @@
 
 
+
+# LOG
+log.name:
+  'hunpy'
+log.dir:
+  '/home/sisco/PycharmProjects/hunpy/log'
+log.string.format:
+  '%(asctime)s - %(levelname)s - %(message)s'
+log.date.format:
+  '%Y-%m-%d_%H:%M:%S'
+
+
+# DATABASE CONNECTION
 connection.parameters:
   'user': 'root'
   'password': 'pupahit66'
   'host': 'localhost'
   'database': 'hunpy'
+
 
 datasource.relative.paths:
   adservers:            /home/sisco/PycharmProjects/hunpy/datasource/adservers.txt
@@ -15,14 +29,6 @@ datasource.relative.paths:
 
 format.datetime:
   - '%Y-%m-%d %H:%M:%S'
-
-# RELATIVE LOG DIRECTORY
-log_dir:
-  '../log/'
-
-# LOG FILENAME
-log_name:
-  'hunpy'
 
 # MAXIMUM STRING CHARACTERS
 max.source.len: 512

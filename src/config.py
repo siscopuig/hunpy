@@ -23,7 +23,7 @@ class Config:
 					self.fill(yaml.load(yml_file))
 
 			except yaml.YAMLError as ex:
-				self.log.critical('Error loading yaml config file: {}'.format(ex))
+				raise 'Error loading yaml config file: {}'.format(ex)
 
 
 	def fill(self, yml_file):
