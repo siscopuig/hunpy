@@ -1,3 +1,4 @@
+cdn1.spotible.com
 cdn.oas-eu1.adnxs.com
 secure.flashtalking.com
 s0.2mdn.net
@@ -111,7 +112,6 @@ img.tbnimg.com
 ipengtai.huanqiu.com
 wmcdn.qtmojo.cn
 r.takungpao.com
-localhost:63342
 101com.com
 101order.com
 123freeavatars.com

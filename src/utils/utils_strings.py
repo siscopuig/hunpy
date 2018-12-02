@@ -7,24 +7,23 @@ class UtilsString:
 
 	@staticmethod
 	def match_string_in_list(string, string_list):
+		"""
 
 
-		# Convert strings to casefolded strings for caseless matching
-		# (Is an aggressive lower case)
-		string = string.casefold()
-
-
-		for element in string_list:
-			str = ''.join(element.casefold())
-			if str == string:
+		:param string:
+		:param string_list:
+		:return: boolean
+		"""
+		casefold_string = string.casefold()
+		for str in string_list:
+			if (str is string or string is str) or (str.casefold() in casefold_string):
 				return True
 
 		return False
 
 
-
 	@staticmethod
-	def match_string_parts_in_list(src, string_list):
+	def match_string_parts_in_list(parts, string_list):
 
 		# match_string_parts_in_list(ignore_path) string: ads in str: uploads
 		# https://s0.2mdn.net/ads/richmedia/studio/pv2/60817163/20180903024843963/index.html
@@ -45,44 +44,38 @@ class UtilsString:
 		# the same string -- that is, it has a different identity, because it is stored
 		# in a different place in memory.
 
-
-
-		src = src.casefold()
-		exploded = src.split('/')
-
-		for string in exploded:
+		for part in parts:
 			for str in string_list:
-				if string and string in str.casefold() and string == str.casefold():
+				if (part is not '' and part == str) or (part.casefold == str.casefold()):
 					return True
-
 		return False
 
+
+	@staticmethod
+	def strip_query_in_source(source):
+
+		if '?' in source:
+			return source.split('?')[0]
+		elif '#' in source:
+			return source.split('#')[0]
+
+		return source
+
+
+	@staticmethod
+	def get_paths_from_source(source):
+
+		source = UtilsString.strip_query_in_source(source)
+		source = UtilsString.strip_scheme_protocol(source)
+		domain = source.split('/')[0]
+		path = source.replace(domain, '')
+		return path.split('/')
 
 
 	@staticmethod
 	def get_domain(url):
-		"""
-		Get domain from urls like http://localhost:63342/hunpy/ or
-		http://www.localhost:63342/hunpy/. Returns 'localhost:63342'
-		"""
-		# Error
-		# TypeError: argument of type 'NoneType' is not iterable
-
-		if 'www' in url:
-			url = url.replace('www.', '')
-
-		exploded = url.split('/')
-
-		for i, piece in enumerate(exploded):
-			if 'http' in piece:
-				exploded.pop(i)
-				break
-
-		if len(exploded) >= 2:
-			return exploded[1]
-
-		return ''
-
+		src = UtilsString.strip_scheme_protocol(url)
+		return src.split('/')[0]
 
 
 	@staticmethod
@@ -93,7 +86,6 @@ class UtilsString:
 			if size[0] == width and size[1] == height:
 				return True
 		return False
-
 
 
 	@staticmethod
@@ -113,7 +105,6 @@ class UtilsString:
 		exploded.pop(-1)
 
 		return exploded[0]
-
 
 
 	@staticmethod
@@ -155,7 +146,6 @@ class UtilsString:
 
 		# Returns last element
 		return urls.pop(-1)
-
 
 
 	@staticmethod

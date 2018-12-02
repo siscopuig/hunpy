@@ -1,4 +1,3 @@
-
 from item import Item
 from advert import Advert, AdvertState
 from utils.utils_requests import get_http_request
@@ -245,9 +244,12 @@ class ContainerProcessor(Processor):
 			return True
 
 		# Ignore path
-		if UtilsString.match_string_parts_in_list(src, self.datasource.get_ignore_path()):
+		source_paths = UtilsString.get_paths_from_source(src)
+		if UtilsString.match_string_parts_in_list(source_paths, self.datasource.get_ignore_path()):
 			self.log.debug('Source path from src: ({}) in src ignore path list'.format(src))
 			return True
+
+		return False
 
 
 	def process_stripped_source(self, src):
@@ -259,7 +261,7 @@ class ContainerProcessor(Processor):
 		:return:
 		"""
 
-		stripped_source = UtilsString.strip_string(src, '?')
+		stripped_source = UtilsString.strip_query_in_source(src)
 		request = self.is_valid_source_http_request(stripped_source)
 		if not request:
 			self.log.debug('Invalid http response from stripped source, src: ({}) '.format(stripped_source))
@@ -307,14 +309,12 @@ class ContainerProcessor(Processor):
 		if not self.driver.switch_to_window(self.page.main_window_handle):
 			self.log.error('Unable to switch to the main window document')
 
-
 		# New modification
 		if not self.find_advertiser_by_click(item):
 			return False
 
 		# Wait a bit for the new tab to be loaded
 		time.sleep(2)
-
 
 		# Did it open a new window?
 		windows = self.driver.get_window_handle()
@@ -340,9 +340,6 @@ class ContainerProcessor(Processor):
 			return False
 
 
-
-
-
 		if not landing:
 			return False
 
@@ -366,12 +363,10 @@ class ContainerProcessor(Processor):
 
 		for i, window in enumerate(windows):
 
+
 			if window != self.page.main_window_handle:
+
 				self.driver.switch_to_window(window)
-
-
-				#time.sleep(3)
-				#self.driver.refresh_window()
 
 				self.log.debug('Switched to new window: Switched to window ({})'.format(window))
 
@@ -394,16 +389,8 @@ class ContainerProcessor(Processor):
 
 			for landing in landings:
 
-				# Check if landing is not an invalid source
-				if landing in self.src_ignored_landing:
-					self.log.debug('Landing ({}) path in src ignored landing'.format(landing))
+				if self.is_landing_invalid(landing):
 					continue
-
-				# Check if landing domain is equal to page domain
-				domain = UtilsString.get_domain(landing)
-				if domain == self.page.page_domain:
-					self.log.info('Landing domain ({}) equal to page domain {}'.format(domain, self.page.page_domain))
-
 
 		return landing
 
@@ -413,7 +400,7 @@ class ContainerProcessor(Processor):
 
 		if item.img_hrefs:
 
-			for source in reversed(item.img_hrefs):
+			for source in item.img_hrefs:
 
 				link = UtilsString.get_url_from_string(source)
 				if not link:
@@ -429,17 +416,22 @@ class ContainerProcessor(Processor):
 
 
 
-	def is_landing_invalid(self, link):
+	def is_landing_invalid(self, landing):
 
 		# Is landing source already invalid
-		if link in self.src_ignored_landing:
-			self.log.debug('Landing source {} in ignored landing list'.format(link))
+		if landing in self.src_ignored_landing:
+			self.log.debug('Landing source {} in ignored landing list'.format(landing))
+			return True
+
+		# Is landing domain a known ad server
+		domain = UtilsString.get_domain(landing)
+		if UtilsString.match_string_in_list(domain, self.datasource.get_adservers()):
+			self.log.info('Landing domain ({}) in adservers'.format(domain))
 			return True
 
 		# Is landing domain in ignore domain
-		domain = UtilsString.get_domain(link)
-		if domain in self.datasource.get_ignore_domain():
-			self.log.debug('Landing domain {} in ignore domain list'.format(domain))
+		if UtilsString.match_string_in_list(domain, self.datasource.get_adservers()):
+			self.log.debug('Landing domain {} in ignore domain'.format(domain))
 			return True
 
 		return False

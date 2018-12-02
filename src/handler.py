@@ -32,7 +32,7 @@ class Handler:
 		for url in urls:
 
 			# For debugging purposes:
-			#url['url'] = 'http://localhost:63342/hunpy/lab/html_templates/html_main_document.html'
+			#url['url'] = 'http://uk.businessinsider.com/'
 			#url['id']  = 1
 
 			try:
@@ -73,12 +73,6 @@ class Handler:
 
 				# Reset driver
 				self.driver = None
-
-
-		# Close driver and quit chromedriver gracefully
-		self.driver.close()
-		self.driver.quit()
-
 
 
 	def reset_chromedriver(self):
