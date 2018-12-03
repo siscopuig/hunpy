@@ -55,7 +55,6 @@ class FrameSearcher(ContainerElement):
 
 			# Set iframe element
 			iframe.element = element
-			self.log.debug('element ID: {}'.format(element.id))
 
 			# Set element dimensions
 			iframe.size = self.driver.get_element_size(element)

@@ -1,6 +1,5 @@
 from log import Log
 from hunpy_exception import HunpyException
-from utils.utils_files import get_abs_path
 from utils.utils_strings import UtilsString
 import numpy as np
 
@@ -25,11 +24,9 @@ class Datasource:
 
 
 	def config_datasource_abs_path(self, ds_paths):
-		# @todo: Do some file exist checking
 
 		for key, value in ds_paths.items():
 			self.ds_paths[key] = value
-
 
 
 	def get_urls(self):
@@ -37,7 +34,7 @@ class Datasource:
 		self.urls = self.dbconn.select_urls()
 
 		if not self.urls:
-			raise HunpyException('Error getting the urls from database')
+			raise HunpyException('Error getting urls from database')
 
 		return self.urls
 
@@ -68,20 +65,6 @@ class Datasource:
 			self.adservers = np.array(filelines, dtype=np.object)
 
 		return self.adservers
-
-
-
-	def get_ignore_domain_path(self):
-
-		if self.ignore_domain_path is None:
-			# Get datasource list from txt file
-			filelines = self.read_file_in_lines(self.ds_paths['ignore.domain.path'])
-
-			# Create a numpy array to store the list
-			self.ignore_domain_path = np.array(filelines, dtype=np.object)
-
-		return self.ignore_domain_path
-
 
 
 	def get_ignore_domain(self):

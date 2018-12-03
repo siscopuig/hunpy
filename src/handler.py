@@ -32,14 +32,14 @@ class Handler:
 		for url in urls:
 
 			# For debugging purposes:
-			#url['url'] = 'http://uk.businessinsider.com/'
+			#url['url'] = 'http://localhost:63342/hunpy/lab/html_templates/html_main_document.html'
 			#url['id']  = 1
 
 			try:
 
 				# Get driver instance
 				if self.driver is None:
-					self.driver = Driver()
+					self.driver = Driver(self.config)
 					self.log.info('Chromedriver started')
 					self.driver.start()
 
@@ -100,6 +100,7 @@ class Handler:
 		"""
 
 		module_names = [
+			'scroll_processor',
 			'image_processor',
 			'iframe_processor',
 			'storage_processor'

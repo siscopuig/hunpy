@@ -1,7 +1,17 @@
 
 
+# SCROLL PROCESSOR
+jcs.total.height:
+  "return Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);"
+jcs.scroll.top:
+  'top.window.scroll(0, 0)'
+jcs.scroll.down:
+  'window.scrollBy(0, {});'
+jcs.scroll.max.number:
+  10
 
-# LOG
+
+# HUNPY LOG
 log.name:
   'hunpy'
 log.dir:
@@ -19,14 +29,14 @@ connection.parameters:
   'host': 'localhost'
   'database': 'hunpy'
 
-
+# DATASOURCE PATHS
 datasource.relative.paths:
   adservers:            /home/sisco/PycharmProjects/hunpy/datasource/adservers.txt
-  ignore.domain.path:   /home/sisco/PycharmProjects/hunpy/datasource/ignore_domain_path.txt
   ignore.domain:        /home/sisco/PycharmProjects/hunpy/datasource/ignore_domain.txt
   ignore.path:          /home/sisco/PycharmProjects/hunpy/datasource/ignore_path.txt
 
 
+# FORMATS
 format.datetime:
   - '%Y-%m-%d %H:%M:%S'
 
@@ -48,22 +58,39 @@ http_bad_request:
   - 404
   - 500
 
+
 # DRIVER OPTIONS
-chrome.options:
-   - --dns-prefetch-disable
-   - --disable-gpu
-   - --disable-plugins
-   - --no-sandbox
-   - --disable-infobars
-   - --disable-session-crashed-bubble
-   - --ignore-certificate-errors
-   - --ignore-ssl-errors=true
-chrome.headless_option:       --headless
-chrome.size_option:           --window-size={},{}
-chrome.user_data_dir:         --user-data-dir={}
-chrome.user_agent:            --user-agent={}
-chrome.chromedriver_log:      --log-path={}
-chrome.chromedriver_log_name: chromedriver.log
+page.load.timeout:
+  30
+chrome.user.agent:
+  Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64_59.0.3071.86 Safari/537.36
+chrome.window.width:
+  1440
+chrome.window.height:
+  990
+chrome.option.profile.path:
+  --user-data-dir=/home/sisco/PycharmProjects/hunpy/profile
+chrome.option.dns.prefetch.disable:
+  --dns-prefetch-disable
+chrome.option.ignore.ssl.errors:
+  --ignore-ssl-errors=true
+chrome.option.disable.infobars:
+  --disable-infobars
+chrome.option.disable.gpu:
+  --disable-gpu
+chrome.option.disable-plugins:
+  --disable-plugins
+chrome.option.nosandbox:
+  --no-sandbox
+chrome.option.disable.crashed.bubble:
+  --disable-session-crashed-bubble
+chrome.option.headless:
+  --headless
+chrome.option.disable.notifications:
+  --disable-notifications
+chrome.chromedriver.log:
+  --log-path=/home/sisco/PycharmProjects/hunpy/chromedriver.log
+
 
 # XPATH
 x.body:           .//body

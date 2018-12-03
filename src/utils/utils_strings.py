@@ -14,6 +14,10 @@ class UtilsString:
 		:param string_list:
 		:return: boolean
 		"""
+
+		if isinstance(string, bool):
+			print(0)
+
 		casefold_string = string.casefold()
 		for str in string_list:
 			if (str is string or string is str) or (str.casefold() in casefold_string):
@@ -44,9 +48,12 @@ class UtilsString:
 		# the same string -- that is, it has a different identity, because it is stored
 		# in a different place in memory.
 
+		if 'redir.html' in parts:
+			print(0)
+
 		for part in parts:
 			for str in string_list:
-				if (part is not '' and part == str) or (part.casefold == str.casefold()):
+				if (part is not '' and part == str) or (part.casefold() == str.casefold()):
 					return True
 		return False
 
@@ -74,6 +81,7 @@ class UtilsString:
 
 	@staticmethod
 	def get_domain(url):
+
 		src = UtilsString.strip_scheme_protocol(url)
 		return src.split('/')[0]
 

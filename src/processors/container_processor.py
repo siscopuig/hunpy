@@ -234,10 +234,14 @@ class ContainerProcessor(Processor):
 
 
 	def is_src_matching_invalid_pattern(self, src, domain):
+		"""
 
-		# @todo:
-		# - Improve source validation
+		Validate source
 
+		:param src:
+		:param domain:
+		:return: boolean
+		"""
 		# Ignore domain
 		if UtilsString.match_string_in_list(domain, self.datasource.get_ignore_domain()):
 			self.log.debug('Domain src ({}) is in source ignore domain'.format(domain))

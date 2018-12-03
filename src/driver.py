@@ -100,53 +100,83 @@ class Driver:
 	)
 
 
-	def __init__(self):
+	def __init__(self, config):
 
+		self.config = config
 		self.driver = None
 		self.chrome_options = None
 
 
-
-	def start(self):
+	def start(self, headless=False):
 		"""
 		:return:
 		"""
-		self.set_chrome_options()
+
+		# Set chrome options from config
+		self.set_chrome_options(headless)
+
+		# Get webdriver instance
 		self.driver = webdriver.Chrome(chrome_options=self.chrome_options)
-		self.driver.set_window_size(1440, 990)
-		self.driver.set_page_load_timeout(30)
+
+		# Set chrome viewport
+		self.driver.set_window_size(
+			int(self.config['chrome.window.width']),
+			int(self.config['chrome.window.height'])
+		)
+
+
+		# Waiting time before timeout exception is thrown
+		self.driver.set_page_load_timeout(int(self.config['page.load.timeout']))
+
+		# Waiting for any request made. E.g. get element attribute
 		self.driver.implicitly_wait(0)
-		#self.driver.maximize_window()
 
 
-	def set_chrome_options(self):
+	def set_chrome_options(self, headless):
 
-		user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64_59.0.3071.86 Safari/537.36'
-		prefs = {'profile.default_content_setting_values.notifications': 2}
 
 		self.chrome_options = Options()
-		self.chrome_options.add_argument('--user-data-dir=/home/sisco/PycharmProjects/hunpy/profile')
-		self.chrome_options.add_argument('--window-size=1366x768')
-		self.chrome_options.add_argument('--user-agent=' + user_agent)
-		self.chrome_options.add_argument('--ignore-ssl-errors=true')
 
+		# Sets user profile path
+		self.chrome_options.add_argument(self.config['chrome.option.profile.path'])
+
+		# Sets user agent
+		self.chrome_options.add_argument(self.config['chrome.user.agent'])
+
+		# Sets ignore ssl errors
+		self.chrome_options.add_argument(self.config['chrome.option.ignore.ssl.errors'])
+
+		# Unable dns-prefetch
+		self.chrome_options.add_argument(self.config['chrome.option.dns.prefetch.disable'])
+
+		# Disable infobars
+		self.chrome_options.add_argument(self.config['chrome.option.disable.infobars'])
+
+		# Disable gpu
+		self.chrome_options.add_argument(self.config['chrome.option.disable.gpu'])
+
+		# Disable plugins
+		self.chrome_options.add_argument(self.config['chrome.option.disable-plugins'])
+
+		# Unable sandbox
+		self.chrome_options.add_argument(self.config['chrome.option.nosandbox'])
+
+		# Disable session crashed bubble
+		self.chrome_options.add_argument(self.config['chrome.option.disable.crashed.bubble'])
+
+		# Disable notifications
+		self.chrome_options.add_argument(self.config['chrome.option.disable.notifications'])
+
+		# Enable headless mode
+		if headless:
+			self.chrome_options.add_argument(self.config['chrome.option.headless'])
+
+		# Experimental options
+		prefs = {'profile.default_content_setting_values.notifications': 2}
 		self.chrome_options.add_experimental_option(
 			'prefs', prefs
 		)
 
-		# self.chrome_options.arguments(
-		# 	'--window-size=1366x768',
-		# 	'--user-agent=' + self.user_agent,
-		# 	'--ignore-certificate-errors',
-		# 	'--ignore-ssl-errors=true',
-		# 	'--dns-prefetch-disable',
-		# 	'--disable-infobars',
-		# 	'--disable-session-crashed-bubble',
-		# 	'--disable-notifications',
-		# 	'--no-sandbox',
-		# 	#'--headless',
-		# 	#'--disable-gpu',
-		# )
 
 	@ewe()
 	def get_driver(self):
@@ -157,14 +187,6 @@ class Driver:
 		if self.driver is None:
 			self.start()
 		return self.driver
-
-
-	def reset_driver(self):
-		"""
-
-		:return:
-		"""
-		self.driver = None
 
 
 	@ewe()
@@ -410,32 +432,6 @@ class Driver:
 		self.get_driver().switch_to.window(window)
 
 
-
-	def open_new_tab(self):
-		"""
-		There is a bug in chromedriver that prevent chrome
-		to open a new tab sending keys (CONTROL + "t")
-
-		"""
-		#element = self.find_element_by_xpath('.//body')
-
-		#ActionChains(self.get_driver()).send_keys(Keys.COMMAND + "t").click(element).perform()
-
-		# ActionChains(self.get_driver()).key_down(Keys.CONTROL).click(element)\
-		# 	.send_keys('t').perform()
-		pass
-
-
-	@ewe
-	def execute_script(self, script):
-		"""
-		Opens a new tab on browser window.
-
-		"""
-		self.get_driver().execute_script(script)
-
-
-
 	def save_screenshot(self, filename):
 
 		# Gets the screenshot of the current element as a binary data.
@@ -484,6 +480,35 @@ class Driver:
 		image = image.crop((int(x), int(y), int(width), int(height)))
 		image_rgb = image.convert('RGB')
 		image_rgb.save('sample_screenshot_3.jpeg', format('JPEG'))
+
+
+	def open_new_tab(self):
+		"""
+		There is a bug in chromedriver that prevent chrome
+		to open a new tab sending keys (CONTROL + "t")
+
+		"""
+		#element = self.find_element_by_xpath('.//body')
+
+		#ActionChains(self.get_driver()).send_keys(Keys.COMMAND + "t").click(element).perform()
+
+		# ActionChains(self.get_driver()).key_down(Keys.CONTROL).click(element)\
+		# 	.send_keys('t').perform()
+		pass
+
+
+	@ewe()
+	def execute_javascript(self, script):
+		"""
+		Executes javascript
+		"""
+
+		# Do not work!! why??
+		# return self.get_driver().execute_script(script)
+
+		driver = self.get_driver()
+		return driver.execute_script(script)
+
 
 
 ##########################################

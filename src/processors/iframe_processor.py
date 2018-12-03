@@ -109,7 +109,6 @@ class IframeProcessor(ContainerProcessor):
 
 		for i, src in enumerate(item.img_srcs):
 
-
 			domain = UtilsString.get_domain(src)
 			if self.is_src_matching_invalid_pattern(src, domain):
 				continue
