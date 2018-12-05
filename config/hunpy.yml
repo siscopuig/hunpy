@@ -8,7 +8,7 @@ jcs.scroll.top:
 jcs.scroll.down:
   'window.scrollBy(0, {});'
 jcs.scroll.max.number:
-  10
+  3
 
 
 # HUNPY LOG

@@ -32,7 +32,7 @@ class Handler:
 		for url in urls:
 
 			# For debugging purposes:
-			#url['url'] = 'http://localhost:63342/hunpy/lab/html_templates/html_main_document.html'
+			#url['url'] = 'http://localhost:63343/hunpy/lab/html_templates/html_main_document.html'
 			#url['id']  = 1
 
 			try:
@@ -41,7 +41,7 @@ class Handler:
 				if self.driver is None:
 					self.driver = Driver(self.config)
 					self.log.info('Chromedriver started')
-					self.driver.start()
+					self.driver.start(headless=True)
 
 				# Open url in browser
 				self.driver.open(url['url'], 4)

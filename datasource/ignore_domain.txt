@@ -60,3 +60,5 @@ adsense.codev.wixapps.net
 js.driftt.com
 contextual.media.net
 reutersmedia.net
+ul1.dvtps.com
+secureframe.doubleclick.net

@@ -50,7 +50,6 @@ class FrameSearcher(ContainerElement):
 		# Loop over the elements
 		for element in elements:
 
-
 			iframe = Iframe(parent)
 
 			# Set iframe element
@@ -132,30 +131,27 @@ class FrameSearcher(ContainerElement):
 
 
 			element = self.driver.find_element_by_xpath(iframe.xpath)
-
-
 			if element:
 
-				self.log.debug('Found frame {} using xpath {}'.format(iframe.hashref, iframe.xpath))
+				#self.log.debug('Found frame {} using xpath {}'.format(iframe.hashref, iframe.xpath))
 
 				if not self.driver.switch_to_iframe(element):
-					self.log.debug('Unable to switch to the iframe document')
+					#self.log.debug('Unable to switch to the iframe document')
 					return False
 
 
 			else:
 
 				element = self.find_element_by_hash(iframe.hashref)
-
 				if element:
-					self.log.debug('Found iframe {} using hash xpath {}'.format(iframe.hashref, iframe.xpath))
+					#self.log.debug('Found iframe {} using hash xpath {}'.format(iframe.hashref, iframe.xpath))
 
 					if not self.driver.switch_to_iframe(element):
-						self.log.debug('Unable to switch to iframe document')
+						#self.log.debug('Unable to switch to iframe document')
 						return False
 
 				else:
-					self.log.debug('Unable to find iframe {} using xpath or hash'.format(iframe.hashref))
+					#self.log.debug('Unable to find iframe {} using xpath or hash'.format(iframe.hashref))
 					return False
 
 		return True

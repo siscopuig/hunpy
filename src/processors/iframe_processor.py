@@ -72,11 +72,9 @@ class IframeProcessor(ContainerProcessor):
 			if UtilsString.match_string_in_list(domain, self.datasource.get_adservers()):
 				item.is_known_adserver = True
 
-
 			# Is page domain equal to source domain
 			if domain == self.page.page_domain:
 				item.is_page_domain = True
-
 
 			# If domain source is equal to domain page and not a known placement
 			# most probably is not an ad.

@@ -5,10 +5,11 @@ import selenium.common.exceptions as sce
 from selenium.webdriver.support import expected_conditions as expect_cond
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
-import time
 import io
 from PIL import Image
 from selenium.webdriver.common.keys import Keys
+import time
+
 
 
 def ewe(none_result=True, common_exception_result=False):
@@ -367,34 +368,6 @@ class Driver:
 
 
 	@ewe()
-	def click_on_element(self, element):
-		"""
-		On chrome, pressing the middle button of the mouse links are forced
-		to open a new tab. (Appears that so not work anymore)
-		Open links in a new tab -> Send Keys -> Ctrl + Shift + click
-
-		:return None
-		"""
-
-		# Is element visible?
-		element = self.wait_for_element_visibility(element)
-		if not element:
-			return None
-
-		# This method force chrome to open a new tab by shortcut
-		#ActionChains(self.get_driver()).move_to_element(element).send_keys \
-		#	(Keys.CONTROL + Keys.SHIFT).click().perform()
-
-
-		ActionChains(self.get_driver()).move_to_element(element).\
-			key_down(Keys.COMMAND).click().key_up(Keys.COMMAND).perform()
-
-
-		# This method clicks on element(it might avoid clicking on light-boxes)
-		#ActionChains(self.get_driver()).move_to_element(element).click().perform()
-
-
-	@ewe()
 	def refresh_window(self):
 
 		# ActionChains(self.get_driver()).key_down(Keys.CONTROL).send_keys(Keys.F5).perform()
@@ -452,17 +425,6 @@ class Driver:
 				self.driver.close()
 
 
-	@ewe('', '')
-	def get_current_url(self):
-		"""
-		Get current url from windows in focus
-
-		:return: current url
-		"""
-		return self.get_driver().current_url
-
-
-
 	def get_screenshot_element(self):
 
 		element = self.driver.find_element_by_xpath('.//img')
@@ -508,6 +470,44 @@ class Driver:
 
 		driver = self.get_driver()
 		return driver.execute_script(script)
+
+
+	@ewe()
+	def click_on_element(self, element):
+		"""
+		On chrome, pressing the middle button of the mouse links are forced
+		to open a new tab. (Appears that so not work anymore)
+		Open links in a new tab -> Send Keys -> Ctrl + Shift + click
+
+		:return None
+		"""
+
+		# Is element visible?
+		element = self.wait_for_element_visibility(element)
+		if not element:
+			return None
+
+		# This method force chrome to open a new tab with focus
+		#ActionChains(self.get_driver()).move_to_element(element).send_keys \
+		#	(Keys.CONTROL + Keys.SHIFT).click().perform()
+
+		# This method clicks on element(it might avoid clicking on light-boxes)
+		#ActionChains(self.get_driver()).move_to_element(element).click().perform()
+
+		# Open link in new tab (no focus)
+		ActionChains(self.get_driver()).move_to_element(element).\
+			key_down(Keys.COMMAND).click().key_up(Keys.COMMAND).perform()
+
+
+	@ewe('', '')
+	def get_current_url(self):
+		"""
+		Get current url from windows in focus
+
+		:return: current url
+		"""
+		return self.get_driver().current_url
+
 
 
 

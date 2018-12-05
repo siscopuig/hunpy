@@ -124,14 +124,14 @@ class ContainerProcessor(Processor):
 				continue
 
 			# Process links from anchors or clicking elements.
-			self.process_advertiser(item, advert)
+			if not self.process_advertiser(item, advert):
+				continue
 
 			# Add advert in list.
 			page.adverts.append(advert)
 
 
 		return True
-
 
 
 	def process_duplicate_advert_in_page(self, advert):
@@ -152,7 +152,6 @@ class ContainerProcessor(Processor):
 				return True
 
 		return False
-
 
 
 	def process_existing_advert(self, advert):
@@ -194,28 +193,6 @@ class ContainerProcessor(Processor):
 		return True
 
 
-
-	def process_advertiser(self, item, advert):
-
-
-		if not advert.advertiser:
-
-			if self.get_link_from_anchors(item):
-				self.log.info('Link obtained from img hrefs: {}'.format(item.landing))
-
-			else:
-				landing = self.process_landing(item)
-				if not landing:
-					return False
-
-			if item.landing:
-				advert.landing = item.landing
-				advert.advertiser = UtilsString.get_domain(item.landing)
-
-		return True
-
-
-
 	def set_advert(self, advert, item):
 		"""
 
@@ -242,6 +219,12 @@ class ContainerProcessor(Processor):
 		:param domain:
 		:return: boolean
 		"""
+
+		avoid = ['javascript:false', 'about:blank', 'javascript:'';']
+		if src in avoid:
+			self.log.debug('source ({}) in avoid array'.format(src))
+			return True
+
 		# Ignore domain
 		if UtilsString.match_string_in_list(domain, self.datasource.get_ignore_domain()):
 			self.log.debug('Domain src ({}) is in source ignore domain'.format(domain))
@@ -282,14 +265,37 @@ class ContainerProcessor(Processor):
 		return src, request['content_type']
 
 
-	def find_advertiser_by_click(self, item):
+	def process_advertiser(self, item, advert):
 
+		if not advert.advertiser:
+
+			# Anchors
+			link = self.get_link_from_anchors(item)
+			if link:
+				self.log.info('Link obtained from img hrefs: {}'.format(link))
+				item.landing = link
+
+			# Clicking
+			else:
+				landing = self.process_landing(item)
+				if not landing:
+					return False
+
+			if item.landing:
+				advert.landing = item.landing
+				advert.advertiser = UtilsString.get_domain(item.landing)
+
+		return True
+
+
+
+	def find_advertiser_by_click(self, item):
 
 		element = item.element
 		if item.xpath:
 			element = self.driver.find_element_by_xpath(item.xpath)
 			if not element:
-				self.log.info('Process landing -> No element by find element by xpath {}'.format(item.xpath))
+				self.log.info('Unable to find landing element by item.xpath: {}'.format(item.xpath))
 				return False
 
 
@@ -301,7 +307,6 @@ class ContainerProcessor(Processor):
 		return True
 
 
-
 	def process_landing(self, item):
 		"""
 
@@ -310,7 +315,7 @@ class ContainerProcessor(Processor):
 		"""
 
 		# Switch to main document
-		if not self.driver.switch_to_window(self.page.main_window_handle):
+		if not self.driver.switch_to_window_default_content(self.page.main_window_handle):
 			self.log.error('Unable to switch to the main window document')
 
 		# New modification
@@ -324,15 +329,12 @@ class ContainerProcessor(Processor):
 		windows = self.driver.get_window_handle()
 		if len(windows) == 1:
 			self.log.info('CLicking on element did not open a new tab')
-			if self.page.main_window_handle == windows[0]:
+
+			# Check that the main window did not redirect to another page
+			current_url = self.driver.get_current_url()
+			if current_url != self.page.url:
+				self.log.info('Main window redirected to: {}'.format(current_url))
 				return False
-
-		# Check that the main window did not redirect to another page
-		current_url = self.driver.get_current_url()
-		if current_url != self.page.url:
-			self.log.info('Main window redirected to: {}'.format(current_url))
-			return False
-
 
 		try:
 			# Retrieve landings
@@ -342,7 +344,6 @@ class ContainerProcessor(Processor):
 			self.log.warning('Timeout error accessing url on tab: ({})'.format(e))
 			self.driver.close_window_except_main(windows)
 			return False
-
 
 		if not landing:
 			return False
@@ -361,18 +362,14 @@ class ContainerProcessor(Processor):
 		# 	- Improve different click on element methods and checks.
 
 		landings = []
-
 		windows = self.driver.get_window_handle()
 		self.log.info('Number of windows: ({})'.format(len(windows)))
 
 		for i, window in enumerate(windows):
 
-
 			if window != self.page.main_window_handle:
 
 				self.driver.switch_to_window(window)
-
-				self.log.debug('Switched to new window: Switched to window ({})'.format(window))
 
 				# Get landing url
 				landing = self.driver.get_current_url()
@@ -382,20 +379,16 @@ class ContainerProcessor(Processor):
 					self.log.debug('Not possible to get landing url from tab.')
 					self.driver.switch_to_window(self.page.main_window_handle)
 
-
 		# Switch back to the main window
 		self.driver.switch_to_window(self.page.main_window_handle)
 		self.driver.close_window_except_main(windows)
 		self.log.info('Switched to main window: ({})'.format(self.page.main_window_handle))
 
-
+		# Validate landings
 		if landings:
-
 			for landing in landings:
-
 				if self.is_landing_invalid(landing):
 					continue
-
 		return landing
 
 
@@ -403,7 +396,6 @@ class ContainerProcessor(Processor):
 	def get_link_from_anchors(self, item):
 
 		if item.img_hrefs:
-
 			for source in item.img_hrefs:
 
 				link = UtilsString.get_url_from_string(source)
@@ -412,12 +404,9 @@ class ContainerProcessor(Processor):
 
 				if self.is_landing_invalid(link):
 					continue
-
-				item.landing = link
-				return True
+				return link
 
 		return False
-
 
 
 	def is_landing_invalid(self, landing):
@@ -480,6 +469,19 @@ class ContainerProcessor(Processor):
 		print("--- %s seconds ---" % (round(time.time() - start, 2)))
 		# Total requests: 51
 		# --- 5.28 seconds - --
+
+
+	def process_anchors(self, item, advert):
+
+		if not advert.advertiser:
+
+			link = self.get_link_from_anchors(item)
+			if link:
+				advert.landing = link
+				advert.advertiser = UtilsString.get_domain(link)
+
+		return True
+
 
 
 
