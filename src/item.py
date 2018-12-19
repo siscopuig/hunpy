@@ -13,6 +13,7 @@ class Item:
 		self.element = None
 		self.size = None
 		self.location = None
+		self.isframe = None
 
 		self.is_known_placement = None
 		self.is_known_adserver = None
@@ -37,8 +38,6 @@ class Item:
 		self.landing = None
 		self.xpath = ''
 		self.finfo = None
-		self.is_content = None
-		self.is_iframe = False
 
 
 

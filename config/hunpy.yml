@@ -1,4 +1,11 @@
 
+# PROCESSOR MODULES
+processors:
+#  - scroll_processor
+  - image_processor
+#  - iframe_processor
+  - storage_processor
+
 
 # SCROLL PROCESSOR
 jcs.total.height:
@@ -69,7 +76,7 @@ chrome.window.width:
 chrome.window.height:
   990
 chrome.option.profile.path:
-  --user-data-dir=/home/sisco/PycharmProjects/hunpy/profile
+  /home/sisco/PycharmProjects/hunpy/profile
 chrome.option.dns.prefetch.disable:
   --dns-prefetch-disable
 chrome.option.ignore.ssl.errors:
@@ -115,14 +122,15 @@ txt.href:    href
 txt.onclick: onclick
 
 
-src.ignored.subdomains:
-  - safeframe
-  - cache
-  - templates
-  - addons
-  - uploads
-  - wp-content
-  - plugins
+src.ignore.path.domain.exceptions:
+  - ds.serving-sys.com
+  - secure-ds.serving-sys.com
+  - cdn.flashtalking.com'
+
+src.ignore.iframe:
+  - javascript:false
+  - about:blank
+  - javascript:'';
 
 src.ignore.landing:
    - 'about:'

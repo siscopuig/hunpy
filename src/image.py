@@ -1,4 +1,4 @@
-from containers.container_image import ImageContainer
+from containers.image_container import ImageContainer
 
 
 class Image(ImageContainer):

@@ -16,7 +16,6 @@ class Datasource:
 		self.datasource = {}
 		self.placements = None
 		self.adservers = None
-		self.ignore_domain_path = None
 		self.ignore_domain = None
 		self.ignore_path = None
 
@@ -175,11 +174,16 @@ class Datasource:
 					self.log.info('landing has been sanitised')
 
 
+		finfo = advert.finfo
+		if 'text/html' in finfo:
+			advert.finfo = finfo[:-15]
+
+
 		data = {
 			"uid": advert.uid,
 			"src": advert.src,
-			"width": advert.width,
-			"height": advert.height,
+			"width": advert.size[0],
+			"height": advert.size[1],
 			"finfo": advert.finfo,
 			"isframe": advert.isframe,
 			"x": advert.location[0],
@@ -228,8 +232,7 @@ class Datasource:
 
 		# @todo: Log if an error or successful
 
-		self.dbconn.insert_new_instance_record(
-			data['uid'], data['url_id'], data['counter'], data['date'])
+		self.dbconn.insert_new_instance_record(data['uid'], data['url_id'], data['counter'], data['date'])
 
 
 

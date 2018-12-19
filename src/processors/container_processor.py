@@ -27,15 +27,15 @@ class ContainerProcessor(Processor):
 		self.config = config
 		self.datasource = datasource
 		self.http_bad_request = self.config['http_bad_request']
-		self.src_ignored_landing = self.config['src.ignore.landing']
-
+		self.src_ignore_iframe = self.config['src.ignore.iframe']
+		self.src_ignore_landing = self.config['src.ignore.landing']
+		self.max_src_chars = int(self.config['max.source.len'])
 
 
 	def get_items(self, containers):
 
 		if not containers.size:
 			return np.array([], dtype=np.object)
-
 
 		items = np.empty(len(containers), dtype=np.object)
 		for i, container in enumerate(containers):
@@ -73,6 +73,7 @@ class ContainerProcessor(Processor):
 		"""
 
 		containers = self.get_containers(page)
+
 
 		if len(containers) <= 0:
 			self.log.debug('No containers found')
@@ -166,7 +167,6 @@ class ContainerProcessor(Processor):
 
 			advert.state = AdvertState.EXISTING
 
-
 			if not existing['id']:
 				self.log.info('Advert not found in database, source: ({})'.format(advert.src))
 				return False
@@ -202,10 +202,8 @@ class ContainerProcessor(Processor):
 		"""
 
 		advert.src = encode_url(item.src)
-		advert.domain = UtilsString.get_domain(advert.src)
 		advert.url_id = self.page.url_id
-		advert.width = item.size[0]
-		advert.height = item.size[1]
+		advert.size = item.size
 		advert.location = item.location
 		advert.finfo = item.finfo
 
@@ -220,9 +218,14 @@ class ContainerProcessor(Processor):
 		:return: boolean
 		"""
 
-		avoid = ['javascript:false', 'about:blank', 'javascript:'';']
-		if src in avoid:
-			self.log.debug('source ({}) in avoid array'.format(src))
+		# Ignore source if greater than config value
+		if len(src) > self.max_src_chars:
+			self.log.debug('Exceed max number of characters: ({}), source: ({})'.format(self.max_src_chars, src))
+			return True
+
+		# Ignore dummy source
+		if src in self.src_ignore_iframe:
+			self.log.debug('Invalid source ({}) '.format(src))
 			return True
 
 		# Ignore domain
@@ -230,10 +233,15 @@ class ContainerProcessor(Processor):
 			self.log.debug('Domain src ({}) is in source ignore domain'.format(domain))
 			return True
 
+		apply_ignore_path = False
+		if domain in self.config['src.ignore.path.domain.exceptions']:
+			self.log.info('Ignore path validation skipped, adserver domain: ({})'.format(domain))
+			apply_ignore_path = True
+
 		# Ignore path
 		source_paths = UtilsString.get_paths_from_source(src)
-		if UtilsString.match_string_parts_in_list(source_paths, self.datasource.get_ignore_path()):
-			self.log.debug('Source path from src: ({}) in src ignore path list'.format(src))
+		if not apply_ignore_path and UtilsString.match_string_parts_in_list(source_paths, self.datasource.get_ignore_path()):
+			self.log.debug('Ignored source by ignore path, src: ({})'.format(src))
 			return True
 
 		return False
@@ -337,7 +345,7 @@ class ContainerProcessor(Processor):
 				return False
 
 		try:
-			# Retrieve landings
+			# Retrieve landing from new tab and validate it
 			landing = self.get_landing_source()
 
 		except TimeoutException as e:
@@ -412,8 +420,8 @@ class ContainerProcessor(Processor):
 	def is_landing_invalid(self, landing):
 
 		# Is landing source already invalid
-		if landing in self.src_ignored_landing:
-			self.log.debug('Landing source {} in ignored landing list'.format(landing))
+		if landing in self.src_ignore_landing:
+			self.log.debug('Ignored invalid landing: ({})'.format(landing))
 			return True
 
 		# Is landing domain a known ad server

@@ -44,7 +44,6 @@ class MysqlConn:
 	# }
 
 
-
 	def __init__(self, conn_param):
 
 		self.log = Log()
@@ -62,8 +61,7 @@ class MysqlConn:
 			self.conn_param["cursorclass"] = pymysql.cursors.DictCursor
 
 
-
-
+	@ewe
 	def connect(self):
 
 		if self.conn is None:
@@ -76,8 +74,7 @@ class MysqlConn:
 				self.conn = None
 				raise exception
 
-
-
+	@ewe
 	def close(self):
 		if self.conn:
 			self.conn.close()
@@ -148,7 +145,6 @@ class MysqlConn:
 	@ewe
 	def insert_new_advert(self, data):
 
-
 		sql = "INSERT INTO Adverts (" \
 			  "uid, advertiser, src, width, height, landing, finfo, isframe, x, y) " \
 			  "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
@@ -201,8 +197,3 @@ class MysqlConn:
 			  "WHERE id = %s AND date = %s LIMIT 1"
 		self.cursor.execute(sql, (id, date))
 		self.conn.commit()
-
-
-
-
-###############################################################

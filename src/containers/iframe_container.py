@@ -1,7 +1,7 @@
 from html_element import HtmlElement
 
 
-class Iframe(HtmlElement):
+class IframeContainer(HtmlElement):
 
 
 	def __init__(self, parent=None):
@@ -15,7 +15,7 @@ class Iframe(HtmlElement):
 
 		string = (
 			'\n'
-			'{t}Frame: {level}:{hash}\n'
+			'{t}Frame: 		  {level} : {hash}\n'
 			'{t} id:          {id}\n'
 			'{t} name:        {name}\n'
 			'{t} src:         {src}\n'
@@ -39,9 +39,12 @@ class Iframe(HtmlElement):
 			img_srcs=self.img_srcs,
 			clicks=self.onclicks, t=tab)
 
+		# Include sub-frames.
+		# return string + '\n' + ''.join([str(frame) for frame in self.iframes])
+
+		# Includes nested frames
 		for iframe in self.iframes:
 			string + '\n' + ''.join(str(iframe))
 		return string
 
-		# Include sub-frames.
-		#return string + '\n' + ''.join([str(frame) for frame in self.iframes])
+

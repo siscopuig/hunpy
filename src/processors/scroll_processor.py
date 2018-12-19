@@ -28,8 +28,7 @@ class ScrollProcessor(Processor):
 				remaining_height = total_height - height_counted
 
 				if remaining_height > scroll_down:
-					script = self.config['jcs.scroll.down'].format(scroll_down)
-					self.driver.execute_javascript(script)
+					self.driver.execute_javascript(self.config['jcs.scroll.down'].format(scroll_down))
 					time.sleep(0.2)
 
 				# Stops at certain amount of scrolls

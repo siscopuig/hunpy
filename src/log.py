@@ -18,7 +18,7 @@ class Log:
 		self.logger = logging.getLogger(__name__)
 
 
-	def open(self, config):
+	def open(self, config, debug=False):
 
 		string_format = config['log.string.format']
 		date_format = config['log.date.format']
@@ -37,18 +37,19 @@ class Log:
 		except OSError:
 			print('Error: Creating directory. ' + abs_filepath)
 
-		# @todo:
-		# Get info to explain the process of the lines below.
 
-		self.logger.setLevel(logging.DEBUG)
+		level = logging.DEBUG if debug else logging.INFO
+
+
+		self.logger.setLevel(level)
 		formatter = logging.Formatter(string_format)
 
 		fh = logging.FileHandler(filename=log_filepath, mode='a', encoding=None, delay=False)
-		fh.setLevel(logging.DEBUG)
+		fh.setLevel(level)
 		fh.setFormatter(formatter)
 
 		sh = logging.StreamHandler()
-		sh.setLevel(logging.DEBUG)
+		sh.setLevel(level)
 		sh.setFormatter(formatter)
 
 		self.logger.addHandler(fh)

@@ -11,20 +11,15 @@ from selenium.webdriver.common.keys import Keys
 import time
 
 
-
 def ewe(none_result=True, common_exception_result=False):
 	"""
 	Execute without exceptions
 	"""
-
 	def action(func):
 		"""
-
 		:param func:
 		:return: wrapper function
 		"""
-
-
 		def wrapper(self, *args, **kwargs):
 			"""
 			Some functions do not return anything unless is an exception.
@@ -101,6 +96,8 @@ class Driver:
 	)
 
 
+
+
 	def __init__(self, config):
 
 		self.config = config
@@ -139,7 +136,7 @@ class Driver:
 		self.chrome_options = Options()
 
 		# Sets user profile path
-		self.chrome_options.add_argument(self.config['chrome.option.profile.path'])
+		self.chrome_options.add_argument('--user-data-dir={}'.format(self.config['chrome.option.profile.path']))
 
 		# Sets user agent
 		self.chrome_options.add_argument(self.config['chrome.user.agent'])

@@ -1,5 +1,5 @@
-from iframe import Iframe
-from containers.container_element import ContainerElement
+from containers.iframe_container import IframeContainer
+from searchers.container_searcher import ContainerSearcher
 from searchers.image_searcher import ImageSearcher
 from page import Page
 import numpy as np
@@ -7,7 +7,7 @@ import hashlib
 from log import Log
 
 
-class FrameSearcher(ContainerElement):
+class FrameSearcher(ContainerSearcher):
 	"""
 	Search and extract main document elements(iframes, images, etc...)
 	"""
@@ -45,12 +45,16 @@ class FrameSearcher(ContainerElement):
 
 		iframes = []
 
+		self.log.info('Searching for iframe elements...')
+
+		# Get iframe elements
 		elements = self.driver.find_elements_by_xpath(self.x_iframe)
 
 		# Loop over the elements
 		for element in elements:
 
-			iframe = Iframe(parent)
+			# Get a container instance
+			iframe = IframeContainer(parent)
 
 			# Set iframe element
 			iframe.element = element
@@ -82,8 +86,11 @@ class FrameSearcher(ContainerElement):
 			# Add hash reference
 			refs.append(iframe.hashref)
 
-
+			# Append iframe in list
 			iframes.append(iframe)
+
+
+			self.log.debug(iframe.__str__())
 
 
 		for i, iframe in enumerate(iframes):
@@ -133,10 +140,7 @@ class FrameSearcher(ContainerElement):
 			element = self.driver.find_element_by_xpath(iframe.xpath)
 			if element:
 
-				#self.log.debug('Found frame {} using xpath {}'.format(iframe.hashref, iframe.xpath))
-
 				if not self.driver.switch_to_iframe(element):
-					#self.log.debug('Unable to switch to the iframe document')
 					return False
 
 
@@ -144,14 +148,11 @@ class FrameSearcher(ContainerElement):
 
 				element = self.find_element_by_hash(iframe.hashref)
 				if element:
-					#self.log.debug('Found iframe {} using hash xpath {}'.format(iframe.hashref, iframe.xpath))
 
 					if not self.driver.switch_to_iframe(element):
-						#self.log.debug('Unable to switch to iframe document')
 						return False
 
 				else:
-					#self.log.debug('Unable to find iframe {} using xpath or hash'.format(iframe.hashref))
 					return False
 
 		return True

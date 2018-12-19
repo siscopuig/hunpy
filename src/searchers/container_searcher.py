@@ -1,16 +1,13 @@
 
 
-class ContainerElement:
+
+class ContainerSearcher:
 
 	"""
-	Base class for extracted containers.
-
+	Based class for extracted containers
 	"""
 
 	def __init__(self, driver, config):
-		"""
-		:param driver:
-		"""
 
 		self.driver = driver
 		self.config = config
@@ -44,8 +41,7 @@ class ContainerElement:
 		if not self.is_visible(container):
 			return False
 
-		# The *args and **keywordargs forms are used for passing lists
-		# of arguments and dictionaries of arguments, respectively
+
 		return self.is_valid_size(*container.size)
 
 

@@ -30,7 +30,6 @@ class HtmlElement:
 		self.anchor_imgs = []
 		self.img_srcs = []
 		self.onclicks = []
-
 		self.iframes = []
 		self.images = []
 

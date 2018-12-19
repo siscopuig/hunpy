@@ -40,6 +40,9 @@ class IframeProcessor(ContainerProcessor):
 				self.process_image_sources(item):
 			return False
 
+		# Set source taken inside an iframe to true
+		advert.isframe = 1
+
 		self.set_advert(advert, item)
 
 		return True
@@ -52,9 +55,6 @@ class IframeProcessor(ContainerProcessor):
 		:param item:
 		:return:
 		"""
-
-		# @todo:
-		# - advert object should not come here. There is no need to have it
 
 
 		for i, src in enumerate(item.iframe_srcs):
@@ -95,7 +95,6 @@ class IframeProcessor(ContainerProcessor):
 
 			item.src = source
 			item.finfo = finfo
-			item.is_content = True
 			return True
 
 		return False
@@ -140,7 +139,6 @@ class IframeProcessor(ContainerProcessor):
 
 			item.src = source
 			item.finfo = finfo
-			item.is_content = True
 			return True
 
 		return False
@@ -165,7 +163,7 @@ class IframeProcessor(ContainerProcessor):
 		item.names = OrderedSet()
 		item.titles = OrderedSet()
 		item.styles = OrderedSet()
-		self.append_item_info(item, container)
+		self.append_item_properties(item, container)
 
 		# Convert sets to list for better handle
 		item.iframe_srcs = list(item.iframe_srcs)
@@ -176,12 +174,9 @@ class IframeProcessor(ContainerProcessor):
 		item.names = list(item.names)
 		item.titles = list(item.titles)
 		item.styles = list(item.styles)
-		item.is_iframe = True
 
 
-
-
-	def append_item_info(self, item, container):
+	def append_item_properties(self, item, container):
 
 		# Append frame source.
 		if container.src:
@@ -227,7 +222,7 @@ class IframeProcessor(ContainerProcessor):
 
 
 		for iframe in container.iframes:
-			self.append_item_info(item, iframe)
+			self.append_item_properties(item, iframe)
 
 		return True
 

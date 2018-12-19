@@ -1,12 +1,12 @@
 from os import path, makedirs
 
 
-def create_directory(abs_filepath):
+def create_directory(dir_path):
 	try:
-		if not path.exists(abs_filepath):
-			makedirs(abs_filepath)
+		if not path.exists(dir_path):
+			makedirs(path)
 	except OSError:
-		print('Error: Creating directory. ' + abs_filepath)
+		print('Error creating directory: {}'.format(dir_path))
 
 
 def get_abs_path(relative_path):

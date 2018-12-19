@@ -3,6 +3,7 @@ from config import Config
 from datasource import Datasource
 from handler import Handler
 from connector.mysql_connector import MysqlConn
+from utils.utils_files import create_directory
 import sys
 
 
@@ -26,6 +27,9 @@ class Bootstrap:
 		# Get configuration list
 		config = self.get_yaml_conf_file()
 
+		# Creates chrome profile folder if doesn't exist
+		create_directory(config['chrome.option.profile.path'])
+
 		# Get connector
 		dbconn = self.get_connector(config['connection.parameters'])
 
@@ -33,7 +37,7 @@ class Bootstrap:
 		datasource = self.get_datasource(dbconn, config['datasource.relative.paths'])
 
 		# Open log
-		self.log.open(config)
+		self.log.open(config, debug=True)
 		self.log.info('Hunpy started')
 
 		# Start processing

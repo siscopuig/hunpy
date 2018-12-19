@@ -1,9 +1,10 @@
-from containers.container_element import ContainerElement
+from searchers.container_searcher import ContainerSearcher
+from log import Log
 from image import Image
 import numpy as np
 
 
-class ImageSearcher(ContainerElement):
+class ImageSearcher(ContainerSearcher):
 	"""
 	Search for images in main document
 	"""
@@ -11,6 +12,9 @@ class ImageSearcher(ContainerElement):
 	def __init__(self, driver, config):
 
 		super().__init__(driver, config)
+
+		self.log = Log()
+
 
 
 	def find_containers(self):
@@ -69,6 +73,9 @@ class ImageSearcher(ContainerElement):
 				container.a_href 	= self.driver.get_element_attribute(container.a_element, self.txt_href)
 				container.a_onclick = self.driver.get_element_attribute(container.a_element, self.txt_onclick)
 				container.a_style	= self.driver.get_element_attribute(container.a_element, self.txt_style)
+
+			# For debugging purposes only
+			self.log.debug(container.__str__())
 
 			containers[i] = container
 			i += 1

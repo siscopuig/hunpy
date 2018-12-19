@@ -15,15 +15,13 @@ class Advert:
 		self.id = None
 		self.uid = None
 		self.src = None
-		self.width = None
-		self.height = None
+		self.size = None
 		self.advertiser = None
 		self.landing = None
 		self.finfo = None
-		self.datetime = None
 		self.location = None
 		self.state = None
-		self.isframe = 0
+		self.isframe = None
 		self.instances = 1
 
 
@@ -37,24 +35,26 @@ class Advert:
 			'{t} Advert: 	  \n'
 			'{t} uid:         {uid}\n'
 			'{t} src:         {src}\n'
-			'{t} width:       {width}\n'
-			'{t} height:      {height}\n'
+			'{t} size:        {size}\n'
 			'{t} advertiser:  {advertiser}\n'
 			'{t} landing: 	  {landing}\n'
 			'{t} finfo:	      {finfo}\n'
+			'{t} datetime:	  {datetime}\n'
+			'{t} location:	  {location}\n'
 			'{t} datetime:    {datetime}\n'
-			'{t} is frame:    {isframe}\n'
+			'{t} isframe:     {isframe}\n'
+			'{t} instances:	  {instances}\n'
 
 		).format(
 			uid=self.uid,
 			src=self.src,
-			width=self.width,
-			height=self.height,
+			size=self.size,
 			advertiser=self.advertiser,
 			landing=self.landing,
 			finfo=self.finfo,
-			datetime=self.datetime,
-			is_iframe=self.isframe, t=tab)
+			isframe=self.isframe,
+			t=tab
+		)
 
 		return string
 

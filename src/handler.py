@@ -1,8 +1,8 @@
 from driver import Driver
 from page import Page
 from log import Log
+from module_manager import ModuleManager
 from utils.utils_date import UtilsDate
-import importlib
 import traceback
 import subprocess
 import sys
@@ -23,6 +23,7 @@ class Handler:
 		self.page = None
 
 
+
 	def search(self):
 
 		date = UtilsDate.get_date()
@@ -32,8 +33,8 @@ class Handler:
 		for url in urls:
 
 			# For debugging purposes:
-			#url['url'] = 'http://localhost:63343/hunpy/lab/html_templates/html_main_document.html'
-			#url['id']  = 1
+			url['url'] = 'http://localhost:63342/hunpy/lab/html_templates/html_main_document.html'
+			url['id']  = 1
 
 			try:
 
@@ -50,11 +51,12 @@ class Handler:
 				# Open a page instance
 				self.page = Page(self.driver, url['id'], url['url'])
 
-				# Create processors (tuple)
-				self.processors = self.create_processors(self.driver, self.config, self.datasource)
+				# Load processors
+				module_manager = ModuleManager(self.driver, self.config, self.datasource)
+				module_manager.create_processors(self.config['processors'])
 
 				# Iterate processors (tuple)
-				for name, processor in self.processors.items():
+				for name, processor in module_manager.get_processors().items():
 					processor.process_start(self.page, processor_name=name)
 
 				# Count cycle
@@ -87,59 +89,3 @@ class Handler:
 
 		except OSError as e:
 			self.log.error('Execution failed: OSError: {}'.format(e, file=sys.stderr))
-
-
-
-	def create_processors(self, driver, config, datasource):
-		"""
-
-		:param driver:
-		:param config:
-		:param datasource:
-		:return:
-		"""
-
-		module_names = [
-			'scroll_processor',
-			'image_processor',
-			'iframe_processor',
-			'storage_processor'
-		]
-		module_dir   = 'processors'
-
-		objects = {}
-		for module_name in module_names:
-			cls = self.import_class(self.get_class_name(module_name), module_name, module_dir)
-			if cls:
-				objects[module_name] = cls(driver, config, datasource)
-
-		return objects
-
-
-
-	def import_class(self, cls_name, module_name, module_dir):
-		"""
-
-		:return:
-		"""
-		try:
-
-			module = importlib.import_module(module_dir + '.' + module_name)
-			return getattr(module, cls_name)
-		except Exception as error:
-			self.log.debug('Exception importing class: {}'.format(error))
-
-
-
-	def get_class_name(self, module_name, cls_name=''):
-		"""
-		Get class name by module name:
-		 - Split module name (iframe_processor -> ['iframe', 'processor']
-		 - Uppercase first character + string with first character removed
-		"""
-
-		for name_part in module_name.split('_'):
-			cls_name += ''.join([name_part[:1].upper() + name_part[1:]])
-
-		return cls_name
-
