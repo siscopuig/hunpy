@@ -41,7 +41,6 @@ class ContainerSearcher:
 		if not self.is_visible(container):
 			return False
 
-
 		return self.is_valid_size(*container.size)
 
 
@@ -55,7 +54,5 @@ class ContainerSearcher:
 
 	def is_valid_size(self, width, height):
 
-		# If width, height greater that min_dimension AND
-		# max_pixels greater or equal than min_pixels
 		return (width > self.min_dimension) and (height > self.min_dimension) and \
 			   ((width * height) >= self.min_pixels)

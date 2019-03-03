@@ -3,9 +3,8 @@ from hunpy_exception import HunpyException
 from utils.utils_strings import UtilsString
 import numpy as np
 
+
 class Datasource:
-	"""
-	"""
 
 	def __init__(self, dbconn):
 
@@ -18,8 +17,6 @@ class Datasource:
 		self.adservers = None
 		self.ignore_domain = None
 		self.ignore_path = None
-
-
 
 
 	def config_datasource_abs_path(self, ds_paths):
@@ -54,7 +51,6 @@ class Datasource:
 
 	def get_adservers(self):
 
-
 		if self.adservers is None:
 
 			# Get datasource list from txt file
@@ -77,9 +73,7 @@ class Datasource:
 			# Create a numpy array to store the list
 			self.ignore_domain = np.array(filelines, dtype=np.object)
 
-
 		return self.ignore_domain
-
 
 
 	def get_ignore_path(self):
@@ -92,17 +86,10 @@ class Datasource:
 			# Create a numpy array to store the list
 			self.ignore_path = np.array(filelines, dtype=np.object)
 
-
 		return self.ignore_path
 
 
-
 	def read_file_in_lines(self, filepath):
-		"""
-
-		:param filepath:
-		:return:
-		"""
 
 		with open(filepath, 'rt', encoding='utf-8') as f:
 			data = f.readlines()
@@ -111,44 +98,25 @@ class Datasource:
 		return [line.rstrip('\n') for line in data]
 
 
-
 	def __setitem__(self, key, value):
-
-		"""
-
-		:param key:
-		:param value:
-		:return:
-		"""
 
 		self.datasource[key] = value
 
 
-
 	def __getitem__(self, item):
-		"""
 
-		:param item:
-		:return:
-		"""
 		return self.datasource[item]
 
 
-
 	def __contains__(self, key):
-		"""
 
-		:param key:
-		:return:
-		"""
 		return key in self.datasource
 
 
 # ------------------------------------------------
 
 	def match_placement(self, width, height):
-		"""
-		"""
+
 		for size in self.get_placements():
 			if size[0] == width and size[1] == height:
 				return True
@@ -173,11 +141,9 @@ class Datasource:
 				else:
 					self.log.info('landing has been sanitised')
 
-
 		finfo = advert.finfo
 		if 'text/html' in finfo:
 			advert.finfo = finfo[:-15]
-
 
 		data = {
 			"uid": advert.uid,
@@ -192,14 +158,12 @@ class Datasource:
 			"advertiser": advert.advertiser if advert.advertiser else None,
 		}
 
-
 		self.dbconn.insert_new_advert(data)
-
 
 
 	def is_source_in_database(self, src):
 
-		# @todo:
+		# @TODO:
 		# Select all the values needed in one call (id, uid, src, advertiser).
 		# It will return a list dict. E.g.
 		#	[{'id': 1, 'uid': '06e7fe57-c21d-4f40-9afa-f441361349be',
@@ -217,7 +181,6 @@ class Datasource:
 		return result[0]
 
 
-
 	def is_new_instance(self, uid, url_id, date):
 
 		result = self.dbconn.select_instance_record_by_date('id', 'Instances', uid, url_id, date)
@@ -227,19 +190,16 @@ class Datasource:
 		return result[0]['id']
 
 
-
 	def insert_new_instance(self, data):
 
-		# @todo: Log if an error or successful
-
+		# @TODO: Log if an error or successful
 		self.dbconn.insert_new_instance_record(data['uid'], data['url_id'], data['counter'], data['date'])
 
 
 
 	def update_existing_instance(self, data):
 
-		# @todo: Log if an error or successful
-
+		# @TODO: Log if an error or successful
 		self.dbconn.update_existing_instance_record(data['id'], data['date'], data['counter'])
 
 

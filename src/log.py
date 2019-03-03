@@ -3,7 +3,6 @@ import os
 import datetime
 
 
-
 class Log:
 
 	# https://docs.python.org/3/library/logging.html
@@ -64,75 +63,37 @@ class Log:
 
 		(DEBUG, INFO, WARNING, ERROR, CRITICAL)
 
-		:param level:
-		:return:
 		"""
 
 		self.logger.setLevel(level)
 
 
 	def debug(self, *args, **kwargs):
-		"""
-
-		:param args:
-		:param kwargs:
-		:return:
-		"""
 
 		logging.LoggerAdapter(self.logger, extra='').debug(*args, **kwargs)
 
 
 	def info(self, *args, **kwargs):
-		"""
-
-		:param args:
-		:param kwargs:
-		:return:
-		"""
 
 		logging.LoggerAdapter(self.logger, extra='').info(*args, **kwargs)
 
 
 	def warning(self, *args, **kwargs):
-		"""
-
-		:param args:
-		:param kwargs:
-		:return:
-		"""
 
 		logging.LoggerAdapter(self.logger, extra='').warning(*args, **kwargs)
 
 
 	def error(self, *args, **kwargs):
-		"""
-
-		:param args:
-		:param kwargs:
-		:return:
-		"""
 
 		logging.LoggerAdapter(self.logger, extra='').error(*args, **kwargs)
 
 
 	def critical(self, *args, **kwargs):
-		"""
-
-		:param args:
-		:param kwargs:
-		:return:
-		"""
 
 		logging.LoggerAdapter(self.logger, extra='').critical(*args, **kwargs)
 
 
 	def exception(self, *args, **kwargs):
-		"""
-
-		:param args:
-		:param kwargs:
-		:return:
-		"""
 
 		logging.LoggerAdapter(self.logger, extra='').exception(*args, **kwargs)
 

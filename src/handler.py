@@ -10,9 +10,7 @@ import sys
 
 class Handler:
 
-
 	processors = None
-
 
 	def __init__(self, config, datasource):
 
@@ -23,18 +21,16 @@ class Handler:
 		self.page = None
 
 
-
 	def search(self):
 
 		date = UtilsDate.get_date()
-
 		urls = self.datasource.get_urls()
 
 		for url in urls:
 
 			# For debugging purposes:
-			url['url'] = 'http://localhost:63342/hunpy/lab/html_templates/html_main_document.html'
-			url['id']  = 1
+			#url['url'] = 'http://localhost:63342/hunpy/lab/html_templates/html_main_document.html'
+			#url['id']  = 1
 
 			try:
 
@@ -80,7 +76,6 @@ class Handler:
 	def reset_chromedriver(self):
 
 		try:
-
 			retcode = subprocess.call(["pkill", "-f", "chrome"])
 			if retcode < 0:
 				self.log.warning('Child was terminated by signal, -retcode: ({})'.format(-retcode, file=sys.stderr))

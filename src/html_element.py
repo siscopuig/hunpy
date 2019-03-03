@@ -47,15 +47,12 @@ class HtmlElement:
 
 	def is_recursive(self, document):
 		"""
-		Checks that child source is not the same as the parent in order to avoid
-		duplicates.
-
+		Checks that child source is not the same as the parent in order to avoid duplicates.
 		"""
 		ancestor = document.parent
 		while ancestor:
 			if (document.src or ancestor.src) and (document.src == ancestor.src):
 				return True
-
 			ancestor = ancestor.parent
 
 		return False

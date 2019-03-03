@@ -5,13 +5,10 @@ import yaml
 
 class Config:
 
-
-
 	def __init__(self):
 
 		self.log = Log()
 		self.data = {}
-
 
 
 	def load(self, file_paths):

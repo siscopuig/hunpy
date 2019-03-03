@@ -28,7 +28,7 @@ def ewe(none_result=True, common_exception_result=False):
 			:param self:
 			:param args:
 			:param kwargs:
-			:return:
+			:return: wrapper
 			"""
 			try:
 
@@ -92,10 +92,7 @@ class Driver:
 		# Thrown when the target provided to the `ActionsChains` move()
 		# method is invalid, i.e. out of document.
 		sce.MoveTargetOutOfBoundsException,
-
 	)
-
-
 
 
 	def __init__(self, config):
@@ -106,9 +103,6 @@ class Driver:
 
 
 	def start(self, headless=False):
-		"""
-		:return:
-		"""
 
 		# Set chrome options from config
 		self.set_chrome_options(headless)
@@ -122,7 +116,6 @@ class Driver:
 			int(self.config['chrome.window.height'])
 		)
 
-
 		# Waiting time before timeout exception is thrown
 		self.driver.set_page_load_timeout(int(self.config['page.load.timeout']))
 
@@ -131,7 +124,6 @@ class Driver:
 
 
 	def set_chrome_options(self, headless):
-
 
 		self.chrome_options = Options()
 
@@ -178,10 +170,7 @@ class Driver:
 
 	@ewe()
 	def get_driver(self):
-		"""
 
-		:return:
-		"""
 		if self.driver is None:
 			self.start()
 		return self.driver
@@ -189,12 +178,7 @@ class Driver:
 
 	@ewe()
 	def open(self, url, wait=None):
-		"""
 
-		:param wait:
-		:param url:
-		:return:
-		"""
 		self.get_driver().get(url)
 
 		if wait:
@@ -202,102 +186,61 @@ class Driver:
 
 
 	def quit(self):
-		"""
 
-		:return:
-		"""
 		self.driver.quit()
 
 
 	@ewe([], [])
 	def find_elements_by_xpath(self, xpath):
-		"""
 
-		:param xpath:
-		:return:
-		"""
 		return self.get_driver().find_elements_by_xpath(xpath)
 
 
 	@ewe(None, None)
 	def find_element_by_xpath(self, xpath):
-		"""
-
-		:param xpath:
-		:return:
-		"""
 
 		return self.get_driver().find_element_by_xpath(xpath)
 
 
 	@ewe()
 	def find_element_parent_by_child(self, child_element, xpath):
-		"""
 
-		:param child_element:
-		:param xpath:
-		:return:
-		"""
 		return child_element.find_element_by_xpath(xpath)
-
 
 
 	@ewe('', '')
 	def get_element_size(self, element):
-		"""
 
-		:param element:
-		:return:
-		"""
 		return element.size['width'], element.size['height']
 
 
 	@ewe('', '')
 	def get_element_location(self, element):
-		"""
 
-		:param element:
-		:return:
-		"""
 		return element.location['x'], element.location['y']
 
 
 	@ewe('', '')
 	def get_element_attribute(self, element, attr):
-		"""
-
-		:param element:
-		:param attr:
-		:return:
-		"""
 
 		return element.get_attribute(attr)
 
 
 	@ewe()
 	def close(self):
-		"""
 
-		:return:
-		"""
 		self.get_driver().close()
 
 
 	@ewe()
 	def get_window_size(self):
-		"""
 
-		:return:
-		"""
 		return self.driver.get_window_size()
 
 
 	@ewe()
 	def switch_to_default_content(self):
-		"""
 
-		:return:
-		"""
 		self.get_driver().switch_to.default_content()
 
 
@@ -311,22 +254,13 @@ class Driver:
 
 	@ewe()
 	def switch_to_iframe(self, element):
-		"""
 
-		:param element:
-		:return:
-		"""
 		self.get_driver().switch_to.frame(element)
 
 
 	@ewe(None, None)
 	def find_child_element_by_xpath(self, xpath, parent_element):
-		"""
 
-		:param xpath:
-		:param parent_element:
-		:return:
-		"""
 		return parent_element.find_element_by_xpath(xpath)
 
 
@@ -334,9 +268,6 @@ class Driver:
 	def is_element_displayed(self, element):
 		"""
 		Whether the element is visible to a user
-
-		:param element:
-		:return: Boolean
 		"""
 		return element.is_displayed()
 
@@ -345,10 +276,7 @@ class Driver:
 	def is_visibility_of_element_located(self, xpath):
 		"""
 		Given the generated xpath reference find the element of an element
-		previously seen.
-		Does not work at the moment!!
-		:param xpath:
-		:return:
+		previously seen. Does not work at the moment!!
 		"""
 		WebDriverWait(self.get_driver(), 2, 0.2).until \
 			(expect_cond.visibility_of_element_located(self.get_driver().find_element_by_xpath(xpath)))
@@ -357,6 +285,7 @@ class Driver:
 	@ewe()
 	def wait_for_element_visibility(self, element):
 		"""
+		Waits for an element until becomes visible
 
 		:param element:
 		:return: the (same) WebElement once it is visible
@@ -367,6 +296,7 @@ class Driver:
 	@ewe()
 	def refresh_window(self):
 
+		# Another method, is it working??
 		# ActionChains(self.get_driver()).key_down(Keys.CONTROL).send_keys(Keys.F5).perform()
 
 		self.get_driver().execute_script("location.reload()")
@@ -377,7 +307,6 @@ class Driver:
 	def get_window_handle(self):
 		"""
 		Returns the handles of all windows within the current session.
-		:return:
 		"""
 		return self.get_driver().window_handles
 
@@ -385,7 +314,6 @@ class Driver:
 	@ewe('', '')
 	def get_main_window_handle(self):
 		"""
-
 		:return: 'CDwindow-552D2F0FD1B1B6C1B5FECCDE486232A7'
 		"""
 
@@ -394,18 +322,14 @@ class Driver:
 
 	@ewe()
 	def switch_to_window(self, window):
-		"""
 
-		:param window:
-		:return:
-		"""
 		self.get_driver().switch_to.window(window)
 
 
 	def save_screenshot(self, filename):
-
-		# Gets the screenshot of the current element as a binary data.
-
+		"""
+		Gets the screenshot of the current element as a binary data.
+		"""
 		self.get_driver().save_screenshot(filename)
 
 
@@ -445,12 +369,9 @@ class Driver:
 		"""
 		There is a bug in chromedriver that prevent chrome
 		to open a new tab sending keys (CONTROL + "t")
-
 		"""
 		#element = self.find_element_by_xpath('.//body')
-
 		#ActionChains(self.get_driver()).send_keys(Keys.COMMAND + "t").click(element).perform()
-
 		# ActionChains(self.get_driver()).key_down(Keys.CONTROL).click(element)\
 		# 	.send_keys('t').perform()
 		pass
@@ -458,9 +379,6 @@ class Driver:
 
 	@ewe()
 	def execute_javascript(self, script):
-		"""
-		Executes javascript
-		"""
 
 		# Do not work!! why??
 		# return self.get_driver().execute_script(script)
@@ -473,7 +391,7 @@ class Driver:
 	def click_on_element(self, element):
 		"""
 		On chrome, pressing the middle button of the mouse links are forced
-		to open a new tab. (Appears that so not work anymore)
+		to open a new tab. (Appears that do not work anymore)
 		Open links in a new tab -> Send Keys -> Ctrl + Shift + click
 
 		:return None
@@ -485,11 +403,11 @@ class Driver:
 			return None
 
 		# This method force chrome to open a new tab with focus
-		#ActionChains(self.get_driver()).move_to_element(element).send_keys \
+		# ActionChains(self.get_driver()).move_to_element(element).send_keys \
 		#	(Keys.CONTROL + Keys.SHIFT).click().perform()
 
 		# This method clicks on element(it might avoid clicking on light-boxes)
-		#ActionChains(self.get_driver()).move_to_element(element).click().perform()
+		# ActionChains(self.get_driver()).move_to_element(element).click().perform()
 
 		# Open link in new tab (no focus)
 		ActionChains(self.get_driver()).move_to_element(element).\
@@ -499,22 +417,9 @@ class Driver:
 	@ewe('', '')
 	def get_current_url(self):
 		"""
-		Get current url from windows in focus
+		Get current url from windows in focus.
 
 		:return: current url
 		"""
 		return self.get_driver().current_url
-
-
-
-
-##########################################
-# if __name__ == '__main__':
-# 	url_web = 'http://siscopuig.com'
-# 	driver = Driver()
-# 	driver.create()
-# 	driver.open(url_web)
-# 	size = driver.get_window_size()
-# 	driver.close()
-# 	print('Stop')
 

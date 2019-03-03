@@ -16,7 +16,6 @@ class ImageSearcher(ContainerSearcher):
 		self.log = Log()
 
 
-
 	def find_containers(self):
 
 		containers = np.array(self.find_images(), dtype=np.object)
@@ -27,8 +26,6 @@ class ImageSearcher(ContainerSearcher):
 
 
 	def find_images(self):
-		"""
-		"""
 
 		img_elements = self.driver.find_elements_by_xpath(self.x_img)
 		if not img_elements:
@@ -52,7 +49,6 @@ class ImageSearcher(ContainerSearcher):
 			container.size = self.driver.get_element_size(container.element)
 			container.location = self.driver.get_element_location(container.element)
 
-
 			if not self.is_valid_container(container):
 				continue
 
@@ -64,7 +60,6 @@ class ImageSearcher(ContainerSearcher):
 				continue
 
 			anchors.add(container.a_element)
-
 			container.onclick = self.driver.get_element_attribute(img_element, self.txt_onclick)
 			container.style   = self.driver.get_element_attribute(img_element, self.txt_style)
 
@@ -75,7 +70,7 @@ class ImageSearcher(ContainerSearcher):
 				container.a_style	= self.driver.get_element_attribute(container.a_element, self.txt_style)
 
 			# For debugging purposes only
-			self.log.debug(container.__str__())
+			#self.log.debug(container.__str__())
 
 			containers[i] = container
 			i += 1

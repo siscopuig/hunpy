@@ -1,9 +1,10 @@
 from log import Log
 import time
 
+
 class Processor:
 
-
+	""" Base class for processors"""
 
 	def __init__(self, driver, config, datasource):
 
@@ -15,23 +16,15 @@ class Processor:
 
 
 	def process_start(self, page, processor_name):
-		"""
-		"""
 
 		# Get current timestamp
 		start = time.time()
-
-
 		self.log.info('Processor {} started'.format(processor_name))
-
-
 		self.page = page
-
 
 		if not self.driver.switch_to_window_default_content(self.page.main_window_handle):
 			self.log.error('Unable to switch to main window default content')
 			return False
-
 
 		# Action
 		self.process(page)
@@ -47,7 +40,6 @@ class Processor:
 		:param page:
 		:return:
 		"""
-
 		return True
 
 

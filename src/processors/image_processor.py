@@ -4,9 +4,7 @@ from utils.utils_strings import UtilsString
 from log import Log
 
 
-
 class ImageProcessor(ContainerProcessor):
-
 
 	def __init__(self, driver, config, datasource):
 
@@ -18,12 +16,7 @@ class ImageProcessor(ContainerProcessor):
 
 
 	def set_item(self, item, container):
-		"""
 
-		:param item:
-		:param container:
-		:return:
-		"""
 		item.element 		= container.element
 		item.size 			= container.size
 		item.location 		= container.location
@@ -42,7 +35,6 @@ class ImageProcessor(ContainerProcessor):
 
 	def process(self, page):
 
-
 		containers = self.get_containers(page)
 
 		if len(containers) <= 0:
@@ -58,9 +50,7 @@ class ImageProcessor(ContainerProcessor):
 
 
 	def process_source(self, item, advert):
-		"""
-		Process source images from main source
-		"""
+
 		if not self.process_image_source(item):
 			return False
 
@@ -74,30 +64,22 @@ class ImageProcessor(ContainerProcessor):
 
 	def process_image_source(self, item):
 
-
-
 		if not item.src:
 			return False
-
 
 		domain = UtilsString.get_domain(item.src)
 		if self.is_src_matching_invalid_pattern(item.src, domain):
 			return False
 
-
 		if self.datasource.match_placement(item.size[0], item.size[1]):
 			item.is_known_placement = True
-
 
 		if UtilsString.match_string_in_list(domain, self.datasource.get_adservers()):
 			item.is_known_adserver = True
 
-
-		# Is page domain equal to source domain
 		if domain == self.page.page_domain:
 			item.is_page_domain = True
 
-		# If source domain is equal
 		if item.is_page_domain and not item.is_known_placement:
 			self.log.debug('Invalid source: is page domain ({}) and not a known placement source: ({})'
 						   .format(self.page.page_domain, item.src))
@@ -118,7 +100,6 @@ class ImageProcessor(ContainerProcessor):
 
 
 	def get_link_from_anchors(self, item, link=''):
-
 
 		if item.a_href:
 			self.log.debug('ImageExtractor: Item value on a_href: {}'.format(item.a_href))
@@ -141,14 +122,3 @@ class ImageProcessor(ContainerProcessor):
 			return link
 
 		return False
-
-
-
-
-
-
-
-
-
-
-

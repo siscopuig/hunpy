@@ -2,6 +2,7 @@
 from urllib.parse import quote
 from functools import reduce
 
+
 chars = {
 	'%3A': ':',
 	'%2F': '/',

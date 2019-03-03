@@ -32,7 +32,7 @@ log.date.format:
 # DATABASE CONNECTION
 connection.parameters:
   'user': 'root'
-  'password': 'pupahit66'
+  'password': ''
   'host': 'localhost'
   'database': 'hunpy'
 
@@ -41,7 +41,6 @@ datasource.relative.paths:
   adservers:            /home/sisco/PycharmProjects/hunpy/datasource/adservers.txt
   ignore.domain:        /home/sisco/PycharmProjects/hunpy/datasource/ignore_domain.txt
   ignore.path:          /home/sisco/PycharmProjects/hunpy/datasource/ignore_path.txt
-
 
 # FORMATS
 format.datetime:

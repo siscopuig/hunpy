@@ -14,14 +14,11 @@ class Item:
 		self.size = None
 		self.location = None
 		self.isframe = None
-
 		self.is_known_placement = None
 		self.is_known_adserver = None
 		self.is_page_domain = None
 		self.is_advertiser_missing = True
 		self.instance = {}
-
-
 		self.iframe_srcs = []
 		self.img_srcs = []
 		self.img_hrefs = []
@@ -31,13 +28,9 @@ class Item:
 		self.titles = []
 		self.styles = []
 
-
 		# Processed data
 		self.src = None
 		self.advertiser = None
 		self.landing = None
 		self.xpath = ''
 		self.finfo = None
-
-
-

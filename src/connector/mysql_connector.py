@@ -27,21 +27,10 @@ def ewe(func):
 		except MySQLError as exception:
 			self.log.error('PyMySQL error {}'.format(exception))
 
-		#finally:
-		#	self.close()
-
 	return wrapper
 
 
 class MysqlConn:
-
-
-	# connect_params = {
-	# 	'user': 'root',
-	# 	'password': 'pupahit66',
-	# 	'host': 'localhost',
-	# 	'database': 'hunpy'
-	# }
 
 
 	def __init__(self, conn_param):

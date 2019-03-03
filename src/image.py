@@ -3,7 +3,6 @@ from containers.image_container import ImageContainer
 
 class Image(ImageContainer):
 
-
 	def __init__(self):
 
 		ImageContainer.__init__(self)
@@ -11,7 +10,6 @@ class Image(ImageContainer):
 		self.src = None
 		self.onclick = None
 		self.style = None
-
 		self.a_href = None
 		self.a_onclick = None
 		self.a_style = None

@@ -6,10 +6,6 @@ from searchers.iframe_searcher import FrameSearcher
 
 
 class IframeProcessor(ContainerProcessor):
-	"""
-	item.iframe_srcs can have one or many sources
-	"""
-
 
 	def __init__(self, driver, config, datasource):
 
@@ -20,21 +16,12 @@ class IframeProcessor(ContainerProcessor):
 		self.log = Log()
 
 
-
 	def get_containers(self, page):
-		"""
 
-		:param page:
-		:return:
-		"""
 		return self.framesearcher.find_containers(page)
 
 
-		
 	def process_source(self, item, advert):
-		"""
-		Process iframes & images inside
-		"""
 
 		if not self.process_frame_sources(item) and not \
 				self.process_image_sources(item):
@@ -48,17 +35,9 @@ class IframeProcessor(ContainerProcessor):
 		return True
 
 
-
 	def process_frame_sources(self, item):
-		"""
-
-		:param item:
-		:return:
-		"""
-
 
 		for i, src in enumerate(item.iframe_srcs):
-
 
 			domain = UtilsString.get_domain(src)
 			if self.is_src_matching_invalid_pattern(src, domain):
@@ -100,9 +79,7 @@ class IframeProcessor(ContainerProcessor):
 		return False
 
 
-
 	def process_image_sources(self, item):
-
 
 		for i, src in enumerate(item.img_srcs):
 
@@ -144,17 +121,16 @@ class IframeProcessor(ContainerProcessor):
 		return False
 
 
-
 	def set_item(self, item, container):
+		"""
+		An OrderedSet is a custom MutableSet that remembers its order,
+		so that every entry has an index that can be looked up.
+		"""
 
 		item.element = container.element
 		item.location = container.location
 		item.size = container.size
 		item.xpath = container.xpath
-
-		# Convert to an ordered list
-		# An OrderedSet is a custom MutableSet that remembers its order,
-		# so that every entry has an index that can be looked up.
 		item.iframe_srcs = OrderedSet()
 		item.img_srcs = OrderedSet()
 		item.img_hrefs = OrderedSet()
@@ -198,10 +174,9 @@ class IframeProcessor(ContainerProcessor):
 		if container.style:
 			item.styles.add(container.style)
 
-
 		# Append image info.
 		for img in container.images:
-			# Attributes come from Image class
+
 			if img.src:
 				item.img_srcs.add(img.src)
 
@@ -220,7 +195,6 @@ class IframeProcessor(ContainerProcessor):
 			if img.a_style:
 				item.styles.add(img.a_style)
 
-
 		for iframe in container.iframes:
 			self.append_item_properties(item, iframe)
 
@@ -229,12 +203,7 @@ class IframeProcessor(ContainerProcessor):
 
 
 	def extract_link_from_attributes(self, item, link=''):
-		"""
 
-		:param item:
-		:param link:
-		:return:
-		"""
 		if item.img_hrefs:
 			link = self.get_link_from_list(item.img_hrefs)
 			if link:
@@ -251,13 +220,8 @@ class IframeProcessor(ContainerProcessor):
 		return link
 
 
-
 	def get_link_from_list(self, list):
-		"""
-		
-		:param list: 
-		:return: 
-		"""
+
 		for string in list:
 			url = UtilsString.get_url_from_string(string)
 			if url:

@@ -57,9 +57,3 @@ class Advert:
 		)
 
 		return string
-
-
-
-
-
-

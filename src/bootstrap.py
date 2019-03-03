@@ -6,20 +6,14 @@ from connector.mysql_connector import MysqlConn
 from utils.utils_files import create_directory
 import sys
 
-
 # Configuration filepath
 config_yml_file_path = ['/home/sisco/PycharmProjects/hunpy/config/hunpy.yml']
 
 
-
 class Bootstrap:
 
-
 	def __init__(self):
-
-		# Get a log instance
 		self.log = Log()
-
 
 
 	def start(self):
@@ -49,13 +43,9 @@ class Bootstrap:
 	def get_connector(self, connect_param):
 		"""
 		Connect to the database and retrieves the connector
-
-		:param connect_param:
-		:return: connector object
 		"""
 
 		try:
-
 			conn = MysqlConn(connect_param)
 			conn.connect()
 
@@ -98,10 +88,7 @@ class Bootstrap:
 
 		except Exception as e:
 			sys.exit('Error loading datasource files: {}'.format(e))
-
 		return ds
-
-
 
 
 ##########################################

@@ -28,8 +28,7 @@ class FrameSearcher(ContainerSearcher):
 
 
 	def find_containers(self, page=None):
-		"""
-		"""
+
 		containers = np.array(self.find_iframes(page), dtype=np.object)
 		if containers.size == 0:
 			return []
@@ -38,8 +37,6 @@ class FrameSearcher(ContainerSearcher):
 
 
 	def find_iframes(self, parent):
-		"""
-		"""
 
 		refs = []
 
@@ -89,12 +86,11 @@ class FrameSearcher(ContainerSearcher):
 			# Append iframe in list
 			iframes.append(iframe)
 
-
-			self.log.debug(iframe.__str__())
+			# For debugging purposes only
+			#self.log.debug(iframe.__str__())
 
 
 		for i, iframe in enumerate(iframes):
-
 
 			result = self.switch_to_iframe(iframe)
 			if not result:
@@ -106,23 +102,15 @@ class FrameSearcher(ContainerSearcher):
 			# Recursive - it is calling itself
 			iframe.iframes = self.find_iframes(iframe)
 
-
 		return iframes
 
 
 	def find_images(self):
-		"""
-		"""
+
 		return ImageSearcher(self.driver, self.config).find_containers()
 
 
-
 	def switch_to_iframe(self, iframe):
-		"""
-
-		:param iframe:
-		:return:
-		"""
 
 		iframes = []
 
@@ -136,31 +124,24 @@ class FrameSearcher(ContainerSearcher):
 
 		for iframe in reversed(iframes):
 
-
 			element = self.driver.find_element_by_xpath(iframe.xpath)
 			if element:
-
 				if not self.driver.switch_to_iframe(element):
 					return False
 
-
 			else:
-
 				element = self.find_element_by_hash(iframe.hashref)
 				if element:
-
 					if not self.driver.switch_to_iframe(element):
 						return False
-
 				else:
 					return False
+
 
 		return True
 
 
 	def process_iframe_ref(self, iframe, element):
-		"""
-		"""
 
 		data = []
 		for attr in self.attri_tags:
@@ -179,16 +160,13 @@ class FrameSearcher(ContainerSearcher):
 
 
 	def find_element_by_hash(self, hashref):
-		"""
-
-		"""
 
 		# Try and find an element with the hash.
 		elements = self.driver.find_elements_by_xpath(self.x_iframe)
 		for element in elements:
 
 			# Create a frame object and set the info.
-			iframe = Iframe()
+			iframe = IframeContainer()
 
 			# var iframe
 			result = self.process_iframe_ref(iframe, element)

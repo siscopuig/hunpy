@@ -3,6 +3,7 @@ import aiohttp
 from asyncio import TimeoutError
 from aiohttp import ClientError
 
+
 HEADERS = {'user-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:62.0) Gecko/20100101 Firefox/62.0'}
 
 
@@ -16,7 +17,6 @@ async def process_http_requests(items):
 				async with session.get(item.img_src, timeout=5, headers=HEADERS) as resp:
 					item.request['status'] = resp.status
 					item.request['content_type'] = resp.content_type
-
 
 		except TimeoutError as e:
 			print(e)
@@ -34,9 +34,7 @@ def get_http_request(src):
 	# 	print('Valid response: {status} for src: {src}'.format(status=status, src=src))
 	# 	return False
 
-
 	try:
-
 		request = {}
 		r = requests.get(src)
 		request['status'] = r.status_code

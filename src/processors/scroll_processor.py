@@ -4,7 +4,6 @@ import time
 
 class ScrollProcessor(Processor):
 
-
 	def __init__(self, driver, config, datasource):
 
 		super().__init__(driver, config, datasource)
@@ -12,15 +11,13 @@ class ScrollProcessor(Processor):
 
 	def process(self, page):
 
-
 		try:
-
 			total_height = self.driver.execute_javascript(self.config['jcs.total.height'])
 			max_scroll = int(self.config['jcs.scroll.max.number'])
 			scroll_down = self.config['chrome.window.height']
-
 			height_counted  = 0
 			counter = -1
+
 			while height_counted <= total_height:
 
 				counter += 1
@@ -37,7 +34,6 @@ class ScrollProcessor(Processor):
 
 			# Scroll top
 			self.driver.execute_javascript(self.config['jcs.scroll.top'])
-
 
 		except Exception as e:
 			self.log.error('Error on scroll processor: {}'.format(e))

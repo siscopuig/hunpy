@@ -15,7 +15,6 @@ class ModuleManager:
 
 	def create_processors(self, processors):
 
-
 		module_dir   = 'processors'
 
 		for module_name in processors:
@@ -30,10 +29,7 @@ class ModuleManager:
 
 
 	def import_class(self, cls_name, module_name, module_dir):
-		"""
 
-		:return:
-		"""
 		try:
 
 			module = importlib.import_module(module_dir + '.' + module_name)

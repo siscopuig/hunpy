@@ -1,16 +1,10 @@
-
 from html_element import HtmlElement
 from utils.utils_strings import UtilsString
 
 
 class Page(HtmlElement):
 	"""
-	This class tries to represent the main document (a complete url)
-
-	Properties:
-		- The page itself (src) E.g. (http://www.europeanpensions.net/ep/index.php)
-		- The page domain (page_domain) E.g. (europeanpensions.net)
-		- adverts from iframes & images from main document
+	This class tries to represent the main document (a complete url).
 	"""
 
 	def __init__(self, driver, id, url):

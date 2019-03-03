@@ -3,7 +3,6 @@ from html_element import HtmlElement
 
 class IframeContainer(HtmlElement):
 
-
 	def __init__(self, parent=None):
 
 		HtmlElement.__init__(self, parent)
@@ -39,8 +38,6 @@ class IframeContainer(HtmlElement):
 			img_srcs=self.img_srcs,
 			clicks=self.onclicks, t=tab)
 
-		# Include sub-frames.
-		# return string + '\n' + ''.join([str(frame) for frame in self.iframes])
 
 		# Includes nested frames
 		for iframe in self.iframes:

@@ -4,15 +4,8 @@ import re
 class UtilsString:
 
 
-
 	@staticmethod
 	def match_string_in_list(string, string_list):
-		"""
-
-		:param string:
-		:param string_list:
-		:return: boolean
-		"""
 
 		casefold_string = string.casefold()
 		for str in string_list:
@@ -81,8 +74,7 @@ class UtilsString:
 
 	@staticmethod
 	def match_placement(placements, width, height):
-		"""
-		"""
+
 		for size in placements:
 			if size[0] == width and size[1] == height:
 				return True
@@ -125,8 +117,6 @@ class UtilsString:
 		https://www.rlam.co.uk/Home/Intermediaries/Products/Fixed-Income/OEICs/Monthly-Income-Bond-Fund/
 		?utm_source=FTAdviser&utm_medium=Half%20Page&utm_campaign=MIB%202018
 
-		:param string:
-		:return: None or url
 		"""
 
 		# Return a list of all non-overlapping matches in the string.
@@ -183,34 +173,8 @@ class UtilsString:
 		return source.sub('', url)
 
 
-
-	# WORK IN PROGRESS
 	@staticmethod
 	def strip_landing(source):
 
-		# Strip schema (http://www, https://www, http://, https://)
-		# Strip source in parts (/)
-
 		# Returns first split
-
-
 		return source.split('?', 1)[0]
-
-
-
-
-
-#############################
-# src = 'http://adclick.g.doubleclick.net/pcs/click?xai=AKAOjsvhOqNiIi3Zv-' \
-# 	  'JwQKu7K3VwVXzzhphDRT4O8FZ48g9A3QHmZ0m-m58ugEOY7GrBMuA_T4DfhkyDRm12fX8BlFD' \
-# 	  'JK3df8lhzM9kIzjWg2w342TC7S3B1UFUH6qc-qj8ElBwxvEZJ7UiGVqgi5pJHqEVq8i9kNcxDL' \
-# 	  'ZFqdmUT4DexaYprDksioGNurfK-RQ2qaFdb21kwvEhJ9x9Px1Wu3kLIRHhIh71kLpOLsLWO7t9vD3w' \
-# 	  '1WfmlWrcpuUvLfd31zQy2&sai=AMfl-YSmUDAw5oZbgx8BID9_3GzlxdLUM-sCS7oadMMYImbQYLn' \
-# 	  'laWVdI9DY0zOTl1zgla8uu9HGyIuv_gQHP2ExfND_6Vbm29FXV3pHLu6_5wQsZ0-mOFLxgssHLXUj&s' \
-# 	  'ig=Cg0ArKJSzAcOvYMZk5ZOEAE&urlfix=1&adurl=https://servedby.flashtalking.com/click' \
-# 	  '/1/98145;3371049;2367840;210;0/?ft_impID=6A4E4B98-DA0F-88F7-361E-3BA1078F0145&g=' \
-# 	  '3947060DBD153D&random=55963&ft_width=300&ft_height=600&url=' \
-# 	  'https://www.rlam.co.uk/Home/Intermediaries/Products/Fixed-Income/OEICs/Monthly-Income-Bond-Fund/' \
-# 	  '?utm_source=FTAdviser&utm_medium=Half%20Page&utm_campaign=MIB%202018'
-# url = UtilsString.strip_landing(src)
-# # print(url)
