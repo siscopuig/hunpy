@@ -38,9 +38,9 @@ connection.parameters:
 
 # DATASOURCE PATHS
 datasource.relative.paths:
-  adservers:            /home/sisco/PycharmProjects/hunpy/datasource/adservers.txt
-  ignore.domain:        /home/sisco/PycharmProjects/hunpy/datasource/ignore_domain.txt
-  ignore.path:          /home/sisco/PycharmProjects/hunpy/datasource/ignore_path.txt
+  adservers:            hunpy/datasource/adservers.txt
+  ignore.domain:        hunpy/datasource/ignore_domain.txt
+  ignore.path:          hunpy/datasource/ignore_path.txt
 
 # FORMATS
 format.datetime:
@@ -95,7 +95,7 @@ chrome.option.headless:
 chrome.option.disable.notifications:
   --disable-notifications
 chrome.chromedriver.log:
-  --log-path=/home/sisco/PycharmProjects/hunpy/chromedriver.log
+  --log-path=hunpy/chromedriver.log
 
 
 # XPATH

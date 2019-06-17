@@ -46,8 +46,8 @@ class MysqlConn:
 		if 'charset' not in self.conn_param:
 			self.conn_param['charset'] = 'utf8mb4'
 
-		if "cursorclass" not in self.conn_param:
-			self.conn_param["cursorclass"] = pymysql.cursors.DictCursor
+		if 'cursorclass' not in self.conn_param:
+			self.conn_param['cursorclass'] = pymysql.cursors.DictCursor
 
 
 	@ewe
