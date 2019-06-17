@@ -1,4 +1,4 @@
 .idea
 .vscode
 venv
-XDA_CACHE_HOME
+XDG_CACHE_HOME
