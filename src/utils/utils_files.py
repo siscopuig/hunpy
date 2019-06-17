@@ -4,7 +4,7 @@ from os import path, makedirs
 def create_directory(dir_path):
 	try:
 		if not path.exists(dir_path):
-			makedirs(path)
+			makedirs(dir_path)
 	except OSError:
 		print('Error creating directory: {}'.format(dir_path))
 

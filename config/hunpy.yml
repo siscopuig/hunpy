@@ -22,7 +22,7 @@ jcs.scroll.max.number:
 log.name:
   'hunpy'
 log.dir:
-  '/home/sisco/PycharmProjects/hunpy/log'
+  'hunpy/log'
 log.string.format:
   '%(asctime)s - %(levelname)s - %(message)s'
 log.date.format:
@@ -32,7 +32,7 @@ log.date.format:
 # DATABASE CONNECTION
 connection.parameters:
   'user': 'root'
-  'password': ''
+  'password': 'pass123'
   'host': 'localhost'
   'database': 'hunpy'
 
@@ -75,7 +75,7 @@ chrome.window.width:
 chrome.window.height:
   990
 chrome.option.profile.path:
-  /home/sisco/PycharmProjects/hunpy/profile
+  hunpy/profile
 chrome.option.dns.prefetch.disable:
   --dns-prefetch-disable
 chrome.option.ignore.ssl.errors:

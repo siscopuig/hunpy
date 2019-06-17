@@ -7,7 +7,7 @@ from utils.utils_files import create_directory
 import sys
 
 # Configuration filepath
-config_yml_file_path = ['/home/sisco/PycharmProjects/hunpy/config/hunpy.yml']
+config_yml_file_path = ['../config/hunpy.yml']
 
 
 class Bootstrap:
