@@ -4,26 +4,24 @@ import yaml
 
 
 class Config:
+    """"""
+    def __init__(self):
 
-	def __init__(self):
+        self.log = Log()
+        self.data = {}
 
-		self.log = Log()
-		self.data = {}
+    def load_config(self, file_paths):
 
+        for path in file_paths:
 
-	def load(self, file_paths):
+            try:
+                with open(get_abs_path(path), 'r') as yml_file:
+                    self.fill(yaml.safe_load(yml_file))
 
-		for path in file_paths:
+            except yaml.YAMLError as ex:
+                raise 'Error loading yaml config file: {}'.format(ex)
 
-			try:
-				with open(get_abs_path(path), 'r') as yml_file:
-					self.fill(yaml.load(yml_file))
+    def fill(self, yml_file):
 
-			except yaml.YAMLError as ex:
-				raise 'Error loading yaml config file: {}'.format(ex)
-
-
-	def fill(self, yml_file):
-
-		for key, value in yml_file.items():
-			self.data[key] = value
+        for key, value in yml_file.items():
+            self.data[key] = value

@@ -8,62 +8,37 @@ HEADERS = {'user-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:62.0) Gecko
 
 
 async def process_http_requests(items):
-
-	for i, item in enumerate(items):
-
-		try:
-
-			async with aiohttp.ClientSession(conn_timeout=5) as session:
-				async with session.get(item.img_src, timeout=5, headers=HEADERS) as resp:
-					item.request['status'] = resp.status
-					item.request['content_type'] = resp.content_type
-
-		except TimeoutError as e:
-			print(e)
-
-		except ClientError as e:
-			print(e)
-
+    
+    for i, item in enumerate(items):
+        try:
+            async with aiohttp.ClientSession(conn_timeout=5) as session:
+                async with session.get(item.img_src, timeout=5, headers=HEADERS) as resp:
+                    item.request['status'] = resp.status
+                    item.request['content_type'] = resp.content_type
+        except TimeoutError as e:
+            print(e)
+        except ClientError as e:
+            print(e)
 
 def get_http_request(src):
-
-	# if is_invalid_status(request['status'], http_bad_request):
-	# 	print('Invalid response: {} for src: {}'.format(status=status, src=src))
-	# 	return True
-	# else:
-	# 	print('Valid response: {status} for src: {src}'.format(status=status, src=src))
-	# 	return False
-
-	try:
-		request = {}
-		r = requests.get(src)
-		request['status'] = r.status_code
-		request['content_type']  = r.headers.__getitem__('Content-Type')
-		return request
-
-	except Exception as e:
-		print(e)
-		return False
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
+    # if is_invalid_status(request['status'], http_bad_request):
+    # 	print('Invalid response: {} for src: {}'.format(status=status, src=src))
+    # 	return True
+    # else:
+    # 	print('Valid response: {status} for src: {src}'.format(status=status, src=src))
+    # 	return False
+    
+    try:
+        request = {}
+        r = requests.get(src)
+        request['status'] = r.status_code
+        request['content_type']  = r.headers.__getitem__('Content-Type')
+        return request
+    
+    except Exception as e:
+        print(e)
+        return False
 
 ###########################################################################
 # src = 'https://s0.2mdn.net/ads/richmedia/studio/pv2/60804105/index.html'

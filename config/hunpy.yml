@@ -1,11 +1,10 @@
 
 # PROCESSOR MODULES
 processors:
-#  - scroll_processor
+  - scroll_processor
   - image_processor
-#  - iframe_processor
+  - iframe_processor
   - storage_processor
-
 
 # SCROLL PROCESSOR
 jcs.total.height:
@@ -15,14 +14,14 @@ jcs.scroll.top:
 jcs.scroll.down:
   'window.scrollBy(0, {});'
 jcs.scroll.max.number:
-  3
+  6
 
 
 # HUNPY LOG
 log.name:
   'hunpy'
 log.dir:
-  'hunpy/log'
+  'logs'
 log.string.format:
   '%(asctime)s - %(levelname)s - %(message)s'
 log.date.format:
@@ -38,9 +37,9 @@ connection.parameters:
 
 # DATASOURCE PATHS
 datasource.relative.paths:
-  adservers:            hunpy/datasource/adservers.txt
-  ignore.domain:        hunpy/datasource/ignore_domain.txt
-  ignore.path:          hunpy/datasource/ignore_path.txt
+  adservers: datasource/adservers.txt
+  ignore.domain: datasource/ignore_domain.txt
+  ignore.path: datasource/ignore_path.txt
 
 # FORMATS
 format.datetime:
@@ -64,7 +63,6 @@ http_bad_request:
   - 404
   - 500
 
-
 # DRIVER OPTIONS
 page.load.timeout:
   30
@@ -75,7 +73,7 @@ chrome.window.width:
 chrome.window.height:
   990
 chrome.option.profile.path:
-  hunpy/profile
+  profile
 chrome.option.dns.prefetch.disable:
   --dns-prefetch-disable
 chrome.option.ignore.ssl.errors:
@@ -96,6 +94,8 @@ chrome.option.disable.notifications:
   --disable-notifications
 chrome.chromedriver.log:
   --log-path=hunpy/chromedriver.log
+chrome.binary.location:
+  /usr/bin/chromium-browser
 
 
 # XPATH
@@ -110,7 +110,7 @@ x.a_img:          .//a//img
 x_aimg:           .//a/img
 x.ancestor_a:     ./ancestor::a
 
-# IFRAME ATTRIBUTES
+# Iframe attributes
 txt.html:    html
 txt.id:      id
 txt.name:    name
@@ -119,7 +119,6 @@ txt.title:   title
 txt.style:   style
 txt.href:    href
 txt.onclick: onclick
-
 
 src.ignore.path.domain.exceptions:
   - ds.serving-sys.com
@@ -136,12 +135,6 @@ src.ignore.landing:
    - 'about:blank'
    - javascript
    - widget
-
-
-
-
-
-
 
 
 

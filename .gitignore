@@ -2,3 +2,5 @@
 .vscode
 venv
 XDG_CACHE_HOME
+*__pycache__
+*.pyc
