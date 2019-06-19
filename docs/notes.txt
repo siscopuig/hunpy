@@ -1,0 +1,11 @@
+
+
+- Create a virtual environment for this project.
+- Run code from terminal passing arguments.
+
+
+What arguments do I want to pass?
+    -- url       -> pass url
+    -- headless  -> run headless
+    -- debug     -> run debug mode 
+    -- show      -> display ads

@@ -1,5 +1,0 @@
-
-
-- Create a virtual environment for this project.
-- Run code from terminal passing arguments.
-
