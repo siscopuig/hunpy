@@ -13,6 +13,7 @@ class StorageProcessor(Processor):
 
 	def process(self, page):
 
+
 		if not self.page.adverts:
 			return False
 

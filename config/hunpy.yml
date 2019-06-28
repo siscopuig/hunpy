@@ -4,7 +4,8 @@ processors:
   - scroll_processor
   - image_processor
   - iframe_processor
-  - storage_processor
+  - captures_processor
+  # - storage_processor
 
 # SCROLL PROCESSOR
 jcs.total.height:

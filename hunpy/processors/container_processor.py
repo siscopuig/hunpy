@@ -78,7 +78,7 @@ class ContainerProcessor(Processor):
 
 	def process_items(self, items, page):
 
-		for i, item in enumerate(items):
+		for item in items:
 
 			advert = Advert()
 
@@ -316,7 +316,7 @@ class ContainerProcessor(Processor):
 		windows = self.driver.get_window_handle()
 		self.log.info('Number of windows: ({})'.format(len(windows)))
 
-		for i, window in enumerate(windows):
+		for window in windows:
 
 			if window != self.page.main_window_handle:
 

@@ -19,17 +19,16 @@ class Advert:
 		self.advertiser = None
 		self.landing = None
 		self.finfo = None
+		self.datetime = None
 		self.location = None
-		self.state = None
 		self.isframe = None
 		self.instances = 1
-
+		self.state = None
 
 
 	def __str__(self):
 
 		tab = '\t'
-
 		string = (
 			'\n'
 			'{t} Advert: 	  \n'
@@ -41,10 +40,8 @@ class Advert:
 			'{t} finfo:	      {finfo}\n'
 			'{t} datetime:	  {datetime}\n'
 			'{t} location:	  {location}\n'
-			'{t} datetime:    {datetime}\n'
 			'{t} isframe:     {isframe}\n'
 			'{t} instances:	  {instances}\n'
-
 		).format(
 			uid=self.uid,
 			src=self.src,
@@ -52,8 +49,11 @@ class Advert:
 			advertiser=self.advertiser,
 			landing=self.landing,
 			finfo=self.finfo,
+			datetime=self.datetime,
+			location=self.location,
 			isframe=self.isframe,
+			instances=self.instances,
 			t=tab
 		)
-
+		
 		return string

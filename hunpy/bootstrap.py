@@ -1,22 +1,20 @@
-from .log import Log
-from .config import Config
-from .datasource import Datasource
-from .handler import Handler
-from .connector.mysql_connector import MysqlConn
-from .utils.utils_files import create_directory
 import sys
+from hunpy.log import Log
+from hunpy.config import Config
+from hunpy.datasource import Datasource
+from hunpy.handler import Handler
+from hunpy.connector.mysql_connector import MysqlConn
+from hunpy.utils.utils_files import create_directory
 
 config_yml_file_path = ['config/hunpy.yml']
 
 
 class Bootstrap:
     """"""
-
     def __init__(self):
         self.log = Log()
-        
-    def start(self):
 
+    def start(self):
 
         # Get configuration list
         config = self.get_yaml_conf_file()
@@ -39,15 +37,16 @@ class Bootstrap:
         handler = Handler(config, datasource)
         handler.search()
 
-    def get_connector(self, connect_param):
+    @staticmethod
+    def get_connector(connect_param):
         """
         Connect to the database and retrieves the connector
         """
         try:
             conn = MysqlConn(connect_param)
             conn.connect()
-        except Exception as e:
-            sys.exit('MySQL exception: {}'.format(e))
+        except Exception as exception:
+            sys.exit('MySQL exception: {}'.format(exception))
         return conn
 
     def get_yaml_conf_file(self):

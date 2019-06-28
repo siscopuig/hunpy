@@ -1,5 +1,6 @@
 .idea
 .vscode
+test/*
 venv
 XDG_CACHE_HOME
 *__pycache__

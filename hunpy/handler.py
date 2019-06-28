@@ -28,7 +28,7 @@ class Handler:
         for url in urls:
 
             # For debugging purposes:
-            # url['url'] = 'http://localhost:63342/hunpy/lab/html_templates/html_main_document.html'
+            # url['url'] = 'http://0.0.0.0:8080/templates/document1.html'
             # url['id']  = 1
 
             try:
@@ -47,8 +47,7 @@ class Handler:
                 self.page = Page(self.driver, url['id'], url['url'])
 
                 # Load processors
-                module_manager = ModuleManager(self.driver, self.config,
-                                               self.datasource)
+                module_manager = ModuleManager(self.driver, self.config,self.datasource)
                 module_manager.create_processors(self.config['processors'])
 
                 # Iterate processors (tuple)
@@ -72,7 +71,10 @@ class Handler:
                 # Reset driver
                 self.driver = None
 
+
     def reset_chromedriver(self):
+
+        # @TODO Revise this function. It's about the browser, not chromedriver
 
         try:
             retcode = subprocess.call(["pkill", "-f", "chromium-browser"])

@@ -22,6 +22,7 @@ class ModuleManager:
 			if cls:
 				self.processors[module_name] = cls(self.driver, self.config, self.datasource)
 
+
 	def get_processors(self):
 
 		return self.processors

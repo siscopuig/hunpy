@@ -1,8 +1,8 @@
 from .log import Log
 from .hunpy_exception import HunpyException
 from .utils.utils_strings import UtilsString
+from .utils.utils_files import get_project_root_abs_path
 import numpy as np
-import os
 
 
 class Datasource:
@@ -19,12 +19,12 @@ class Datasource:
         self.ignore_domain = None
         self.ignore_path = None
 
+
     def config_datasource_abs_path(self, ds_paths):
 
-        project_root_path = os.path.abspath(__file__ + '/../../')
-
         for key, value in ds_paths.items():
-            self.ds_paths[key] = os.path.join(project_root_path, value)
+            self.ds_paths[key] = get_project_root_abs_path(value)
+
 
     def get_urls(self):
 
@@ -34,6 +34,7 @@ class Datasource:
             raise HunpyException('Error getting urls from database')
 
         return self.urls
+
 
     def get_placements(self):
 
@@ -157,7 +158,7 @@ class Datasource:
         # @TODO:
         # Select all the values needed in one call (id, uid, src, advertiser).
         # It will return a list dict. E.g.
-        #	[{'id': 1, 'uid': '06e7fe57-c21d-4f40-9afa-f441361349be',
+        # [{'id': 1, 'uid': '06e7fe57-c21d-4f40-9afa-f441361349be',
         # 'advertiser': 'events.marcusevans-events.com'}]
 
         # Select uid from adverts where src is equal to src

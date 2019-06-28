@@ -73,7 +73,7 @@ class IframeProcessor(ContainerProcessor):
 				continue
 
 			item.src = source
-			item.finfo = finfo
+			item.finfo = finfo.split(';')[0]
 			return True
 
 		return False

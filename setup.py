@@ -17,5 +17,4 @@ setup(
             'hunpy = hunpy.hunpy:main'
         ]
     }
-
 )
