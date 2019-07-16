@@ -1,7 +1,9 @@
-from .container_processor import ContainerProcessor
-from ..searchers.image_searcher import ImageSearcher
-from ..utils.utils_strings import UtilsString
-from ..log import Log
+# -*- coding: utf-8 -*-
+
+from hunpy.processors.container_processor import ContainerProcessor
+from hunpy.searchers.image_searcher import ImageSearcher
+from hunpy.utils.utils_strings import UtilsString
+from hunpy.log import Log
 
 
 class ImageProcessor(ContainerProcessor):
@@ -90,12 +92,13 @@ class ImageProcessor(ContainerProcessor):
 						   .format(item.size[0], item.size[1], item.src))
 			return False
 
-		source, finfo = self.process_stripped_source(item.src)
-		if not finfo:
+		result = self.process_stripped_source(item.src)
+		if not result['valid']:
 			return False
 
-		item.src = source
-		item.finfo = finfo
+		item.src = result['url']
+		item.finfo = result['finfo']
+
 		return True
 
 
@@ -118,7 +121,7 @@ class ImageProcessor(ContainerProcessor):
 			link = UtilsString.get_url_from_string(item.onclick)
 
 		if link and not self.is_landing_invalid(link):
-			self.log.info('Link obtained from img hrefs: {}'.format(link))
+			self.log.debug('Link obtained from img hrefs: {}'.format(link))
 			return link
 
 		return False

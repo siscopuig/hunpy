@@ -4,19 +4,19 @@ processors:
   - scroll_processor
   - image_processor
   - iframe_processor
-  - captures_processor
-  # - storage_processor
+  - storage_processor
 
 # SCROLL PROCESSOR
-jcs.total.height:
+js.total.height:
   "return Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);"
-jcs.scroll.top:
+js.scroll.top:
   'top.window.scroll(0, 0)'
-jcs.scroll.down:
+js.scroll.down:
   'window.scrollBy(0, {});'
-jcs.scroll.max.number:
+js.scroll.max.number:
   6
-
+js.time.wait.scroll:
+  0.5
 
 # HUNPY LOG
 log.name:
@@ -36,8 +36,9 @@ connection.parameters:
   'host': 'localhost'
   'database': 'hunpy'
 
-# DATASOURCE PATHS
+# DATASOURCE RELATIVE PATHS
 datasource.relative.paths:
+  sources: datasource/sources.txt
   adservers: datasource/adservers.txt
   ignore.domain: datasource/ignore_domain.txt
   ignore.path: datasource/ignore_path.txt
@@ -64,11 +65,14 @@ http_bad_request:
   - 404
   - 500
 
+headers:
+  user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.90 Safari/537.36
+
 # DRIVER OPTIONS
 page.load.timeout:
   30
 chrome.user.agent:
-  Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64_59.0.3071.86 Safari/537.36
+  Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.90 Safari/537.36
 chrome.window.width:
   1440
 chrome.window.height:

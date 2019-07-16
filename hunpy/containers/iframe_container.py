@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from hunpy.html_element import HtmlElement
 
 
@@ -37,7 +39,6 @@ class IframeContainer(HtmlElement):
 			anchor_imgs=self.anchor_imgs,
 			img_srcs=self.img_srcs,
 			clicks=self.onclicks, t=tab)
-
 
 		# Includes nested frames
 		for iframe in self.iframes:

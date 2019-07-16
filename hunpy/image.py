@@ -1,4 +1,6 @@
-from .containers.image_container import ImageContainer
+# -*- coding: utf-8 -*-
+
+from hunpy.containers.image_container import ImageContainer
 
 
 class Image(ImageContainer):

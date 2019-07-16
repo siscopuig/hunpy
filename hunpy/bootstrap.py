@@ -1,80 +1,75 @@
-import sys
-from hunpy.log import Log
-from hunpy.config import Config
-from hunpy.datasource import Datasource
-from hunpy.handler import Handler
-from hunpy.connector.mysql_connector import MysqlConn
-from hunpy.utils.utils_files import create_directory
+# -*- coding: utf-8 -*-
 
-config_yml_file_path = ['config/hunpy.yml']
+import traceback
+import subprocess
+import sys
+from hunpy.driver import Driver
+from hunpy.page import Page
+from hunpy.log import Log
+from hunpy.module_manager import ModuleManager
 
 
 class Bootstrap:
-    """"""
-    def __init__(self):
+
+    processors = None
+
+    def __init__(self, config, datasource):
+
         self.log = Log()
+        self.config = config
+        self.datasource = datasource
+        self.driver = None
+        self.page = None
+        self.urls = {}
 
-    def start(self):
 
-        # Get configuration list
-        config = self.get_yaml_conf_file()
+    def search(self, urls, arg_headless):
 
-        # Creates chrome profile folder if doesn't exist
-        create_directory(config['chrome.option.profile.path'])
+        for url_id, url in urls.items():
 
-        # Get connector
-        dbconn = self.get_connector(config['connection.parameters'])
+            try:
 
-        # Get datasource from files & database
-        datasource = self.get_datasource(dbconn,
-                                         config['datasource.relative.paths'])
+                # Get driver instance
+                if self.driver is None:
+                    self.driver = Driver(self.config)
+                    self.log.info('Chromedriver started')
+                    self.driver.start_driver(headless=arg_headless)
 
-        # Open log
-        self.log.open_log(config, debug=True)
-        self.log.info('Hunpy started')
+                # Open url in browser
+                self.driver.open(url, 1)
+                self.log.info('Page opened: {}'.format(url))
 
-        # Start processing
-        handler = Handler(config, datasource)
-        handler.search()
+                # Open a page instance
+                self.page = Page(self.driver, url_id, url)
 
-    @staticmethod
-    def get_connector(connect_param):
-        """
-        Connect to the database and retrieves the connector
-        """
-        try:
-            conn = MysqlConn(connect_param)
-            conn.connect()
-        except Exception as exception:
-            sys.exit('MySQL exception: {}'.format(exception))
-        return conn
+                # Load processors
+                module_manager = ModuleManager(self.driver, self.config,self.datasource)
+                module_manager.create_processors(self.config['processors'])
 
-    def get_yaml_conf_file(self):
-        """
-        Load yaml config file
+                # Iterate processors (tuple)
+                for name, processor in module_manager.get_processors().items():
+                    processor.process_start(self.page, processor_name=name)
 
-        :return: a config list
-        """
-        try:
-            config = Config()
-            config.load_config(config_yml_file_path)
-        except Exception as e:
-            sys.exit('Error loading yaml configuration file: {}'.format(e))
-        return config.data
+            except Exception as exception:
+                exception = str(exception).replace('\n', '')
+                self.log.error(f"Exception caught on Bootstrap: ({exception})")
 
-    def get_datasource(self, dbconn, datasource_relative_paths):
-        """
-        Load datasource text files into the system
+                # At this point, if an exception is thrown kill chromedriver processes
+                self.reset_chromedriver()
+                self.log.error('Stopped chromedriver by exception: {}'.format(exception))
 
-        :param datasource_relative_paths:
-        :param dbconn:
-        :return: datasource object
-        """
+                # Reset driver
+                self.driver = None
+
+        self.driver.close()
+        self.driver.quit()
+
+
+    def reset_chromedriver(self):
 
         try:
-            ds = Datasource(dbconn)
-            ds.config_datasource_abs_path(datasource_relative_paths)
-
-        except Exception as e:
-            sys.exit('Error loading datasource files: {}'.format(e))
-        return ds
+            subprocess.call(["pkill", "-f", "chromium-browser"])
+            subprocess.call(["pkill", "-f", "chromedriver"])
+        except OSError as e:
+            self.log.error('Execution failed: OSError: {}'.format(
+                e, file=sys.stderr))

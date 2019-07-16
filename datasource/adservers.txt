@@ -40,7 +40,7 @@ cdn.adnxs.com
 cdn.adsfactor.net
 secure-ds.serving-sys.com
 pool.admedo.com
-img.adplan-ds.com 
+img.adplan-ds.com
 content.aimatch.com
 img.ak.impact-ad.jp
 pubads.g.doubleclick.net
@@ -52,7 +52,7 @@ images2.ads.rcsobjects.it
 adserver.fa-mag.com
 fi.intms.nl
 ad.bluerating.com
-ced.sascdn.com 
+ced.sascdn.com
 efund.media
 banners.host.bannerflow.com
 gfx.finanztreff.de
@@ -2723,3 +2723,4 @@ zeusclicks.com
 zm232.com
 zmedia.com
 zqtk.net
+ads.google.com

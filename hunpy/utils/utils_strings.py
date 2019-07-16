@@ -3,7 +3,6 @@ import re
 
 class UtilsString:
 
-
 	@staticmethod
 	def match_string_in_list(string, string_list):
 
@@ -11,31 +10,11 @@ class UtilsString:
 		for str in string_list:
 			if (str is string or string is str) or (str.casefold() in casefold_string):
 				return True
-
 		return False
 
 
 	@staticmethod
 	def match_string_parts_in_list(parts, string_list):
-
-		# match_string_parts_in_list(ignore_path) string: ads in str: uploads
-		# https://s0.2mdn.net/ads/richmedia/studio/pv2/60817163/20180903024843963/index.html
-
-		# 'is' is used for identity comparison, while == is used for equality comparison
-
-		# So, when you have two string literals (words that are literally typed into your
-		# program source code, surrounded by quotation marks) in your program that have
-		# the same value, the Python compiler will automatically intern the strings, making
-		# them both stored at the same memory location. (Note that this doesn't always happen,
-		# and the rules for when this happens are quite convoluted, so please don't rely
-		# on this behavior in production code!)
-		#
-		# Since in your interactive session both strings are actually stored in the same
-		# memory location, they have the same identity, so the `is` operator works as expected.
-		# But if you construct a string by some other method (even if that string contains
-		# exactly the same characters), then the string may be equal, but it is not
-		# the same string -- that is, it has a different identity, because it is stored
-		# in a different place in memory.
 
 		for part in parts:
 			for str in string_list:
@@ -130,7 +109,8 @@ class UtilsString:
 		#	'https://servedby.flashtalking.com/click/1/98145',
 		#	'https://www.rlam.co.uk/Home/Intermediaries/Products/Fixed-Income/OEICs/Monthly-Income-Bond-Fund/'
 		# ]
-		urls = re.findall('http[s]?://(?:(?!http[s]?://)[a-zA-Z]|[0-9]|[$\-_@.&+/]|[!*,]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', string)
+		urls = re.findall('http[s]?://(?:(?!http[s]?://)[a-zA-Z]|[0-9]|[$\-_@.&+/]'
+		                  '|[!*,]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', string)
 
 		if not urls:
 			return None

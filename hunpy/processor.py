@@ -1,5 +1,5 @@
-from .log import Log
 import time
+from hunpy.log import Log
 
 
 class Processor:
@@ -21,8 +21,7 @@ class Processor:
         self.log.info('Processor {} started'.format(processor_name))
         self.page = page
 
-        if not self.driver.switch_to_window_default_content(
-                self.page.main_window_handle):
+        if not self.driver.switch_to_window_default_content(self.page.main_window_handle):
             self.log.error('Unable to switch to main window default content')
             return False
 
@@ -30,8 +29,8 @@ class Processor:
         self.process(page)
 
         # Log processor completion time
-        self.log.info('Processor {} finished in {} seconds'.format(
-            processor_name, round(time.time() - start, 2)))
+        self.log.info('Processor: ({}) finished in ({}) seconds'
+                      .format(processor_name, round(time.time() - start, 2)))
 
 
     def process(self, page):

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import importlib
 from hunpy.log import Log
 
@@ -7,9 +9,13 @@ class ModuleManager:
 	def __init__(self, driver, config, datasource):
 
 		self.log = Log()
+
 		self.driver = driver
+
 		self.config = config
+
 		self.datasource = datasource
+
 		self.processors = {}
 
 
@@ -29,7 +35,7 @@ class ModuleManager:
 
 
 	def import_class(self, cls_name, module_name, module_dir):
-		
+
 		try:
 
 			module = importlib.import_module('.' + module_dir + '.' + module_name, package='hunpy')
@@ -39,11 +45,6 @@ class ModuleManager:
 
 
 	def get_class_name(self, module_name, cls_name=''):
-		"""
-		Get class name by module name:
-		 - Split module name (iframe_processor -> ['iframe', 'processor']
-		 - Uppercase first character + string with first character removed
-		"""
 
 		for name_part in module_name.split('_'):
 			cls_name += ''.join([name_part[:1].upper() + name_part[1:]])

@@ -1,6 +1,8 @@
 .idea
 .vscode
-test/*
+docs
+profile/*
+test
 venv
 XDG_CACHE_HOME
 *__pycache__

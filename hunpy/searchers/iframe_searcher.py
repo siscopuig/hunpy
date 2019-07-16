@@ -1,10 +1,12 @@
-from ..containers.iframe_container import IframeContainer
-from ..searchers.container_searcher import ContainerSearcher
-from ..searchers.image_searcher import ImageSearcher
-from ..page import Page
-from ..log import Log
+# -*- coding: utf-8 -*-
+
 import numpy as np
 import hashlib
+from hunpy.containers.iframe_container import IframeContainer
+from hunpy.searchers.container_searcher import ContainerSearcher
+from hunpy.searchers.image_searcher import ImageSearcher
+from hunpy.page import Page
+from hunpy.log import Log
 
 
 class FrameSearcher(ContainerSearcher):
@@ -30,6 +32,7 @@ class FrameSearcher(ContainerSearcher):
 	def find_containers(self, page=None):
 
 		containers = np.array(self.find_iframes(page), dtype=np.object)
+
 		if containers.size == 0:
 			return []
 
@@ -41,8 +44,6 @@ class FrameSearcher(ContainerSearcher):
 		refs = []
 
 		iframes = []
-
-		self.log.info('Searching for iframe elements...')
 
 		# Get iframe elements
 		elements = self.driver.find_elements_by_xpath(self.x_iframe)
@@ -87,8 +88,7 @@ class FrameSearcher(ContainerSearcher):
 			iframes.append(iframe)
 
 			# For debugging purposes only
-			#self.log.debug(iframe.__str__())
-
+			self.log.debug(iframe.__str__())
 
 		for i, iframe in enumerate(iframes):
 
@@ -136,7 +136,6 @@ class FrameSearcher(ContainerSearcher):
 						return False
 				else:
 					return False
-
 
 		return True
 

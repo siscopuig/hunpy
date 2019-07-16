@@ -1,8 +1,8 @@
-class Container:
+# -*- coding: utf-8 -*-
 
+class Container:
 	"""
 	Base class for extracted containers.
-
 	"""
 
 	def __init__(self):
@@ -21,11 +21,9 @@ class Container:
 	def __str__(self):
 
 		return (
-
 			' element:      {element}\n'
 			' size:         {size}\n'
 			' location:     {location}\n'
-
 		).format(
 			element=self.element,
 			size=self.size,

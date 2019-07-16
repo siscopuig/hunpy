@@ -1,16 +1,17 @@
-from selenium.common.exceptions import TimeoutException
-from hunpy.utils.utils_strings import UtilsString
-from hunpy.utils.utils_requests import process_http_requests
-from hunpy.utils.utils_url import encode_url
-from ..item import Item
-from ..advert import Advert, AdvertState
-from ..utils.utils_requests import get_http_request
-from hunpy.processor import Processor
+# -*- coding: utf-8 -*-
+
 import numpy as np
 import uuid
 import asyncio
 import time
-from ..log import Log
+from selenium.common.exceptions import TimeoutException
+from hunpy.utils.utils_strings import UtilsString
+from hunpy.utils.utils_url import encode_url
+from hunpy.item import Item
+from hunpy.advert import Advert, AdvertState
+from hunpy.processor import Processor
+from hunpy.log import Log
+from hunpy.utils.utils_requests import UtilsRequest
 
 
 class ContainerProcessor(Processor):
@@ -23,10 +24,10 @@ class ContainerProcessor(Processor):
 		self.driver = driver
 		self.config = config
 		self.datasource = datasource
-		self.http_bad_request = self.config['http_bad_request']
 		self.src_ignore_iframe = self.config['src.ignore.iframe']
 		self.src_ignore_landing = self.config['src.ignore.landing']
 		self.max_src_chars = int(self.config['max.source.len'])
+		self.utilrequest = UtilsRequest(self.config['http_bad_request'], self.config['headers'])
 
 
 	def get_items(self, containers):
@@ -104,6 +105,8 @@ class ContainerProcessor(Processor):
 			# Add advert in list.
 			page.adverts.append(advert)
 
+			self.log.info(advert.__str__())
+
 		return True
 
 
@@ -124,32 +127,28 @@ class ContainerProcessor(Processor):
 
 	def process_existing_advert(self, advert):
 
-		# - Check in database for an existing source.
-		# - Request id, uid, advertiser
-		# - Check if advertiser domain is not blank, if blank, retrieve it.
-
 		existing = self.datasource.is_source_in_database(advert.src)
+
 		if existing:
 
 			advert.state = AdvertState.EXISTING
 
 			if not existing['id']:
-				self.log.info('Advert not found in database, source: ({})'.format(advert.src))
+				self.log.debug('Advert not found in database, source: ({})'.format(advert.src))
 				return False
 			advert.id = existing['id']
 
 			if not existing['uid']:
-				self.log.info('Advert not found in database, source: ({})'.format(advert.src))
+				self.log.debug('Advert not found in database, source: ({})'.format(advert.src))
 				return False
 			advert.uid = existing['uid']
 
 			if existing['advertiser']:
 				advert.advertiser = existing['advertiser']
 			else:
-				self.log.info('Advertiser not found, id: ({}) url_id: ({})'.format(existing['id'], self.page.url_id))
+				self.log.debug('Advertiser not found, id: ({}) url_id: ({})'.format(existing['id'], self.page.url_id))
 
 		else:
-
 			advert.state = AdvertState.NEW
 			advert.uid = self.get_uid()
 
@@ -163,6 +162,12 @@ class ContainerProcessor(Processor):
 		advert.size = item.size
 		advert.location = item.location
 		advert.finfo = item.finfo
+		advert.iframe_element = item.element
+		advert.xpath = item.xpath
+		advert.is_known_placement = item.is_known_placement
+
+		if not advert.src:
+			print('stop')
 
 
 	def is_src_matching_invalid_pattern(self, src, domain):
@@ -171,9 +176,9 @@ class ContainerProcessor(Processor):
 		"""
 
 		# Ignore source if greater than config value
-		if len(src) > self.max_src_chars:
-			self.log.debug('Exceed max number of characters: ({}), source: ({})'.format(self.max_src_chars, src))
-			return True
+		# if len(src) > self.max_src_chars:
+		# 	self.log.debug('Exceed max number of characters: ({}), source: ({})'.format(self.max_src_chars, src))
+		# 	return True
 
 		# Ignore dummy source
 		if src in self.src_ignore_iframe:
@@ -187,7 +192,7 @@ class ContainerProcessor(Processor):
 
 		apply_ignore_path = False
 		if domain in self.config['src.ignore.path.domain.exceptions']:
-			self.log.info('Ignore path validation skipped, adserver domain: ({})'.format(domain))
+			self.log.debug('Ignore path validation skipped, adserver domain: ({})'.format(domain))
 			apply_ignore_path = True
 
 		# Ignore path
@@ -202,26 +207,18 @@ class ContainerProcessor(Processor):
 
 	def process_stripped_source(self, src):
 
-		# @TODO: Check effective link by Curl.
-		# E.g. http://bs.serving-sys.com/Serving/adServer.bs?cn=brd&pli=1074216618&Page=&Pos=1934671096
-		# 	-> https://www.clearbridge.com/global-esg.html?cmpid=cbieu18_eur_web_penage_ros_728x90_wtr
-		#
-
 		stripped_source = UtilsString.strip_query_in_source(src)
-		request = self.is_valid_source_http_request(stripped_source)
-		if not request:
-			self.log.debug('Invalid http response from stripped source, src: ({}) '.format(stripped_source))
-			stripped_source = None
 
-			request = self.is_valid_source_http_request(src)
-			if not request:
-				self.log.debug('Invalid http response, src: ({}) '.format(src))
-				return '', ''
+		response = self.utilrequest.get_http_response(stripped_source)
 
-		if stripped_source:
-			src = stripped_source
+		if response:
+			return response
+		else:
+			response = self.utilrequest.get_http_response(src)
+			if response:
+				return response
 
-		return src, request['content_type']
+		return False
 
 
 	def process_advertiser(self, item, advert):
@@ -231,7 +228,7 @@ class ContainerProcessor(Processor):
 			# Anchors
 			link = self.get_link_from_anchors(item)
 			if link:
-				self.log.info('Link obtained from img hrefs: {}'.format(link))
+				self.log.debug('Link obtained from img hrefs: {}'.format(link))
 				item.landing = link
 
 			# Clicking
@@ -253,12 +250,12 @@ class ContainerProcessor(Processor):
 		if item.xpath:
 			element = self.driver.find_element_by_xpath(item.xpath)
 			if not element:
-				self.log.info('Unable to find landing element by item.xpath: {}'.format(item.xpath))
+				self.log.debug('Unable to find landing element by item.xpath: {}'.format(item.xpath))
 				return False
 
 		result = self.driver.click_on_element(element)
 		if result is None:
-			self.log.info('Item element not visible to click on it')
+			self.log.debug('Item element not visible to click on it')
 			return False
 
 		return True
@@ -280,12 +277,12 @@ class ContainerProcessor(Processor):
 		# Did it open a new window?
 		windows = self.driver.get_window_handle()
 		if len(windows) == 1:
-			self.log.info('CLicking on element did not open a new tab')
+			self.log.debug('CLicking on element did not open a new tab')
 
 			# Check that the main window did not redirect to another page
 			current_url = self.driver.get_current_url()
 			if current_url != self.page.url:
-				self.log.info('Main window redirected to: {}'.format(current_url))
+				self.log.debug('Main window redirected to: {}'.format(current_url))
 				return False
 
 		try:
@@ -308,13 +305,11 @@ class ContainerProcessor(Processor):
 
 	def get_landing_source(self, landing=None):
 
-		# An element could be broken when clicking on an element could redirect
-		# to another address without open a new tab. Solutions:
-		# 	- Improve different click on element methods and checks.
-
 		landings = []
+
 		windows = self.driver.get_window_handle()
-		self.log.info('Number of windows: ({})'.format(len(windows)))
+
+		self.log.debug('Number of windows: ({})'.format(len(windows)))
 
 		for window in windows:
 
@@ -333,7 +328,7 @@ class ContainerProcessor(Processor):
 		# Switch back to the main window
 		self.driver.switch_to_window(self.page.main_window_handle)
 		self.driver.close_window_except_main(windows)
-		self.log.info('Switched to main window: ({})'.format(self.page.main_window_handle))
+		self.log.debug('Switched to main window: ({})'.format(self.page.main_window_handle))
 
 		# Validate landings
 		if landings:
@@ -346,6 +341,7 @@ class ContainerProcessor(Processor):
 	def get_link_from_anchors(self, item):
 
 		if item.img_hrefs:
+
 			for source in item.img_hrefs:
 
 				link = UtilsString.get_url_from_string(source)
@@ -369,27 +365,15 @@ class ContainerProcessor(Processor):
 		# Is landing domain a known ad server
 		domain = UtilsString.get_domain(landing)
 		if UtilsString.match_string_in_list(domain, self.datasource.get_adservers()):
-			self.log.info('Landing domain ({}) in adservers'.format(domain))
+			self.log.debug('Landing domain ({}) in adservers'.format(domain))
 			return True
 
 		# Is landing domain in ignore domain
-		if UtilsString.match_string_in_list(domain, self.datasource.get_adservers()):
+		if UtilsString.match_string_in_list(domain, self.datasource.get_ignore_domain()):
 			self.log.debug('Landing domain {} in ignore domain'.format(domain))
 			return True
 
 		return False
-
-
-	def is_valid_source_http_request(self, src):
-
-		request = get_http_request(src)
-		if not request:
-			return False
-
-		if request['status'] in self.http_bad_request:
-			return False
-
-		return request
 
 
 	def get_uid(self):
@@ -422,10 +406,7 @@ class ContainerProcessor(Processor):
 
 		start = time.time()
 		loop = asyncio.get_event_loop()
-		loop.run_until_complete(process_http_requests(items))
+		loop.run_until_complete(self.utilrequest.process_http_requests(items))
 		loop.run_until_complete(asyncio.sleep(0))
 		print('Total requests: {}'.format(len(items)))
 		print("--- %s seconds ---" % (round(time.time() - start, 2)))
-
-		# Total requests: 51
-		# --- 5.28 seconds - --

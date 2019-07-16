@@ -1,12 +1,11 @@
-import logging
+# -*- coding: utf-8 -*-
+
 import os
+import logging
 import datetime
-from .utils.utils_files import get_project_root_abs_path
+from hunpy.utils.utils_files import get_project_root_abs_path
 
 class Log:
-
-    # https://docs.python.org/3/library/logging.html
-    # https://docs.python.org/3/howto/logging-cookbook.html
 
     # Formatter
     # '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -26,7 +25,7 @@ class Log:
         date = datetime.datetime.now().strftime(date_format)
         abs_log_path = get_project_root_abs_path(log_dir)
         filename = '{log_dir}/{name}_{date}.log'.format(log_dir=log_dir, name=log_name, date=date)
-        
+
         # Finds project root directory
         log_filepath = get_project_root_abs_path(filename)
 
@@ -56,40 +55,47 @@ class Log:
         self.logger.addHandler(fh)
         self.logger.addHandler(sh)
 
+
     def set_level(self, level):
         """
         Set the logging level of this logger.
         level must be an int or a str.
 
         (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-
         """
 
         self.logger.setLevel(level)
+
 
     def debug(self, *args, **kwargs):
 
         logging.LoggerAdapter(self.logger, extra='').debug(*args, **kwargs)
 
+
     def info(self, *args, **kwargs):
 
         logging.LoggerAdapter(self.logger, extra='').info(*args, **kwargs)
+
 
     def warning(self, *args, **kwargs):
 
         logging.LoggerAdapter(self.logger, extra='').warning(*args, **kwargs)
 
+
     def error(self, *args, **kwargs):
 
         logging.LoggerAdapter(self.logger, extra='').error(*args, **kwargs)
+
 
     def critical(self, *args, **kwargs):
 
         logging.LoggerAdapter(self.logger, extra='').critical(*args, **kwargs)
 
+
     def exception(self, *args, **kwargs):
 
         logging.LoggerAdapter(self.logger, extra='').exception(*args, **kwargs)
+
 
     def close(self):
 

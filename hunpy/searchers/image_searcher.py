@@ -1,7 +1,9 @@
-from ..searchers.container_searcher import ContainerSearcher
-from ..log import Log
-from ..image import Image
+# -*- coding: utf-8 -*-
+
 import numpy as np
+from hunpy.searchers.container_searcher import ContainerSearcher
+from hunpy.log import Log
+from hunpy.image import Image
 
 
 class ImageSearcher(ContainerSearcher):
@@ -39,40 +41,40 @@ class ImageSearcher(ContainerSearcher):
 
 			anchors = set()
 
-			container = Image()
+			# Image container
+			img_cont = Image()
 
-			container.src = self.driver.get_element_attribute(img_element, self.txt_src)
-			if not container.src:
+			img_cont.src = self.driver.get_element_attribute(img_element, self.txt_src)
+			if not img_cont.src:
 				continue
 
-			container.element = img_element
-			container.size = self.driver.get_element_size(container.element)
-			container.location = self.driver.get_element_location(container.element)
+			img_cont.element = img_element
+			img_cont.size = self.driver.get_element_size(img_cont.element)
+			img_cont.location = self.driver.get_element_location(img_cont.element)
 
-			if not self.is_valid_container(container):
+			if not self.is_valid_container(img_cont):
 				continue
 
 			# Find the anchor element of the image element if any. Looks for the relative anchor ancestor:
 			# ./ancestor::a
-			container.a_element = self.driver.find_child_element_by_xpath(self.x_ancestor_a, img_element)
+			img_cont.a_element = self.driver.find_child_element_by_xpath(self.x_ancestor_a, img_element)
 
-			if container.a_element in anchors:
+			if img_cont.a_element in anchors:
 				continue
 
-			anchors.add(container.a_element)
-			container.onclick = self.driver.get_element_attribute(img_element, self.txt_onclick)
-			container.style   = self.driver.get_element_attribute(img_element, self.txt_style)
+			anchors.add(img_cont.a_element)
+			img_cont.onclick = self.driver.get_element_attribute(img_element, self.txt_onclick)
+			img_cont.style   = self.driver.get_element_attribute(img_element, self.txt_style)
 
-			# Does it need to check for and anchor inside a container at this point?
-			if container.a_element:
-				container.a_href 	= self.driver.get_element_attribute(container.a_element, self.txt_href)
-				container.a_onclick = self.driver.get_element_attribute(container.a_element, self.txt_onclick)
-				container.a_style	= self.driver.get_element_attribute(container.a_element, self.txt_style)
+			if img_cont.a_element:
+				img_cont.a_href = self.driver.get_element_attribute(img_cont.a_element, self.txt_href)
+				img_cont.a_onclick = self.driver.get_element_attribute(img_cont.a_element, self.txt_onclick)
+				img_cont.a_style = self.driver.get_element_attribute(img_cont.a_element, self.txt_style)
 
 			# For debugging purposes only
-			#self.log.debug(container.__str__())
+			self.log.debug(img_cont.__str__())
 
-			containers[i] = container
+			containers[i] = img_cont
 			i += 1
 			if i >= n_containers:
 				break

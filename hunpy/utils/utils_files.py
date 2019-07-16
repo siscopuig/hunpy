@@ -35,8 +35,7 @@ def get_abs_path(relative_path):
 	return path.abspath(path.expanduser(relative_path))
 
 def get_project_root_abs_path(relative_path):
-	
+
 	abs_path = path.abspath(__file__ + '/../../../')
-	foo = path.join(abs_path, relative_path)
-	return foo
+	return  path.join(abs_path, relative_path)
 

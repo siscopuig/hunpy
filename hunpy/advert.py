@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from enum import Enum
 
 
@@ -9,9 +11,7 @@ class AdvertState(Enum):
 
 class Advert:
 
-
 	def __init__(self):
-
 		self.id = None
 		self.uid = None
 		self.src = None
@@ -24,10 +24,10 @@ class Advert:
 		self.isframe = None
 		self.instances = 1
 		self.state = None
+		self.filepath = None
 
 
 	def __str__(self):
-
 		tab = '\t'
 		string = (
 			'\n'
@@ -42,6 +42,7 @@ class Advert:
 			'{t} location:	  {location}\n'
 			'{t} isframe:     {isframe}\n'
 			'{t} instances:	  {instances}\n'
+			'{t} filepath:	  {filepath}\n'
 		).format(
 			uid=self.uid,
 			src=self.src,
@@ -53,7 +54,8 @@ class Advert:
 			location=self.location,
 			isframe=self.isframe,
 			instances=self.instances,
+			filepath=self.filepath,
 			t=tab
 		)
-		
+
 		return string

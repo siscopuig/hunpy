@@ -1,8 +1,10 @@
-from .container_processor import ContainerProcessor
+# -*- coding: utf-8 -*-
+
 from ordered_set import OrderedSet
-from ..utils.utils_strings import UtilsString
-from ..log import Log
-from ..searchers.iframe_searcher import FrameSearcher
+from hunpy.processors.container_processor import ContainerProcessor
+from hunpy.searchers.iframe_searcher import FrameSearcher
+from hunpy.utils.utils_strings import UtilsString
+from hunpy.log import Log
 
 
 class IframeProcessor(ContainerProcessor):
@@ -68,12 +70,12 @@ class IframeProcessor(ContainerProcessor):
 							   'placement source: ({})'.format(item.size[0], item.size[1], src))
 				continue
 
-			source, finfo = self.process_stripped_source(src)
-			if not finfo:
+			result = self.process_stripped_source(src)
+			if not result:
 				continue
 
-			item.src = source
-			item.finfo = finfo.split(';')[0]
+			item.src = result['url']
+			item.finfo = result['finfo']
 			return True
 
 		return False
@@ -90,6 +92,9 @@ class IframeProcessor(ContainerProcessor):
 			# Is a known placement
 			if self.datasource.match_placement(item.size[0], item.size[1]):
 				item.is_known_placement = True
+			else:
+				self.log.debug('Unknown size: ({}x{}), in source: ({})'.format(
+					item.size[0], item.size[1], src))
 
 			# Is a known ad server
 			if UtilsString.match_string_in_list(domain, self.datasource.get_adservers()):
@@ -101,21 +106,20 @@ class IframeProcessor(ContainerProcessor):
 
 			# If source domain is equal
 			if item.is_page_domain and not item.is_known_placement:
-				self.log.debug('Invalid source: is page domain ({}) and not a known placement source: ({})'
-							   .format(self.page.page_domain, src))
+				self.log.debug('Domain url ({}) in src: ({})'.format(self.page.page_domain, src))
 				continue
 
 			if not item.is_known_placement and not item.is_known_adserver:
-				self.log.debug('Not known placement ({}), ({}) and not a known placement source: ({})'
+				self.log.debug('Unknown size: ({}x{}) in source: ({})'
 							   .format(item.size[0], item.size[1], src))
 				continue
 
-			source, finfo = self.process_stripped_source(src)
-			if not finfo:
+			result = self.process_stripped_source(src)
+			if not result['valid']:
 				continue
 
-			item.src = source
-			item.finfo = finfo
+			item.src = result['url']
+			item.finfo = result['finfo']
 			return True
 
 		return False
@@ -201,21 +205,20 @@ class IframeProcessor(ContainerProcessor):
 		return True
 
 
-
 	def extract_link_from_attributes(self, item, link=''):
 
 		if item.img_hrefs:
 			link = self.get_link_from_list(item.img_hrefs)
 			if link:
-				print('Link: ({link}) extracted from img_hrefs'.format(link=link))
+				self.log.debug('Link: ({link}) extracted from img_hrefs'.format(link=link))
 		elif item.img_onclicks:
 			link = self.get_link_from_list(item.img_onclicks)
 			if link:
-				print('Link: ({link}) extracted from img_onclicks'.format(link=link))
+				self.log.debug('Link: ({link}) extracted from img_onclicks'.format(link=link))
 		elif item.styles:
 			link = self.get_link_from_list(item.styles)
 			if link:
-				print('Link: ({link}) extracted from styles'.format(link=link))
+				self.log.debug('Link: ({link}) extracted from styles'.format(link=link))
 
 		return link
 

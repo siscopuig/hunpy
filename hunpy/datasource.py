@@ -1,18 +1,19 @@
-from .log import Log
-from .hunpy_exception import HunpyException
-from .utils.utils_strings import UtilsString
-from .utils.utils_files import get_project_root_abs_path
+# -*- coding: utf-8 -*-
+
 import numpy as np
+from hunpy.log import Log
+from hunpy.utils.utils_strings import UtilsString
+from hunpy.utils.utils_files import get_project_root_abs_path
 
 
 class Datasource:
+
 
     def __init__(self, dbconn):
 
         self.log = Log()
         self.dbconn = dbconn
         self.ds_paths = {}
-        self.urls = None
         self.datasource = {}
         self.placements = None
         self.adservers = None
@@ -26,17 +27,28 @@ class Datasource:
             self.ds_paths[key] = get_project_root_abs_path(value)
 
 
-    def get_urls(self):
+    def get_urls(self, arg_url):
 
-        self.urls = self.dbconn.select_urls()
+        urls = {}
 
-        if not self.urls:
-            raise HunpyException('Error getting urls from database')
+        if arg_url:
+            urls[1] = arg_url
 
-        return self.urls
+        if not urls:
+
+            file = self.read_file_in_lines(self.ds_paths['sources'])
+
+            counter = 1
+            for line in file:
+                urls[counter] = line
+                counter += 1
+
+        return urls
 
 
     def get_placements(self):
+
+        # @todo: Get placements from a text file in folder datasources.
 
         if self.placements is None:
 
@@ -49,41 +61,39 @@ class Datasource:
 
         return self.placements
 
+
     def get_adservers(self):
 
         if self.adservers is None:
 
-            # Get datasource list from txt file
-            filelines = self.read_file_in_lines(self.ds_paths['adservers'])
+            file = self.read_file_in_lines(self.ds_paths['adservers'])
 
-            # Create a numpy array to store the list
-            self.adservers = np.array(filelines, dtype=np.object)
+            self.adservers = np.array(file, dtype=np.object)
 
         return self.adservers
+
 
     def get_ignore_domain(self):
 
         if self.ignore_domain is None:
 
-            # Get datasource list from txt file
-            filelines = self.read_file_in_lines(self.ds_paths['ignore.domain'])
+            file = self.read_file_in_lines(self.ds_paths['ignore.domain'])
 
-            # Create a numpy array to store the list
-            self.ignore_domain = np.array(filelines, dtype=np.object)
+            self.ignore_domain = np.array(file, dtype=np.object)
 
         return self.ignore_domain
+
 
     def get_ignore_path(self):
 
         if self.ignore_path is None:
 
-            # Get datasource list from txt file
-            filelines = self.read_file_in_lines(self.ds_paths['ignore.path'])
+            file = self.read_file_in_lines(self.ds_paths['ignore.path'])
 
-            # Create a numpy array to store the list
-            self.ignore_path = np.array(filelines, dtype=np.object)
+            self.ignore_path = np.array(file, dtype=np.object)
 
         return self.ignore_path
+
 
     def read_file_in_lines(self, filepath):
 
@@ -93,19 +103,6 @@ class Datasource:
         # Return a copy of the line with trailing whitespace removed.
         return [line.rstrip('\n') for line in data]
 
-    def __setitem__(self, key, value):
-
-        self.datasource[key] = value
-
-    def __getitem__(self, item):
-
-        return self.datasource[item]
-
-    def __contains__(self, key):
-
-        return key in self.datasource
-
-    # ------------------------------------------------
 
     def match_placement(self, width, height):
 
@@ -114,14 +111,8 @@ class Datasource:
                 return True
         return False
 
-    # ------------------------------------------------
 
     def insert_new_advert(self, advert):
-
-        # @todo:
-        # - Make sure that record has been inserted successfully.
-        # - If an error it thrown during the operation, catch it!
-        # - Check that landing is not bigger than 512 character -> done
 
         landing = advert.landing
         if landing:
@@ -129,14 +120,9 @@ class Datasource:
                 landing = UtilsString.strip_landing(landing)
                 if len(landing) > 512:
                     landing = landing[:512]
-                    self.log.info(
-                        'landing has been truncated to have 512 characters')
+                    self.log.debug('landing has been truncated to have 512 characters')
                 else:
-                    self.log.info('landing has been sanitised')
-
-        finfo = advert.finfo
-        if 'text/html' in finfo:
-            advert.finfo = finfo[:-15]
+                    self.log.debug('landing has been sanitised')
 
         data = {
             "uid": advert.uid,
@@ -149,17 +135,13 @@ class Datasource:
             "y": advert.location[1],
             "landing": landing if landing else None,
             "advertiser": advert.advertiser if advert.advertiser else None,
+            # "filepath": advert.filepath
         }
 
         self.dbconn.insert_new_advert(data)
 
-    def is_source_in_database(self, src):
 
-        # @TODO:
-        # Select all the values needed in one call (id, uid, src, advertiser).
-        # It will return a list dict. E.g.
-        # [{'id': 1, 'uid': '06e7fe57-c21d-4f40-9afa-f441361349be',
-        # 'advertiser': 'events.marcusevans-events.com'}]
+    def is_source_in_database(self, src):
 
         # Select uid from adverts where src is equal to src
         result = self.dbconn.select_existing_source(src)
@@ -167,37 +149,23 @@ class Datasource:
             return False
 
         if len(result) >= 2:
-            self.log.info(
+            self.log.debug(
                 'Number ({}) of duplicated source ({}) found in database'.
                 format(len(result), src))
 
         return result[0]
 
-    def is_new_instance(self, uid, url_id, date):
 
-        result = self.dbconn.select_instance_record_by_date(
-            'id', 'Instances', uid, url_id, date)
-        if not result:
-            return False
+    def __setitem__(self, key, value):
 
-        return result[0]['id']
+        self.datasource[key] = value
 
-    def insert_new_instance(self, data):
 
-        # @TODO: Log if an error or successful
-        self.dbconn.insert_new_instance_record(data['uid'], data['url_id'],
-                                               data['counter'], data['date'])
+    def __getitem__(self, item):
 
-    def update_existing_instance(self, data):
+        return self.datasource[item]
 
-        # @TODO: Log if an error or successful
-        self.dbconn.update_existing_instance_record(data['id'], data['date'],
-                                                    data['counter'])
 
-    def count_cycle(self, url_id, date):
+    def __contains__(self, key):
 
-        result = self.dbconn.today_new_cycle(url_id, date)
-        if not result:
-            self.dbconn.insert_cycle(url_id, 1, date)
-        else:
-            self.dbconn.update_cycle(result[0]['id'], date)
+        return key in self.datasource

@@ -1,5 +1,7 @@
-from .html_element import HtmlElement
-from .utils.utils_strings import UtilsString
+# -*- coding: utf-8 -*-
+
+from hunpy.html_element import HtmlElement
+from hunpy.utils.utils_strings import UtilsString
 
 
 class Page(HtmlElement):
@@ -10,7 +12,7 @@ class Page(HtmlElement):
 	def __init__(self, driver, id, url):
 
 		HtmlElement.__init__(self)
-		
+
 		# Url id
 		self.url_id = id
 

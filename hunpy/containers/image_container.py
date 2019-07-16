@@ -1,7 +1,6 @@
-
+# -*- coding: utf-8 -*-
 
 class ImageContainer:
-
 
 	def __init__(self):
 

@@ -1,5 +1,6 @@
-class ContainerSearcher:
+# -*- coding: utf-8 -*-
 
+class ContainerSearcher:
 	"""
 	Based class for extracted containers
 	"""
@@ -21,15 +22,15 @@ class ContainerSearcher:
 		self.txt_href = self.config['txt.href']
 
 		# Xpath
-		self.x_body = self.config['x.body']		# .//body
-		self.x_iframe = self.config['x.iframe']		# .//iframe
-		self.x_iframe_n = self.config['x.iframe_n']	# .//iframe[{}]
-		self.x_equals = self.config['x.equals']		# '@{}="{}"'
-		self.x_contains = self.config['x.contains']	# contains(@{}, "{}")
-		self.x_and = self.config['x.and']		# ' and '
-		self.x_img = self.config['x.img']		# .//img
-		self.x_aimg = self.config['x_aimg']		# .//a/img
-		self.x_a_img = self.config['x.a_img']		# .//a//img
+		self.x_body = self.config['x.body']		        # .//body
+		self.x_iframe = self.config['x.iframe']		    # .//iframe
+		self.x_iframe_n = self.config['x.iframe_n']	    # .//iframe[{}]
+		self.x_equals = self.config['x.equals']		    # '@{}="{}"'
+		self.x_contains = self.config['x.contains']	    # contains(@{}, "{}")
+		self.x_and = self.config['x.and']		        # ' and '
+		self.x_img = self.config['x.img']		        # .//img
+		self.x_aimg = self.config['x_aimg']		        # .//a/img
+		self.x_a_img = self.config['x.a_img']		    # .//a//img
 		self.x_ancestor_a = self.config['x.ancestor_a'] # ./ancestor::a
 
 
