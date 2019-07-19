@@ -102,7 +102,6 @@ chrome.chromedriver.log:
 chrome.binary.location:
   /usr/bin/chromium-browser
 
-
 # XPATH
 x.body:           .//body
 x.iframe:         .//iframe
