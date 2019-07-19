@@ -2,7 +2,3 @@ language: python
 python:
   - "3.6"
   - "3.7"
-before_install:
-  - pip install --user codecov
-after_success:
-  - codecov --file coverage/lcov.info --disable search
