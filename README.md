@@ -2,22 +2,15 @@
 
 ## Overview
 
+Find ads and store the ad server source in a database table.
+
 1. [Install prerequisites](#install-prerequisites)
-
-    - Git
-    - python 3.4 +
-    - chromedriver
-    - MySQL
-    - Pip
-
 
 2. [Clone the project](#clone-the-project)
     
-    We’ll download the code from its repository on GitHub.
-    
 3. [Edit config.yml file in config directory](#edit-config-file)
 
-4. [Run the application](#run-app)
+4. [Run the application](#run-the-application)
 
 
 ## Install prerequisites
@@ -53,21 +46,33 @@ All requisites should be available for your distribution. The most important are
 
 * [Chromium Browser](https://www.chromium.org/getting-involved/download-chromium)
 
-
+    - Install browser for Ubuntu or Debian 
+    
+        ````sh
+        sudo apt install chromium-browser
+        ````
+        
 * MySQL
 
-    - Install MySQL and create a new database called `hunpy` 
+    - Install MySQL and create a new database called `hunpy`.
+      
+    - Import schema: 
 
+        from hunpy/hunpy/connector/hunpy_db_blank.sql directory import `hunpy_db_blank.sql` to the database hunpy:
 
+        ````sh
+        mysql -u root -p hunpy < hunpy_db_blank.sql
+        ````
 ## Clone the project
 
 To install [Git](http://git-scm.com/book/en/v2/Getting-Started-Installing-Git), 
 download it and install following the instructions:
 
+We’ll download the code from its repository on GitHub.
+
 ```sh
 git clone https://github.com/siscopuig/hunpy.git
 ```
-
 
 ## Edit config file
 
@@ -84,7 +89,6 @@ git clone https://github.com/siscopuig/hunpy.git
     chrome.window.width: 1440
     chrome.window.height: 990
     ````
-
 
 ## Run the application
 
@@ -105,9 +109,6 @@ git clone https://github.com/siscopuig/hunpy.git
     
     # Activate virtualenv
     source hunpy/venv/bin/activate
-    
-    # Using venv (default)    
-    python3 -m venv hunpy/venv
     ````
     
 2. Install project dependencies:
@@ -122,7 +123,34 @@ git clone https://github.com/siscopuig/hunpy.git
     http://page_two.com
     ...
     ````
+
+4. Run application from command line:
+
+    Run as normal
+    ````sh
+    python3 hunpu_runner.py
+    ````
     
+    Is possible to pass a url only
+    ````sh
+    python3 hunpu_runner.py --url http://example.com
+    ````
+    
+    To run in headless mode --headless (-a)
+    ````sh
+    python3 hunpu_runner.py --headless
+    ````
+    
+    Running debugging mode display verbose:
+    ````sh
+    python3 hunpu_runner.py --debug
+    ````
+    
+## Help
+
+Any thought, 
+    
+        
     
 
     

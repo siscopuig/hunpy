@@ -28,8 +28,9 @@ class Hunpy:
 
     def start(self, args):
 
+        # At the moment accepts a url only when parsing arguments from terminal
         if args.url:
-            self.arg_url = args.url
+            self.arg_url = args.url[0]
 
         if args.headless:
             self.arg_headless = True
