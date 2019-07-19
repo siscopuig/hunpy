@@ -1,5 +1,3 @@
-
-
 ## Overview
 
 Find ads and store the ad server source in a database table.
