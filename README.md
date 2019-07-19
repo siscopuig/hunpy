@@ -1,3 +1,6 @@
+![build-passing-green.svg](https://img.shields.io/badge/build-passing-green.svg) ![version-0.0.1-green.svg](https://img.shields.io/badge/version-0.0.1-green.svg)
+
+
 ## Overview
 
 Find ads and store the ad server source in a database table.
